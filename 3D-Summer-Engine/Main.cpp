@@ -155,6 +155,10 @@ int main() {
 		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << compileInfo << std::endl;
 	}
 
+	glUseProgram(shaderProgram);
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+
 	std::cout << "Engine Started" << std::endl;
 	
 	//Draw
