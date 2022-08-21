@@ -7,7 +7,7 @@
 #include <list>
 
 
-class fileHandler
+class FileHandler
 {
 public:
 	bool writeFile(std::string fileName, std::string content);

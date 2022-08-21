@@ -1,11 +1,16 @@
 #include <iostream>
+#include <string>
 #include <glad/glad.h> //Needs to be included before GLFW
 #include <GLFW/glfw3.h>
 #include "WindowHandler.h"
+#include "fileHandler.h"
 
 const int WIDTH = 1000;
 const int HEIGHT = 700;
 const char* WINDOW_NAME = "Summer Engine";
+
+const char* VERTEX_SHADER_PATH = "Shaders/vertex_shader.vert";
+const char* FRAGMENT_SHADER_PATH = "Shaders/fragment_shader.frag";
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -16,7 +21,8 @@ int main() {
 	std::cout << "Engine Starting..." << std::endl;
 	
 	WindowHandler windowHandler(WIDTH, HEIGHT, WINDOW_NAME);
-
+	FileHandler fileHandler;
+	
 	//Create window
 	int result = windowHandler.init();
 	if (result == -1) //If there was an error when creating the window exit the application
@@ -75,7 +81,6 @@ int main() {
 			depth values of the fragment to determine if a fragment is in front or behind another object and should thus be discarded accordingly.
 	*/
 
-	//Vertex Shader
 	/*Vertex Buffer Object(VBO)
 		
 	*/
@@ -87,9 +92,68 @@ int main() {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertices), triangleVertices, GL_STATIC_DRAW);
 
-	//Geometry Shader
+	//Vertex Shader
+	//Read shader file content
+	std::string vertexShaderContent = "";
+	fileHandler.readFile("Shaders/vertex_shader.vert", vertexShaderContent);
+	std::cout << "Vertex Shader Content: \n" << vertexShaderContent << "\n !!!End of file!!!" << std::endl;
+
+	const char* vertexShaderSource = vertexShaderContent.c_str();;
+
+	//Create vertex shader
+	unsigned int vertexShader;
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+	glCompileShader(vertexShader);
+
+	int success;
+	char compileInfo[512];
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+
+	if (!success)
+	{
+		glGetShaderInfoLog(vertexShader, sizeof(compileInfo), NULL, compileInfo);
+		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << compileInfo << std::endl;
+	}
 
 	//Fragment Shader
+	std::string fragmentShaderContent = "";
+	fileHandler.readFile(FRAGMENT_SHADER_PATH, fragmentShaderContent);
+	std::cout << "Fragment Shader Content: \n" << fragmentShaderContent << "\n !!!End of file!!!" << std::endl;
+
+	const char* fragmentShaderSource = fragmentShaderContent.c_str();
+
+	//Create fragment shader
+	unsigned int fragmentShader;
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+	glCompileShader(fragmentShader);
+
+	success = 0;
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+
+	if (!success)
+	{
+		glGetShaderInfoLog(fragmentShader, sizeof(compileInfo), NULL, compileInfo);
+		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << compileInfo << std::endl;
+	}
+
+	//Shader Program
+
+	unsigned int shaderProgram;
+	shaderProgram = glCreateProgram();
+
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
+	glLinkProgram(shaderProgram);
+
+	success = 0;
+	glad_glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+	if (!success)
+	{
+		glGetProgramInfoLog(shaderProgram, sizeof(compileInfo), NULL, compileInfo);
+		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << compileInfo << std::endl;
+	}
 
 	std::cout << "Engine Started" << std::endl;
 	

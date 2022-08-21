@@ -1,24 +1,24 @@
 #include "fileHandler.h"
 
-std::fstream fileHandler::openFile(std::string fileName) {
+std::fstream FileHandler::openFile(std::string fileName) {
 	std::fstream openedFile(fileName);
 	return openedFile;
 }
 
-bool fileHandler::createFile(std::string fileName) {
+bool FileHandler::createFile(std::string fileName) {
 	std::ofstream outFile(fileName);
 	outFile.close();
 	return true;
 }
 
-void fileHandler::closeFile() {
+void FileHandler::closeFile() {
 	file.close();
 }
 
-bool fileHandler::removeFile(const char * fileName) {
+bool FileHandler::removeFile(const char * fileName) {
 	if (file.is_open())
 	{
-		fileHandler::closeFile();
+		FileHandler::closeFile();
 	}
 	try
 	{
@@ -32,7 +32,7 @@ bool fileHandler::removeFile(const char * fileName) {
 	}
 }
 
-bool fileHandler::readFile(std::string fileName, std::string & content) {
+bool FileHandler::readFile(std::string fileName, std::string & content) {
 	try
 	{
 		content = "";
@@ -57,9 +57,9 @@ bool fileHandler::readFile(std::string fileName, std::string & content) {
 	}
 }
 
-bool fileHandler::writeFile(std::string fileName, std::string content) {
+bool FileHandler::writeFile(std::string fileName, std::string content) {
 	//Open and create the file
-	std::fstream fileToBeWrittenTo = fileHandler::openFile(fileName);
+	std::fstream fileToBeWrittenTo = FileHandler::openFile(fileName);
 	if (fileToBeWrittenTo.is_open()) {
 		//Write to the file
 		fileToBeWrittenTo << content;
@@ -68,7 +68,7 @@ bool fileHandler::writeFile(std::string fileName, std::string content) {
 	}
 	else
 	{
-		fileHandler::createFile(fileName);
+		FileHandler::createFile(fileName);
 		fileToBeWrittenTo = std::fstream(fileName);
 
 		fileToBeWrittenTo << content;
@@ -79,6 +79,6 @@ bool fileHandler::writeFile(std::string fileName, std::string content) {
 	return false;
 }
 
-bool fileHandler::createDir(const char* path) {
+bool FileHandler::createDir(const char* path) {
 	return _mkdir(path) ? true : false;
 }

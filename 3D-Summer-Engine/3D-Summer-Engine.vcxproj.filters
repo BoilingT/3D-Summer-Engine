@@ -11,11 +11,11 @@
     </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>;rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{bae45580-4f8e-42d7-be3a-3349fb552768}</UniqueIdentifier>
-      <Extensions>shader</Extensions>
+      <Extensions>shader;frag;vert</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -45,6 +45,12 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="Shaders\fragment_shader.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\fragment_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\vertex_shader.vert">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
