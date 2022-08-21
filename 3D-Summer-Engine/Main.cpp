@@ -189,7 +189,7 @@ int main() {
 	{
 		processInput(windowHandler.getWindow());
 
-		glClearColor(0.58f, 0.71f, 0.91, 1);
+		glClearColor(0.58f, 0.71f, 0.91f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(shaderProgram);
