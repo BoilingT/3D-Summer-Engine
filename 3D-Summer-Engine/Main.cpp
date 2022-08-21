@@ -36,10 +36,11 @@ int main() {
 	//Resize the viewport when the window size is changed
 	glfwSetFramebufferSizeCallback(windowHandler.getWindow(), framebuffer_size_callback);
 
-	float vertices[] = {
-	-0.5f, -0.5f, 0.0f,
-	 0.5f, -0.5f, 0.0f,
-	 0.0f,  0.5f, 0.0f
+	//Triangle
+	float triangleVertices[] = {
+	-0.5f, -0.5f, 0.0f,	//Bottom Left
+	 0.5f, -0.5f, 0.0f, //Bottom Right
+	 0.0f,  0.5f, 0.0f	//Middle Top
 	};
 
 	/*
@@ -78,6 +79,13 @@ int main() {
 	/*Vertex Buffer Object(VBO)
 		
 	*/
+
+	unsigned int VBO;
+	glGenBuffers(1, &VBO);
+
+	//Send the vertex data into the VBO buffer
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertices), triangleVertices, GL_STATIC_DRAW);
 
 	//Geometry Shader
 
