@@ -42,13 +42,6 @@ int main() {
 	//Resize the viewport when the window size is changed
 	glfwSetFramebufferSizeCallback(windowHandler.getWindow(), framebuffer_size_callback);
 
-	//Triangle
-	float triangleVertices[] = {
-	-0.5f, -0.5f, 0.0f,	//Bottom Left
-	 0.5f, -0.5f, 0.0f, //Bottom Right
-	 0.0f,  0.5f, 0.0f	//Middle Top
-	};
-
 	/*
 	Graphics Pipeline:
 		Vertex data -> Vertex Shader -> Shape Assembly (Opt) -> Geometry Shader -> Rasterization (Opt) -> Fragment Shader -> Tests and Blending (Opt)
@@ -80,17 +73,6 @@ int main() {
 			After all the color values have been determined the final object will then go through the "Alpha test" and "Blending stage". This stage checks the
 			depth values of the fragment to determine if a fragment is in front or behind another object and should thus be discarded accordingly.
 	*/
-
-	/*Vertex Buffer Object(VBO)
-		
-	*/
-
-	unsigned int VBO;
-	glGenBuffers(1, &VBO);
-
-	//Send the vertex data into the VBO buffer
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertices), triangleVertices, GL_STATIC_DRAW);
 
 	//Vertex Shader
 	//Read shader file content
@@ -155,9 +137,40 @@ int main() {
 		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << compileInfo << std::endl;
 	}
 
-	glUseProgram(shaderProgram);
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
+	glUseProgram(shaderProgram);
+
+	//Triangle
+	float triangleVertices[] = {
+	-0.5f, -0.5f, 0.0f,	//Bottom Left
+	 0.5f, -0.5f, 0.0f, //Bottom Right
+	 0.0f,  0.5f, 0.0f	//Middle Top
+	};
+
+	/*Vertex Buffer Object (VBO)
+
+	*/
+
+	unsigned int VBO, VAO;
+	glGenBuffers(1, &VBO);
+	glGenVertexArrays(1, &VAO);
+
+	glBindVertexArray(VAO);
+	//Send the vertex data into the VBO buffer
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertices), triangleVertices, GL_STATIC_DRAW);
+
+	//Linking Vertex Attributes
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	/*Vertex Array Object (VAO)
+		
+	*/
+	
+
 
 	std::cout << "Engine Started" << std::endl;
 	
@@ -169,6 +182,9 @@ int main() {
 		glClearColor(0.58f, 0.71f, 0.91, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		glUseProgram(shaderProgram);
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 		/*Double buffer
 			When rendering, the front buffer contains the final output of an image and is rendered to the screen.
 			While it is being drawn to the screen a back buffer is being drawn behind the scenes in order to reduce flickering issues.
