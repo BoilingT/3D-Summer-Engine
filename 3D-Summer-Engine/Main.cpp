@@ -5,10 +5,11 @@
 
 const int WIDTH = 1000;
 const int HEIGHT = 700;
-const char* WINDOW_NAME = "Summer-Engine";
+const char* WINDOW_NAME = "Summer Engine";
 
-void processInput(GLFWwindow* window);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void processInput(GLFWwindow* window);
+
 
 int main() {
 
@@ -35,6 +36,43 @@ int main() {
 	//Resize the viewport when the window size is changed
 	glfwSetFramebufferSizeCallback(windowHandler.getWindow(), framebuffer_size_callback);
 
+	float vertices[] = {
+	-0.5f, -0.5f, 0.0f,
+	 0.5f, -0.5f, 0.0f,
+	 0.0f,  0.5f, 0.0f
+	};
+
+	/*
+	Graphics Pipeline:
+		Vertex data -> Vertex Shader -> Shape Assembly (Opt) -> Geometry Shader -> Rasterization (Opt) -> Fragment Shader -> Tests and Blending (Opt)
+		Essentials: Vertex data -> Vertex Shader -> Geometry Shader -> Fragent Shader
+
+		Vertex Shader:
+			The vertex shader takes a single vertex as data input. Its main purpose is to transform 3D coordinates into different 3D coordinates.
+			It also allows for basic processing on the vertex attributes.
+
+		Shape Assembly:
+			The assembly stage uses the data from all vertices to create a primitve form and "assembles all the point(s) in the primitive shape given", 
+			as for an example a triangle.
+
+		Geometry Shader:
+			The data collection from the assembly stage is transferred onto the geometry shader. Its job is to take a collection of vertices 
+			that form a primitive form. It has the ability to use the primitive to generate other shapes by making new vertices to form new or different
+			primitives.
+
+		Rasterization:
+			
+	*/
+
+	//Vertex Shader
+	/*Vertex Buffer Object(VBO)
+		
+	*/
+
+	//Geometry Shader
+
+	//Fragment Shader
+
 	std::cout << "Engine Started" << std::endl;
 	
 	//Draw
@@ -45,7 +83,13 @@ int main() {
 		glClearColor(0.58f, 0.71f, 0.91, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		/*Double buffer
+			When rendering, the front buffer contains the final output of an image and is rendered to the screen.
+			While it is being drawn to the screen a back buffer is being drawn behind the scenes in order to reduce flickering issues.
+		*/
+		//Swap color buffer in order to render new images
 		glfwSwapBuffers(windowHandler.getWindow());
+		//Check if any events have been triggered
 		glfwPollEvents();
 	}
 
