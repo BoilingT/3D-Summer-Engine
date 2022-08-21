@@ -61,7 +61,17 @@ int main() {
 			primitives.
 
 		Rasterization:
-			
+			The data from the Geometry Shader is passed on to the Rasterization stage where it maps the resulting primitives 
+			to the corresponding pixels on the screen. This results in fragments for the fragment shader to use. Before the fragment shaders run
+			fragments that are outside the screen are clipped and discarded which improves the performance.
+
+		Fragment Shader:
+			A Fragments Shader's main purpose is to calculate the final color of a pixel. During this stage is usally when all 
+			the advanced OpenGL effects occur. The Fragment Shader usally contains data bout the 3D scene that it can use to calculate the final pixel color.
+
+		Tests and Blending
+			After all the color values have been determined the final object will then go through the "Alpha test" and "Blending stage". This stage checks the
+			depth values of the fragment to determine if a fragment is in front or behind another object and should thus be discarded accordingly.
 	*/
 
 	//Vertex Shader
