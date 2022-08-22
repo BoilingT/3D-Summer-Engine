@@ -143,10 +143,10 @@ int main() {
 
 	//Triangle
 	float vertices[] = {
-		0.5f,  0.5f, 0.0f,  // top right
-		0.5f, -0.5f, 0.0f,  // bottom right
-		-0.5f, -0.5f, 0.0f,  // bottom left
-		-0.5f,  0.5f, 0.0f   // top left 
+		0.8f,  0.5f, 0.0f,  // top right
+		0.8f, -0.5f, 0.0f,  // bottom right
+		-0.8f, -0.5f, 0.0f,  // bottom left
+		-0.8f,  0.5f, 0.0f   // top left 
 	};
 
 	unsigned int indices[] = {
@@ -209,6 +209,10 @@ int main() {
 		//Check if any events have been triggered
 		glfwPollEvents();
 	}
+
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteProgram(shaderProgram);
 
 	glfwTerminate();
 	std::cout << "Engine Stopped" << std::endl;

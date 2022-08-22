@@ -1,0 +1,98 @@
+﻿'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Users\tobbe\Documents\Coding\C++\OpenGL\Projects\3D-Summer-Engine\x64\Debug\3D-Summer-Engine.exe'. Symbols loaded.
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\ntdll.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\kernel32.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\KernelBase.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\user32.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\win32u.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\gdi32.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\gdi32full.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\msvcp_win.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\ucrtbase.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\shell32.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\msvcp140d.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\vcruntime140d.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\vcruntime140_1d.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\ucrtbased.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\imm32.dll'. 
+The thread 0x2674 has exited with code 0 (0x0).
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\uxtheme.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\msvcrt.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\combase.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\rpcrt4.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\dinput8.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\advapi32.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\sechost.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\XInput1_4.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\cfgmgr32.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\devobj.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\dwmapi.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\SHCore.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\InputHost.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\WinTypes.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\oleaut32.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\bcryptprimitives.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\propsys.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\CoreUIComponents.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\ntmarta.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\kernel.appcore.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\CoreMessaging.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\ws2_32.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'D:\Program Files (x86)\RivaTuner Statistics Server\RTSSHooks64.dll'. Module was built without symbols.
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\setupapi.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\bcrypt.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\shlwapi.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\winmm.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\msctf.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\hid.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\wintrust.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\crypt32.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\msasn1.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Program Files\LGHUB\sdks\legacy_forcefeedback_x64.dll'. Module was built without symbols.
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\ole32.dll'. 
+Exception thrown at 0x00007FFE78494FD9 in 3D-Summer-Engine.exe: Microsoft C++ exception: devio::future_error at memory location 0x00000065A00FEB40.
+Exception thrown at 0x00007FFE78494FD9 in 3D-Summer-Engine.exe: Microsoft C++ exception: devio::future_error at memory location 0x00000065A00FEB40.
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\opengl32.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\glu32.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\clbcatq.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\AppXDeploymentClient.dll'. 
+'3D-Summer-Engine.exe' (Win32): Unloaded 'C:\Windows\System32\AppXDeploymentClient.dll'
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_47917a79b8c7fd22\nvoglv64.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\version.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\wtsapi32.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\cryptbase.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\cryptnet.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\drvstore.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\wldp.dll'. 
+The thread 0x3ba0 has exited with code 0 (0x0).
+The thread 0xd10 has exited with code 0 (0x0).
+The thread 0x4a8 has exited with code 0 (0x0).
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\windows.storage.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\DXCore.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\nvspcap64.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\profapi.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\powrprof.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\umpdc.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\winsta.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\TextInputFramework.dll'. 
+'3D-Summer-Engine.exe' (Win32): Loaded 'C:\Windows\System32\oleacc.dll'. 
+The thread 0x3fd8 has exited with code 0 (0x0).
+Exception thrown at 0x00007FFE78494FD9 in 3D-Summer-Engine.exe: Microsoft C++ exception: devio::executor_error at memory location 0x000000659F3AE960.
+Exception thrown at 0x00007FFE78494FD9 in 3D-Summer-Engine.exe: Microsoft C++ exception: devio::executor_error at memory location 0x000000659F3AE960.
+The thread 0x375c has exited with code 0 (0x0).
+The thread 0x3634 has exited with code 0 (0x0).
+The thread 0x4be8 has exited with code 0 (0x0).
+The thread 0x3894 has exited with code 0 (0x0).
+The thread 0x2cf4 has exited with code 0 (0x0).
+The thread 0x1ac4 has exited with code 0 (0x0).
+The thread 0x4bc8 has exited with code 0 (0x0).
+The thread 0x4fc has exited with code 0 (0x0).
+The thread 0x3700 has exited with code 0 (0x0).
+The thread 0x4938 has exited with code 0 (0x0).
+The thread 0x1964 has exited with code 0 (0x0).
+The thread 0x1a68 has exited with code 0 (0x0).
+The thread 0x40d4 has exited with code 0 (0x0).
+The thread 0x3820 has exited with code 0 (0x0).
+The thread 0x3d88 has exited with code 0 (0x0).
+The thread 0x275c has exited with code 0 (0x0).
+The thread 0x2234 has exited with code 0 (0x0).
+The program '[10048] 3D-Summer-Engine.exe' has exited with code 0 (0x0).
