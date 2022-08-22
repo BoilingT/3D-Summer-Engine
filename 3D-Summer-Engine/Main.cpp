@@ -12,8 +12,8 @@ const int WIDTH = 1000;
 const int HEIGHT = 700;
 const char* WINDOW_NAME = "Summer Engine";
 
-const char* VERTEX_SHADER_PATH = "Shaders/default_vertex_shader.vert";
-const char* FRAGMENT_SHADER_PATH = "Shaders/default_fragment_shader.frag";
+const char* VERTEX_SHADER_PATH = "Shaders/vertex_shader.vert";
+const char* FRAGMENT_SHADER_PATH = "Shaders/fragment_shader.frag";
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
