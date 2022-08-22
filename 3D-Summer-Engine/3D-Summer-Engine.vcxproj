@@ -32,6 +32,8 @@
     <ClInclude Include="WindowHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shaders\default_fragment_shader.frag" />
+    <None Include="Shaders\default_vertex_shader.vert" />
     <None Include="Shaders\fragment_shader.frag" />
     <None Include="Shaders\vertex_shader.vert" />
   </ItemGroup>

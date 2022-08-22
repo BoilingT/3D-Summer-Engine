@@ -60,6 +60,12 @@
     <None Include="Shaders\vertex_shader.vert">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="Shaders\default_fragment_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\default_vertex_shader.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Images\LearnOpenGl\wall.jpg">
