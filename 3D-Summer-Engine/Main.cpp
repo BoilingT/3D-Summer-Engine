@@ -143,10 +143,11 @@ int main() {
 
 	//Triangle
 	float vertices[] = {
-		0.8f,  0.5f, 0.0f,  // top right
-		0.8f, -0.5f, 0.0f,  // bottom right
-		-0.8f, -0.5f, 0.0f,  // bottom left
-		-0.8f,  0.5f, 0.0f   // top left 
+		//Positions			//Colors
+		0.8f,  0.5f, 0.0f,	1.0f, 0.0f, 0.0f,  // top right
+		0.8f, -0.5f, 0.0f,	0.0f, 1.0f, 0.0f,  // bottom right
+		-0.8f, -0.5f, 0.0f,	0.0f, 0.0f, 1.0f,  // bottom left
+		-0.8f,  0.5f, 0.0f,	1.0f, 0.0f, 0.0f   // top left 
 	};
 
 	unsigned int indices[] = {
@@ -173,8 +174,13 @@ int main() {
 
 	//Linking Vertex Attributes
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	//Position Attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+
+	//Color Attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	/*Vertex Array Object (VAO)
 		
@@ -189,7 +195,7 @@ int main() {
 	{
 		processInput(windowHandler.getWindow());
 
-		glClearColor(0.58f, 0.71f, 0.91f, 1.0f);
+		glClearColor(0.28f, 0.41f, 0.61f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		//Uniform variables
