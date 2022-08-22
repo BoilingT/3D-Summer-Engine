@@ -83,11 +83,11 @@ int main() {
 
 	//Rectangle
 	float rectVertices[] = {
-		//Positions			//Colors
-		0.8f,  0.5f, 0.0f,	5.0f, 0.0f, 0.0f,  // top right
-		0.8f, -0.5f, 0.0f,	0.0f, 5.0f, 0.0f,  // bottom right
-		-0.8f, -0.5f, 0.0f,	0.0f, 0.0f, 5.0f,  // bottom left
-		-0.8f,  0.5f, 0.0f,	5.0f, 0.0f, 0.0f   // top left 
+		//Positions			//Colors			//Texture Coordinates
+		0.8f,  0.5f, 0.0f,	5.0f, 0.0f, 0.0f,	1.0f, 1.0f, // top right
+		0.8f, -0.5f, 0.0f,	0.0f, 5.0f, 0.0f,	1.0f, 0.0f, // bottom right
+		-0.8f, -0.5f, 0.0f,	0.0f, 0.0f, 5.0f,	0.0f, 0.0f, // bottom left
+		-0.8f,  0.5f, 0.0f,	5.0f, 0.0f, 0.0f,	0.0f, 1.0f // top left 
 	};
 
 	//Triangle
@@ -116,7 +116,7 @@ int main() {
 	glBindVertexArray(VAO);
 	//Send the vertex data into the VBO buffer
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertices), triangleVertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(rectVertices), rectVertices, GL_STATIC_DRAW);
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
@@ -191,10 +191,10 @@ int main() {
 
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glBindVertexArray(VAO);
-		unsigned int verticesCount = sizeof(triangleVertices) / sizeof(float) / 3;
-		glDrawArrays(GL_TRIANGLES, 0, verticesCount);
+		/*unsigned int verticesCount = sizeof(triangleVertices) / sizeof(float) / 3;
+		glDrawArrays(GL_TRIANGLES, 0, verticesCount);*/
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glBindVertexArray(0);
 		/*Double buffer
