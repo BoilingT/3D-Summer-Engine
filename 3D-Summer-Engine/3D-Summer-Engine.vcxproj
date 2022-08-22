@@ -28,11 +28,16 @@
   <ItemGroup>
     <ClInclude Include="fileHandler.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="stb_image.h" />
     <ClInclude Include="WindowHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\fragment_shader.frag" />
     <None Include="Shaders\vertex_shader.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Images\LearnOpenGl\container.jpg" />
+    <Image Include="Images\LearnOpenGl\wall.jpg" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

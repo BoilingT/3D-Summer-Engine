@@ -2,6 +2,8 @@
 #include <string>
 #include <glad/glad.h> //Needs to be included before GLFW
 #include <GLFW/glfw3.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 #include "WindowHandler.h"
 #include "fileHandler.h"
 #include "Shader.h"
@@ -89,17 +91,18 @@ int main() {
 	};
 
 	//Triangle
-
 	float triangleVertices[]{
-		-0.5f, -0.5f, 0.0f, 5.0f, 0.0f, 0.0f,//Bottom Left
-		0.5f, -0.5f, 0.0f, 0.0f, 5.0f, 0.0f,//Bottom Right
-		0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 5.0f//Top
+		-0.5f, -0.5f, 0.0f,		5.0f, 0.0f, 0.0f,	0.0f, 0.0f,  //Bottom Left
+		0.5f, -0.5f, 0.0f,		0.0f, 5.0f, 0.0f,	1.0f, 0.0f,  //Bottom Right
+		0.0f, 0.5f, 0.0f,		0.0f, 0.0f, 5.0f,	0.5f, 1.0f  //Top
 	};
 
 	unsigned int indices[] = {
 		0, 1, 3,
 		1, 2, 3
 	};
+
+	const char* TRIANGLE_IMAGE_PATH = "Images/LearnOpenGL/container.jpg";
 
 	/*Vertex Buffer Object (VBO)
 
@@ -121,20 +124,55 @@ int main() {
 	//Linking Vertex Attributes
 
 	//Position Attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
 	//Color Attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+
+	//Texture Coordinate Attribute
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+
 
 	/*Vertex Array Object (VAO)
 		
 	*/
 
+	//Textures
+	
+	//Generate Texture
+	unsigned int texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	//Texture Wrapping
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	//Texture Filtering and Mipmaps
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	//Loading and Creating Textures
+	int width, height, nrChannels;
+	unsigned char* data = stbi_load(TRIANGLE_IMAGE_PATH, &width, &height, &nrChannels, 0);
+
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		//Generate Mipmaps
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "ERROR::TEXTURE::LOAD_FAILURE" << std::endl;
+	}
+	stbi_image_free(data);
+
 	std::cout << "Engine Started" << std::endl;
 	
-	glUniform4f(glGetUniformLocation(shader.getID(), "posOffset"), 0.3f, 0.0f, 0.0f, 0.0f);
+	glUniform4f(glGetUniformLocation(shader.getID(), "posOffset"), 0.0f, 0.0f, 0.0f, 0.0f);
 
 	//Draw
 	while (!glfwWindowShouldClose(windowHandler.getWindow())) 
@@ -151,6 +189,7 @@ int main() {
 		int vertexColorLocation = glGetUniformLocation(shader.getID(), "ourColor");
 		glUniform4f(vertexColorLocation, 0.0f, val, timeValue, 1.0f);
 
+		glBindTexture(GL_TEXTURE_2D, texture);
 		glBindVertexArray(VAO);
 		unsigned int verticesCount = sizeof(triangleVertices) / sizeof(float) / 3;
 		glDrawArrays(GL_TRIANGLES, 0, verticesCount);

@@ -17,6 +17,10 @@
       <UniqueIdentifier>{bae45580-4f8e-42d7-be3a-3349fb552768}</UniqueIdentifier>
       <Extensions>shader;frag;vert</Extensions>
     </Filter>
+    <Filter Include="Resource Files\Images">
+      <UniqueIdentifier>{a5ac1561-2639-441e-b4f0-31d93de72941}</UniqueIdentifier>
+      <Extensions>jpg;png</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -45,6 +49,9 @@
     <ClInclude Include="Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\fragment_shader.frag">
@@ -53,5 +60,13 @@
     <None Include="Shaders\vertex_shader.vert">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Images\LearnOpenGl\wall.jpg">
+      <Filter>Resource Files\Images</Filter>
+    </Image>
+    <Image Include="Images\LearnOpenGl\container.jpg">
+      <Filter>Resource Files\Images</Filter>
+    </Image>
   </ItemGroup>
 </Project>
