@@ -14,6 +14,8 @@ const char* WINDOW_NAME = "Summer Engine";
 
 const char* VERTEX_SHADER_PATH = "Shaders/vertex_shader.vert";
 const char* FRAGMENT_SHADER_PATH = "Shaders/fragment_shader.frag";
+const char* CONTAINER_IMAGE_PATH = "Images/LearnOpenGL/container.jpg";
+const char* AWESOMEFACE_IMAGE_PATH = "Images/LearnOpenGL/awesomeface.png";
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -90,19 +92,17 @@ int main() {
 		-0.8f,  0.5f, 0.0f,	5.0f, 0.0f, 0.0f,	0.0f, 1.0f // top left 
 	};
 
+	unsigned int indices[] = {
+		0, 1, 3,
+		1, 2, 3
+	};
+	
 	//Triangle
 	float triangleVertices[]{
 		-0.5f, -0.5f, 0.0f,		5.0f, 0.0f, 0.0f,	0.0f, 0.0f,  //Bottom Left
 		0.5f, -0.5f, 0.0f,		0.0f, 5.0f, 0.0f,	1.0f, 0.0f,  //Bottom Right
 		0.0f, 0.5f, 0.0f,		0.0f, 0.0f, 5.0f,	0.5f, 1.0f  //Top
 	};
-
-	unsigned int indices[] = {
-		0, 1, 3,
-		1, 2, 3
-	};
-
-	const char* TRIANGLE_IMAGE_PATH = "Images/LearnOpenGL/container.jpg";
 
 	/*Vertex Buffer Object (VBO)
 
@@ -143,21 +143,23 @@ int main() {
 	//Textures
 	
 	//Generate Texture
-	unsigned int texture;
-	glGenTextures(1, &texture);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	unsigned int textures[2];
+	glGenTextures(2, textures);
+	//First texture
+	glBindTexture(GL_TEXTURE_2D, textures[0]);
 
 	//Texture Wrapping
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	//Texture Filtering and Mipmaps
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	//Loading and Creating Textures
 	int width, height, nrChannels;
-	unsigned char* data = stbi_load(TRIANGLE_IMAGE_PATH, &width, &height, &nrChannels, 0);
+
+	stbi_set_flip_vertically_on_load(true);
+	unsigned char* data = stbi_load(CONTAINER_IMAGE_PATH, &width, &height, &nrChannels, 0);
 
 	if (data)
 	{
@@ -170,9 +172,36 @@ int main() {
 		std::cout << "ERROR::TEXTURE::LOAD_FAILURE" << std::endl;
 	}
 	stbi_image_free(data);
+	shader.setInt("texture1", 0);
+
+	//Second texture
+	glBindTexture(GL_TEXTURE_2D, textures[1]);
+
+	//Texture Wrapping
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	//Texture Filtering and Mipmaps
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	stbi_set_flip_vertically_on_load(true);
+	data = stbi_load(AWESOMEFACE_IMAGE_PATH, &width, &height, &nrChannels, 0);
+
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		//Generate Mipmaps
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "ERROR::TEXTURE::LOAD_FAILURE" << std::endl;
+	}
+	stbi_image_free(data);
+	shader.setInt("texture2", 1);
+
 
 	std::cout << "Engine Started" << std::endl;
-	
 	glUniform4f(glGetUniformLocation(shader.getID(), "posOffset"), 0.0f, 0.0f, 0.0f, 0.0f);
 
 	//Draw
@@ -180,6 +209,7 @@ int main() {
 	{
 		processInput(windowHandler.getWindow());
 
+		//Render
 		glClearColor(0.28f, 0.41f, 0.61f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -190,7 +220,11 @@ int main() {
 		int vertexColorLocation = glGetUniformLocation(shader.getID(), "ourColor");
 		glUniform4f(vertexColorLocation, 0.0f, val, timeValue, 1.0f);
 
-		glBindTexture(GL_TEXTURE_2D, texture);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, textures[0]);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, textures[1]);
+
 		glBindVertexArray(VAO);
 		/*unsigned int verticesCount = sizeof(triangleVertices) / sizeof(float) / 3;
 		glDrawArrays(GL_TRIANGLES, 0, verticesCount);*/
@@ -210,6 +244,7 @@ int main() {
 
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
 	glDeleteProgram(shader.getID());
 
 	glfwTerminate();

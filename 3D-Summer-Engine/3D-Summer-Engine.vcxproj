@@ -38,6 +38,7 @@
     <None Include="Shaders\vertex_shader.vert" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Images\LearnOpenGL\awesomeface.png" />
     <Image Include="Images\LearnOpenGl\container.jpg" />
     <Image Include="Images\LearnOpenGl\wall.jpg" />
   </ItemGroup>
