@@ -7,6 +7,10 @@
 #include "WindowHandler.h"
 #include "fileHandler.h"
 #include "Shader.h"
+//GLM
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 const int WIDTH = 1000;
 const int HEIGHT = 700;
@@ -203,6 +207,9 @@ int main() {
 
 	std::cout << "Engine Started" << std::endl;
 	glUniform4f(glGetUniformLocation(shader.getID(), "posOffset"), 0.0f, 0.0f, 0.0f, 0.0f);
+
+	glm::mat4 trans = glm::mat4(1.0f);
+	glUniformMatrix4fv(glGetUniformLocation(shader.getID(), "transform"), 1, GL_FALSE, glm::value_ptr(trans));
 
 	//Draw
 	while (!glfwWindowShouldClose(windowHandler.getWindow())) 
