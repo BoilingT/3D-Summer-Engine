@@ -114,10 +114,10 @@ int main() {
 	glGenVertexArrays(1, &VAO);
 	
 	glBindVertexArray(VAO);
-	//Send the vertex data into the VBO buffer
+	//Send the Vertex data into the VBO buffer
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rectVertices), rectVertices, GL_STATIC_DRAW);
-	
+	//Send the Indices data into the EBO buffer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
