@@ -241,7 +241,7 @@ int main() {
 		glm::mat4 viewM				= glm::mat4(1.0f);
 		glm::mat4 projectionM		= glm::mat4(1.0f);
 
-		modelM = glm::translate(modelM, glm::vec3(0.0f, 0.0f, 0.0f));
+		modelM = glm::rotate(modelM, (float) glfwGetTime() * glm::radians(70.f), glm::vec3(0.0f, 1.0f, 1.0f));
 		viewM = glm::translate(viewM, glm::vec3(0.0f, 0.0f, -3.0f));
 		projectionM = glm::perspective(glm::radians(60.0f), (float) WIDTH / (float) HEIGHT, 0.1f, 100.0f);
 
