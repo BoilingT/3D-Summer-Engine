@@ -2,7 +2,7 @@
 out vec4 FragColor;
 
 in vec3 vertexPos;
-in vec3 colorValues;
+//in vec3 colorValues;
 in vec2 textureCoord;
 
 uniform vec4 ourColor;
