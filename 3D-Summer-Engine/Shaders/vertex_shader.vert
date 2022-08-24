@@ -7,10 +7,13 @@ out vec3 vertexPos;
 out vec3 colorValues;
 out vec2 textureCoord;
 
-uniform mat4 transform;
+uniform mat4 projection;
+uniform mat4 view;
+uniform mat4 model;
 
 void main(){
-	gl_Position = transform * vec4(aPos.x, aPos.y, aPos.z, 1.0f);
+	mat4 clip_space = projection * view * model;
+	gl_Position = clip_space * vec4(aPos, 1.0f);
 	vertexPos = aPos;
 	colorValues = rgbValues;
 	textureCoord = textureCoordValues;

@@ -90,10 +90,10 @@ int main() {
 	//Rectangle
 	float rectVertices[] = {
 		//Positions			//Colors			//Texture Coordinates
-		0.8f,  0.5f, 0.0f,	5.0f, 0.0f, 0.0f,	1.0f, 1.0f, // top right
-		0.8f, -0.5f, 0.0f,	0.0f, 5.0f, 0.0f,	1.0f, 0.0f, // bottom right
-		-0.8f, -0.5f, 0.0f,	0.0f, 0.0f, 5.0f,	0.0f, 0.0f, // bottom left
-		-0.8f,  0.5f, 0.0f,	5.0f, 0.0f, 0.0f,	0.0f, 1.0f // top left 
+		0.5f,  0.5f, 0.0f,	5.0f, 0.0f, 0.0f,	1.0f, 1.0f, // top right
+		0.5f, -0.5f, 0.0f,	0.0f, 5.0f, 0.0f,	1.0f, 0.0f, // bottom right
+		-0.5f, -0.5f, 0.0f,	0.0f, 0.0f, 5.0f,	0.0f, 0.0f, // bottom left
+		-0.5f,  0.5f, 0.0f,	5.0f, 0.0f, 0.0f,	0.0f, 1.0f // top left 
 	};
 
 	unsigned int indices[] = {
@@ -212,6 +212,8 @@ int main() {
 
 	//Draw
 	
+	
+
 	while (!glfwWindowShouldClose(windowHandler.getWindow())) 
 	{
 		processInput(windowHandler.getWindow());
@@ -220,31 +222,42 @@ int main() {
 		glClearColor(0.28f, 0.41f, 0.61f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, textures[0]);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, textures[1]);
+
 		//Uniform variables
 		shader.use();
-		glm::mat4 trans = glm::mat4(1.0f);
-		trans = glm::translate(trans, glm::vec3(0.5f,0.0f,0.0f));
-		trans = glm::rotate(trans, glm::radians(90.f), glm::vec3(0.0f, 0.0f, 1.0f));
-		glUniformMatrix4fv(glGetUniformLocation(shader.getID(), "transform"), 1, GL_FALSE, glm::value_ptr(trans));
+
+		//Transform Matrices
+		/*
+			Local Space -> (Model Matrix) -> World Space -> (View Matrix) -> View Space -> (Projection Matrix) -> Clip Space -> (Viewport Transform) -> Screen Space
+			Clip Space = Projection Matrix * View Matrix * Model Matrix * Local Vector
+			Projection: https://www.youtube.com/watch?v=U0_ONQQ5ZNM
+		*/
+
+		glm::mat4 modelM			= glm::mat4(1.0f);
+		glm::mat4 viewM				= glm::mat4(1.0f);
+		glm::mat4 projectionM		= glm::mat4(1.0f);
+
+		modelM = glm::translate(modelM, glm::vec3(0.0f, 0.0f, 0.0f));
+		viewM = glm::translate(viewM, glm::vec3(0.0f, 0.0f, -3.0f));
+		projectionM = glm::perspective(glm::radians(60.0f), (float) WIDTH / (float) HEIGHT, 0.1f, 100.0f);
+
+		glUniformMatrix4fv(glGetUniformLocation(shader.getID(), "model"), 1, GL_FALSE, glm::value_ptr(modelM));
+		glUniformMatrix4fv(glGetUniformLocation(shader.getID(), "view"), 1, GL_FALSE, glm::value_ptr(viewM));
+		glUniformMatrix4fv(glGetUniformLocation(shader.getID(), "projection"), 1, GL_FALSE, glm::value_ptr(projectionM));
 
 		float timeValue = glfwGetTime();
 		float val = sin(timeValue);
 		int vertexColorLocation = glGetUniformLocation(shader.getID(), "ourColor");
 		glUniform4f(vertexColorLocation, 0.0f, val, timeValue, 1.0f);
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, textures[0]);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, textures[1]);
-
 		glBindVertexArray(VAO);
 		/*unsigned int verticesCount = sizeof(triangleVertices) / sizeof(float) / 3;
 		glDrawArrays(GL_TRIANGLES, 0, verticesCount);*/
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		trans = glm::mat4(1.0f);
-		trans = glm::translate(trans, glm::vec3(-0.5f, 0.0f, 0.0f));
-		glUniformMatrix4fv(glGetUniformLocation(shader.getID(), "transform"), 1, GL_FALSE, glm::value_ptr(trans));
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glBindVertexArray(0);
