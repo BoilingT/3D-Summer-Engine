@@ -208,10 +208,10 @@ int main() {
 	std::cout << "Engine Started" << std::endl;
 	glUniform4f(glGetUniformLocation(shader.getID(), "posOffset"), 0.0f, 0.0f, 0.0f, 0.0f);
 
-	glm::mat4 trans = glm::mat4(1.0f);
-	glUniformMatrix4fv(glGetUniformLocation(shader.getID(), "transform"), 1, GL_FALSE, glm::value_ptr(trans));
+	//trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
 
 	//Draw
+	
 	while (!glfwWindowShouldClose(windowHandler.getWindow())) 
 	{
 		processInput(windowHandler.getWindow());
@@ -222,6 +222,11 @@ int main() {
 
 		//Uniform variables
 		shader.use();
+		glm::mat4 trans = glm::mat4(1.0f);
+		trans = glm::translate(trans, glm::vec3(0.5f,0.0f,0.0f));
+		trans = glm::rotate(trans, glm::radians(90.f), glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(glGetUniformLocation(shader.getID(), "transform"), 1, GL_FALSE, glm::value_ptr(trans));
+
 		float timeValue = glfwGetTime();
 		float val = sin(timeValue);
 		int vertexColorLocation = glGetUniformLocation(shader.getID(), "ourColor");
@@ -236,6 +241,10 @@ int main() {
 		/*unsigned int verticesCount = sizeof(triangleVertices) / sizeof(float) / 3;
 		glDrawArrays(GL_TRIANGLES, 0, verticesCount);*/
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		trans = glm::mat4(1.0f);
+		trans = glm::translate(trans, glm::vec3(-0.5f, 0.0f, 0.0f));
+		glUniformMatrix4fv(glGetUniformLocation(shader.getID(), "transform"), 1, GL_FALSE, glm::value_ptr(trans));
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glBindVertexArray(0);
