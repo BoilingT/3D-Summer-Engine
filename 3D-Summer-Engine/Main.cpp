@@ -22,7 +22,7 @@ const char* FRAGMENT_SHADER_PATH = "Shaders/fragment_shader.frag";
 const char* CONTAINER_IMAGE_PATH = "Images/LearnOpenGL/container.jpg";
 const char* AWESOMEFACE_IMAGE_PATH = "Images/LearnOpenGL/awesomeface.png";
 
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f));
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
@@ -326,9 +326,10 @@ int main() {
 				modelM = glm::scale(modelM, glm::vec3(50.0f, 0.0f, 50.0f));
 			}
 			else if (i == 1) {
-				modelM = glm::scale(modelM, glm::vec3(0.3f, 0.3f, 0.3f));
+				modelM = glm::scale(modelM, glm::vec3(0.1f, 0.1f, 0.1f));
 			}
-			else
+
+			if(i > 1)
 			{
 				modelM = glm::rotate(modelM, (float)glfwGetTime() * glm::radians(70.f) * (i+1)*0.1f, glm::vec3(0.0f, 1.0f, 1.0f));
 			}
