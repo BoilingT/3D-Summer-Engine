@@ -298,7 +298,7 @@ int main() {
 		
 
 		viewM = glm::lookAt(camera.getPos(),
-							camera.getPos() + camera.forward(),
+							camera.getTarget(),
 							camera.up());
 
 		projectionM = glm::perspective(glm::radians(60.0f), (float) WIDTH / (float) HEIGHT, 0.1f, 100.0f);
@@ -388,6 +388,7 @@ void processInput(GLFWwindow* window) {
 	//Forward
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
+		//std::cout << "Forward: { " << camera.forward().x << ", " << camera.forward().y << ", " << camera.forward().z << " }" << std::endl;
 		camera.translate(camera.forward() * cameraSpeed);
 	}
 	//Backward

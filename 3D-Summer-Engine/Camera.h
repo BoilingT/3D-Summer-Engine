@@ -9,12 +9,12 @@ class Camera
 private:
 	//Transform
 	glm::vec3 cameraPos;
-	glm::vec3 cameraTarget = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 cameraTarget = glm::vec3(1.0f, 0.0f, 0.0f);
 	glm::vec3 cameraDir;
 	glm::vec3 cameraRot;
-	//Coordinate System
+	//World Space Coordinate System
 	const glm::vec3 upDir = glm::vec3(0.0f, 1.0f, 0.0f);
-	glm::vec3 rightDir;
+	//Directions relative to the cameras coordinate system
 	glm::vec3 cameraForward;
 	glm::vec3 cameraRight;
 	glm::vec3 cameraUp;
@@ -36,6 +36,7 @@ public:
 	glm::vec3 up();
 	glm::vec3 right();
 
+	void updateRelativeCoordinates();
 	void translate(const glm::vec3 translation);
 	void rotate(const glm::vec3 translation);
 };
