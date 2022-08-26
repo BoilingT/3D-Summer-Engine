@@ -27,30 +27,6 @@ void Camera::setTarget(const glm::vec3 target) {
 	updateRelativeCoordinates();
 }
 
-glm::vec3 Camera::getPos() {
-	return cameraPos;
-}
-
-glm::vec3 Camera::getRot() {
-	return cameraRot;
-}
-
-glm::vec3 Camera::getTarget() {
-	return cameraTarget;
-}
-
-glm::vec3 Camera::up() {
-	return cameraUp;
-}
-
-glm::vec3 Camera::right() {
-	return cameraRight;
-}
-
-glm::vec3 Camera::forward() {
-	return -cameraDir;
-}
-
 void Camera::translate(const glm::vec3 translation) {
 	cameraPos = cameraPos + translation;
 	cameraTarget = cameraTarget + translation;
