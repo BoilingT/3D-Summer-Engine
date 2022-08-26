@@ -7,6 +7,7 @@
 #include "WindowHandler.h"
 #include "fileHandler.h"
 #include "Shader.h"
+#include "Camera.h"
 //GLM
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -21,9 +22,12 @@ const char* FRAGMENT_SHADER_PATH = "Shaders/fragment_shader.frag";
 const char* CONTAINER_IMAGE_PATH = "Images/LearnOpenGL/container.jpg";
 const char* AWESOMEFACE_IMAGE_PATH = "Images/LearnOpenGL/awesomeface.png";
 
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f));
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
-
 
 int main() {
 
@@ -260,6 +264,12 @@ int main() {
 	
 	while (!glfwWindowShouldClose(windowHandler.getWindow())) 
 	{
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+		//fps = f/s => fps = 1/dt
+		//std::cout << 1/deltaTime << std::endl;
+
 		processInput(windowHandler.getWindow());
 
 		//Render
@@ -285,7 +295,12 @@ int main() {
 		glm::mat4 viewM				= glm::mat4(1.0f);
 		glm::mat4 projectionM		= glm::mat4(1.0f);
 
-		viewM = glm::translate(viewM, glm::vec3(0.0f, 0.0f, -3.0f));
+		
+
+		viewM = glm::lookAt(camera.getPos(),
+							camera.getPos() + camera.forward(),
+							camera.up());
+
 		projectionM = glm::perspective(glm::radians(60.0f), (float) WIDTH / (float) HEIGHT, 0.1f, 100.0f);
 
 		glm::vec3 cubePositions[] = {
@@ -350,21 +365,44 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 }
 
 void processInput(GLFWwindow* window) {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE))
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
 
-	if (glfwGetKey(window, GLFW_KEY_1))
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
-	else if (glfwGetKey(window, GLFW_KEY_2))
+	else if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
-	else if (glfwGetKey(window, GLFW_KEY_3))
+	else if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+	}
+
+	const float cameraSpeed = 2.5f * deltaTime;
+
+	//Forward
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	{
+		camera.translate(camera.forward() * cameraSpeed);
+	}
+	//Backward
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	{
+		camera.translate(camera.forward() * -cameraSpeed);
+	}
+	//Right
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	{
+		camera.translate(camera.right() * cameraSpeed);
+	}
+	//Left
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	{
+		camera.translate(camera.right() * -cameraSpeed);
 	}
 }
