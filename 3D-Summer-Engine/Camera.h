@@ -12,7 +12,7 @@ private:
 	const glm::vec3 rightDir = glm::vec3(1.0f, 0.0f, 0.0f);
 	//Transform
 	glm::vec3 cameraPos;
-	glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 1.0f);
+	glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 cameraDir;
 	glm::vec3 cameraRot;
 	//Directions relative to the Camera's coordinate system
