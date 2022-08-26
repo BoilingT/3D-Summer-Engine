@@ -9,7 +9,7 @@ class Camera
 private:
 	//Transform
 	glm::vec3 cameraPos;
-	glm::vec3 cameraTarget = glm::vec3(1.0f, 0.0f, 0.0f);
+	glm::vec3 cameraTarget = glm::vec3(5.0f, -3.0f, 0.0f);
 	glm::vec3 cameraDir;
 	glm::vec3 cameraRot;
 	//World Space Coordinate System

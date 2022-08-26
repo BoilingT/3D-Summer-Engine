@@ -304,8 +304,8 @@ int main() {
 		projectionM = glm::perspective(glm::radians(60.0f), (float) WIDTH / (float) HEIGHT, 0.1f, 100.0f);
 
 		glm::vec3 cubePositions[] = {
-			glm::vec3(0.0f,  0.0f,  0.0f),
-			glm::vec3(2.0f,  5.0f, -15.0f),
+			glm::vec3(0.0f,  -1.0f,  0.0f),
+			camera.getTarget(),
 			glm::vec3(-1.5f, -2.2f, -2.5f),
 			glm::vec3(-3.8f, -2.0f, -12.3f),
 			glm::vec3(2.4f, -0.4f, -3.5f),
@@ -322,9 +322,18 @@ int main() {
 		{
 			modelM = glm::mat4(1.0f);
 			modelM = glm::translate(modelM, cubePositions[i]);
-			modelM = glm::rotate(modelM, (float)glfwGetTime() * glm::radians(70.f) * (i+1)*0.1f, glm::vec3(0.0f, 1.0f, 1.0f));
-			shader.setMat4f("model", modelM);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
+			if (i == 0) {
+				modelM = glm::scale(modelM, glm::vec3(50.0f, 0.0f, 50.0f));
+			}
+			else if (i == 1) {
+				modelM = glm::scale(modelM, glm::vec3(0.3f, 0.3f, 0.3f));
+			}
+			else
+			{
+				modelM = glm::rotate(modelM, (float)glfwGetTime() * glm::radians(70.f) * (i+1)*0.1f, glm::vec3(0.0f, 1.0f, 1.0f));
+			}
+				shader.setMat4f("model", modelM);
+				glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 
 		shader.setMat4f("view", viewM);
@@ -409,11 +418,11 @@ void processInput(GLFWwindow* window) {
 	//Up
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
-		camera.translate(camera.up() * cameraSpeed);
+		camera.translate(glm::vec3(0.0f, 1.0f, 0.0f) * cameraSpeed);
 	}
 	//Down
 	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
 	{
-		camera.translate(camera.up() * -cameraSpeed);
+		camera.translate(glm::vec3(0.0f, 1.0f, 0.0f) * -cameraSpeed);
 	}
 }
