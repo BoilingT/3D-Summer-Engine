@@ -1,16 +1,20 @@
 #include "Camera.h"
 
-Camera::Camera(const glm::vec3 pos, const glm::vec3 rot) {
+Camera::Camera() {
+	updateRelativeCoordinates();
+}
+
+Camera::Camera(const glm::vec3 pos) {
 	cameraPos = pos;
-	cameraRot = rot;
 
 	updateRelativeCoordinates();
 }
 
 void Camera::updateRelativeCoordinates() {
-	cameraDir = glm::normalize(cameraPos - cameraTarget);
+	/*cameraDir = glm::normalize(cameraPos - cameraTarget);
 	cameraRight = glm::normalize(glm::cross(upDir, cameraDir));
-	cameraUp = glm::cross(cameraDir, cameraRight);
+	cameraUp = glm::cross(cameraDir, cameraRight);*/
+	cameraRight = glm::normalize(glm::cross(cameraForward, cameraUp));
 }
 
 void Camera::setPos(const glm::vec3 pos) {
@@ -22,21 +26,12 @@ void Camera::setRot(const glm::vec3 rot) {
 	cameraRot = rot;
 }
 
-void Camera::setTarget(const glm::vec3 target) {
-	cameraTarget = target;
-	updateRelativeCoordinates();
-}
-
 glm::vec3 Camera::getPos() {
 	return cameraPos;
 }
 
 glm::vec3 Camera::getRot() {
 	return cameraRot;
-}
-
-glm::vec3 Camera::getTarget() {
-	return cameraTarget;
 }
 
 glm::vec3 Camera::up() {
@@ -48,12 +43,11 @@ glm::vec3 Camera::right() {
 }
 
 glm::vec3 Camera::forward() {
-	return -cameraDir;
+	return cameraForward;
 }
 
 void Camera::translate(const glm::vec3 translation) {
 	cameraPos = cameraPos + translation;
-	cameraTarget = cameraTarget + translation;
 	updateRelativeCoordinates();
 	std::cout << "Position: { " << cameraPos.x << ", " << cameraPos.y << ", " << cameraPos.z << " }" << std::endl;
 }

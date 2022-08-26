@@ -22,7 +22,7 @@ const char* FRAGMENT_SHADER_PATH = "Shaders/fragment_shader.frag";
 const char* CONTAINER_IMAGE_PATH = "Images/LearnOpenGL/container.jpg";
 const char* AWESOMEFACE_IMAGE_PATH = "Images/LearnOpenGL/awesomeface.png";
 
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f));
+Camera camera;
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -297,7 +297,7 @@ int main() {
 		glm::mat4 projectionM		= glm::mat4(1.0f);
 
 		viewM = glm::lookAt(camera.getPos(),
-							camera.getTarget(),
+							camera.getPos() + camera.forward(),
 							camera.up());
 
 		projectionM = glm::perspective(glm::radians(60.0f), (float) WIDTH / (float) HEIGHT, 0.1f, 100.0f);
@@ -335,7 +335,7 @@ int main() {
 		}
 
 		modelM = glm::mat4(1.0f);
-		modelM = glm::translate(modelM, camera.getTarget());
+		modelM = glm::translate(modelM, camera.getPos() + camera.forward());
 		modelM = glm::scale(modelM, glm::vec3(0.1f, 0.1f, 0.1f));
 
 		shader.setMat4f("model", modelM);
@@ -407,15 +407,15 @@ void processInput(GLFWwindow* window) {
 	{
 		camera.translate(camera.forward() * -cameraSpeed);
 	}
-	//Right
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-	{
-		camera.translate(camera.right() * cameraSpeed);
-	}
 	//Left
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
 		camera.translate(camera.right() * -cameraSpeed);
+	}
+	//Right
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	{
+		camera.translate(camera.right() * cameraSpeed);
 	}
 	//Up
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
