@@ -57,3 +57,7 @@ void Camera::translate(const glm::vec3 translation) {
 	updateRelativeCoordinates();
 	std::cout << "Position: { " << cameraPos.x << ", " << cameraPos.y << ", " << cameraPos.z << " }" << std::endl;
 }
+
+void Camera::rotate(const glm::vec3 rotation) {
+	return;
+}

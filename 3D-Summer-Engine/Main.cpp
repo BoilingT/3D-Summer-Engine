@@ -295,8 +295,6 @@ int main() {
 		glm::mat4 viewM				= glm::mat4(1.0f);
 		glm::mat4 projectionM		= glm::mat4(1.0f);
 
-		
-
 		viewM = glm::lookAt(camera.getPos(),
 							camera.getTarget(),
 							camera.up());
@@ -304,7 +302,7 @@ int main() {
 		projectionM = glm::perspective(glm::radians(60.0f), (float) WIDTH / (float) HEIGHT, 0.1f, 100.0f);
 
 		glm::vec3 cubePositions[] = {
-			glm::vec3(0.0f,  -1.0f,  0.0f),
+			glm::vec3(0.0f, -1.0f, 0.0f),
 			camera.getTarget(),
 			glm::vec3(-1.5f, -2.2f, -2.5f),
 			glm::vec3(-3.8f, -2.0f, -12.3f),

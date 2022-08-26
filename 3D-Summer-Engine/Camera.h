@@ -7,14 +7,15 @@
 class Camera
 {
 private:
+	//Directions relative to the World coordinate system
+	const glm::vec3 upDir = glm::vec3(0.0f, 1.0f, 0.0f);
+	const glm::vec3 rightDir = glm::vec3(1.0f, 0.0f, 0.0f);
 	//Transform
 	glm::vec3 cameraPos;
 	glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 1.0f);
 	glm::vec3 cameraDir;
 	glm::vec3 cameraRot;
-	//World Space Coordinate System
-	const glm::vec3 upDir = glm::vec3(0.0f, 1.0f, 0.0f);
-	//Directions relative to the cameras coordinate system
+	//Directions relative to the Camera's coordinate system
 	glm::vec3 cameraForward;
 	glm::vec3 cameraRight;
 	glm::vec3 cameraUp;
