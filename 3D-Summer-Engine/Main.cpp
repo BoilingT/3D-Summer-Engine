@@ -405,4 +405,14 @@ void processInput(GLFWwindow* window) {
 	{
 		camera.translate(camera.right() * -cameraSpeed);
 	}
+	//Up
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+	{
+		camera.translate(camera.up() * cameraSpeed);
+	}
+	//Down
+	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
+	{
+		camera.translate(camera.up() * -cameraSpeed);
+	}
 }

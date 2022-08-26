@@ -4,10 +4,7 @@ Camera::Camera(const glm::vec3 pos, const glm::vec3 rot) {
 	cameraPos = pos;
 	cameraRot = rot;
 
-	cameraTarget = glm::vec3(0.0f);
 	cameraDir = glm::normalize(cameraPos - cameraTarget);
-
-	upDir = glm::vec3(0.0f, 1.0f, 0.0f);
 	cameraRight = glm::normalize(glm::cross(upDir, cameraDir));
 	cameraUp = glm::cross(cameraDir, cameraRight);
 }
