@@ -13,6 +13,7 @@ private:
 	//Transform
 	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 cameraRot = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 cameraDirection = glm::vec3(0.0f);
 	//Directions relative to the Camera's coordinate system
 	glm::vec3 cameraForward = glm::vec3(0.0f, 0.0f, -1.0f);
 	glm::vec3 cameraRight;

@@ -427,4 +427,25 @@ void processInput(GLFWwindow* window) {
 	{
 		camera.translate(glm::vec3(0.0f, 1.0f, 0.0f) * -cameraSpeed);
 	}
+
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+	{
+		camera.setRot(camera.getRot() + glm::vec3(0.0f, 1.0f, 0.0f));
+		camera.updateRelativeCoordinates();
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+	{
+		camera.setRot(camera.getRot() - glm::vec3(0.0f, 1.0f, 0.0f));
+		camera.updateRelativeCoordinates();
+	}
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+	{
+		camera.setRot(camera.getRot() + glm::vec3(1.0f, 0.0f, 0.0f));
+		camera.updateRelativeCoordinates();
+	}
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+	{
+		camera.setRot(camera.getRot() - glm::vec3(1.0f, 0.0f, 0.0f));
+		camera.updateRelativeCoordinates();
+	}
 }

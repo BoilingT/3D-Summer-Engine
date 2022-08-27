@@ -14,7 +14,15 @@ void Camera::updateRelativeCoordinates() {
 	/*cameraDir = glm::normalize(cameraPos - cameraTarget);
 	cameraRight = glm::normalize(glm::cross(upDir, cameraDir));
 	cameraUp = glm::cross(cameraDir, cameraRight);*/
-	cameraRight = glm::normalize(glm::cross(cameraForward, cameraUp));
+
+	//Yaw
+	cameraDirection.x = cos(glm::radians(cameraRot.y));
+	cameraDirection.z = sin(glm::radians(cameraRot.y));
+	//Pitch
+	cameraDirection.y = sin(glm::radians(cameraRot.x));
+	cameraRight = glm::normalize(glm::cross(cameraDirection, cameraUp));
+
+
 }
 
 void Camera::setPos(const glm::vec3 pos) {
@@ -43,7 +51,8 @@ glm::vec3 Camera::right() {
 }
 
 glm::vec3 Camera::forward() {
-	return cameraForward;
+	//return cameraForward;
+	return cameraDirection;
 }
 
 void Camera::translate(const glm::vec3 translation) {
