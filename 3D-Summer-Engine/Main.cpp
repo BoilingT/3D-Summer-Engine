@@ -392,6 +392,7 @@ void processInput(GLFWwindow* window) {
 	}
 
 	const float cameraSpeed = 2.5f * deltaTime;
+	const float cameraSensitivity = 100.0f * deltaTime;
 
 	//Forward
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
@@ -427,22 +428,18 @@ void processInput(GLFWwindow* window) {
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
-		camera.setRot(camera.getRot() + glm::vec3(0.0f, 1.0f, 0.0f) * 0.3f);
-		camera.updateRelativeCoordinates();
+		camera.rotate(glm::vec3(0.0f, 1.0f, 0.0f) * cameraSensitivity);
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
-		camera.setRot(camera.getRot() - glm::vec3(0.0f, 1.0f, 0.0f) * 0.3f);
-		camera.updateRelativeCoordinates();
+		camera.rotate(glm::vec3(0.0f, 1.0f, 0.0f) * -cameraSensitivity);
 	}
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 	{
-		camera.setRot(camera.getRot() + glm::vec3(1.0f, 0.0f, 0.0f) * 0.3f);
-		camera.updateRelativeCoordinates();
+		camera.rotate(glm::vec3(1.0f, 0.0f, 0.0f) * cameraSensitivity);
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 	{
-		camera.setRot(camera.getRot() - glm::vec3(1.0f, 0.0f, 0.0f)*0.3f);
-		camera.updateRelativeCoordinates();
+		camera.rotate(glm::vec3(1.0f, 0.0f, 0.0f) * -cameraSensitivity);
 	}
 }

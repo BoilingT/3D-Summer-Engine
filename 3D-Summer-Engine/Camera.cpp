@@ -67,5 +67,7 @@ void Camera::translate(const glm::vec3 translation) {
 }
 
 void Camera::rotate(const glm::vec3 rotation) {
-	return;
+	cameraRot = cameraRot + rotation;
+	updateRelativeCoordinates();
+	std::cout << "Rotation: { " << cameraRot.x << ", " << cameraRot.y << ", " << cameraRot.z << " }" << std::endl;
 }
