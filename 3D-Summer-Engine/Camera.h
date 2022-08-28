@@ -36,6 +36,7 @@ public:
 	glm::vec3 up();
 	glm::vec3 right();
 
+	void processMouseMovement(float xTravel, float yTravel);
 	void updateRelativeCoordinates();
 	void translate(const glm::vec3 translation);
 	void rotate(const glm::vec3 rotation);

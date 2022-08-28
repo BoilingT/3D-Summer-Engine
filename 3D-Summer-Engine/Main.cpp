@@ -22,14 +22,17 @@ const char* FRAGMENT_SHADER_PATH = "Shaders/fragment_shader.frag";
 const char* CONTAINER_IMAGE_PATH = "Images/LearnOpenGL/container.jpg";
 const char* AWESOMEFACE_IMAGE_PATH = "Images/LearnOpenGL/awesomeface.png";
 
-Camera camera;
+Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
+//Previous mouse position during the last frame
+float lastX = WIDTH / 2;
+float lastY = HEIGHT / 2;
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void mouse_callback(GLFWwindow* window, double xPos, double yPos);
 void processInput(GLFWwindow* window);
-
 int main() {
 
 	std::cout << "Engine Starting..." << std::endl;
@@ -57,7 +60,8 @@ int main() {
 	glViewport(0, 0, windowHandler.getWidth(), windowHandler.getHeight());
 	//Resize the viewport when the window size is changed
 	glfwSetFramebufferSizeCallback(windowHandler.getWindow(), framebuffer_size_callback);
-
+	glfwSetCursorPosCallback(windowHandler.getWindow(), mouse_callback);
+	glfwSetInputMode(windowHandler.getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	/*
 	Graphics Pipeline:
 		Vertex data -> Vertex Shader -> Shape Assembly (Opt) -> Geometry Shader -> Rasterization (Opt) -> Fragment Shader -> Tests and Blending (Opt)
@@ -372,10 +376,25 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
 }
 
+void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
+	float xTravel, yTravel;
+	xTravel = xPos - lastX;
+	yTravel = yPos - lastY;
+	lastX = xPos;
+	lastY = yPos;
+
+	float sensitivity = 100.0f * deltaTime;
+	camera.processMouseMovement(yTravel * -sensitivity, xTravel * sensitivity);
+}
+
 void processInput(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
 		glfwSetWindowShouldClose(window, true);
+	}
+	if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS)
+	{
+		glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, 1920, 1080, 144);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
@@ -391,7 +410,15 @@ void processInput(GLFWwindow* window) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 	}
 
-	const float cameraSpeed = 2.5f * deltaTime;
+	float cameraSpeed = 2.5f * deltaTime;
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+	{
+		cameraSpeed *= 4.0f;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
+	{
+		cameraSpeed /= 4.0f;
+	}
 	const float cameraSensitivity = 100.0f * deltaTime;
 
 	//Forward

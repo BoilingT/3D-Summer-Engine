@@ -60,6 +60,11 @@ glm::vec3 Camera::forward() {
 	return cameraForward;
 }
 
+void Camera::processMouseMovement(float xTravel, float yTravel) {
+	rotate(glm::vec3(xTravel, yTravel, 0.0f));
+	updateRelativeCoordinates();
+}
+
 void Camera::translate(const glm::vec3 translation) {
 	cameraPos = cameraPos + translation;
 	updateRelativeCoordinates();
