@@ -296,13 +296,10 @@ int main() {
 		glm::mat4 viewM				= glm::mat4(1.0f);
 		glm::mat4 projectionM		= glm::mat4(1.0f);
 
-		viewM = glm::lookAt(camera.getPos(),
-							camera.getPos() + camera.forward(),
-							camera.up());
+		viewM = glm::lookAt(camera.getPos(), camera.getPos() + camera.forward(), camera.up());
+		shader.setMat4f("view", viewM);
 
 		projectionM = glm::perspective(glm::radians(60.0f), (float) WIDTH / (float) HEIGHT, 0.1f, 100.0f);
-		
-		shader.setMat4f("view", viewM);
 		shader.setMat4f("projection", projectionM);
 
 		glm::vec3 cubePositions[] = {
@@ -430,22 +427,22 @@ void processInput(GLFWwindow* window) {
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
-		camera.setRot(camera.getRot() + glm::vec3(0.0f, 1.0f, 0.0f));
+		camera.setRot(camera.getRot() + glm::vec3(0.0f, 1.0f, 0.0f) * 0.3f);
 		camera.updateRelativeCoordinates();
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
-		camera.setRot(camera.getRot() - glm::vec3(0.0f, 1.0f, 0.0f));
+		camera.setRot(camera.getRot() - glm::vec3(0.0f, 1.0f, 0.0f) * 0.3f);
 		camera.updateRelativeCoordinates();
 	}
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 	{
-		camera.setRot(camera.getRot() + glm::vec3(1.0f, 0.0f, 0.0f));
+		camera.setRot(camera.getRot() + glm::vec3(1.0f, 0.0f, 0.0f) * 0.3f);
 		camera.updateRelativeCoordinates();
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 	{
-		camera.setRot(camera.getRot() - glm::vec3(1.0f, 0.0f, 0.0f));
+		camera.setRot(camera.getRot() - glm::vec3(1.0f, 0.0f, 0.0f)*0.3f);
 		camera.updateRelativeCoordinates();
 	}
 }

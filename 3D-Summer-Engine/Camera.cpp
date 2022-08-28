@@ -15,12 +15,18 @@ void Camera::updateRelativeCoordinates() {
 	cameraRight = glm::normalize(glm::cross(upDir, cameraDir));
 	cameraUp = glm::cross(cameraDir, cameraRight);*/
 
+	if (cameraRot.x > 89.0f)
+		cameraRot.x = 89.0f;
+	if (cameraRot.x < -89.0f)
+		cameraRot.x = -89.0f;
+
 	//Yaw
-	cameraDirection.x = cos(glm::radians(cameraRot.y));
-	cameraDirection.z = sin(glm::radians(cameraRot.y));
+	cameraDirection.x = cos(glm::radians(cameraRot.y)) * cos(glm::radians(cameraRot.x));
+	cameraDirection.z = sin(glm::radians(cameraRot.y)) * cos(glm::radians(cameraRot.x));
 	//Pitch
 	cameraDirection.y = sin(glm::radians(cameraRot.x));
 	cameraRight = glm::normalize(glm::cross(cameraDirection, cameraUp));
+	cameraForward = glm::normalize(cameraDirection);
 
 
 }
@@ -51,8 +57,7 @@ glm::vec3 Camera::right() {
 }
 
 glm::vec3 Camera::forward() {
-	//return cameraForward;
-	return cameraDirection;
+	return cameraForward;
 }
 
 void Camera::translate(const glm::vec3 translation) {
