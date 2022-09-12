@@ -1,5 +1,9 @@
 #include <iostream>
 #include <string>
+
+#include <thread>
+#include <chrono>
+
 #include <glad/glad.h> //Needs to be included before GLFW
 #include <GLFW/glfw3.h>
 #define STB_IMAGE_IMPLEMENTATION
@@ -22,10 +26,11 @@ const char* FRAGMENT_SHADER_PATH = "Shaders/fragment_shader.frag";
 const char* CONTAINER_IMAGE_PATH = "Images/LearnOpenGL/container.jpg";
 const char* AWESOMEFACE_IMAGE_PATH = "Images/LearnOpenGL/awesomeface.png";
 
-Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 //Previous mouse position during the last frame
 float lastX = WIDTH / 2;
 float lastY = HEIGHT / 2;
+bool firstMouseEnter = false;
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -266,14 +271,17 @@ int main() {
 	//trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
 
 	//Draw
-	
+	int frames = 0;
+	float time = 0;
 	while (!glfwWindowShouldClose(windowHandler.getWindow())) 
 	{
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 		//fps = f/s => fps = 1/dt
-		//std::cout << 1/deltaTime << std::endl;
+		//144 = 1/s => s = 1/144
+		//std::cout << 1/(deltaTime) << std::endl;
+
 
 		processInput(windowHandler.getWindow());
 
@@ -300,6 +308,23 @@ int main() {
 		glm::mat4 viewM				= glm::mat4(1.0f);
 		glm::mat4 projectionM		= glm::mat4(1.0f);
 
+		/*glm::mat4 lookAtRotation = glm::mat4(
+			camera.right().x, camera.right().y, camera.right().z, 0.0f,
+			camera.up().x, camera.up().y, camera.up().z, 0.0f,
+			camera.getPos().x + camera.forward().x, camera.getPos().y + camera.forward().y, camera.getPos().z + camera.forward().z, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
+		);
+
+		glm::mat4 lookAtTranslation = glm::mat4(
+			1.0f, 0.0f, 0.0f, -camera.getPos().x,
+			0.0f, 1.0f, 0.0f, -camera.getPos().y,
+			0.0f, 0.0f, 1.0f, -camera.getPos().z,
+			0.0f, 0.0f, 0.0f, 1.0f
+		);
+
+		glm::mat4 lookAtM = lookAtRotation * lookAtTranslation;
+		*/
+		//viewM = lookAtM;
 		viewM = glm::lookAt(camera.getPos(), camera.getPos() + camera.forward(), camera.up());
 		shader.setMat4f("view", viewM);
 
@@ -360,6 +385,7 @@ int main() {
 		glfwSwapBuffers(windowHandler.getWindow());
 		//Check if any events have been triggered
 		glfwPollEvents();
+		//std::this_thread::sleep_for(std::chrono::milliseconds((long)(sleepTime*1000)));
 	}
 
 	glDeleteVertexArrays(1, &VAO);
@@ -377,14 +403,20 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 }
 
 void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
+	if (firstMouseEnter)
+	{
+		lastX = xPos;
+		lastY = yPos;
+		firstMouseEnter = false;
+	}
 	float xTravel, yTravel;
 	xTravel = xPos - lastX;
 	yTravel = yPos - lastY;
 	lastX = xPos;
 	lastY = yPos;
 
-	float sensitivity = 100.0f * deltaTime;
-	camera.processMouseMovement(yTravel * -sensitivity, xTravel * sensitivity);
+	const float sensitivity = camera.sensitivity * deltaTime;
+	camera.processMouseMovement(yTravel * -sensitivity, xTravel * -sensitivity);
 }
 
 void processInput(GLFWwindow* window) {
@@ -394,7 +426,7 @@ void processInput(GLFWwindow* window) {
 	}
 	if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS)
 	{
-		glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, 1920, 1080, 144);
+		glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, 1920, 1080, NULL);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
@@ -410,56 +442,49 @@ void processInput(GLFWwindow* window) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 	}
 
-	float cameraSpeed = 2.5f * deltaTime;
-	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-	{
-		cameraSpeed *= 4.0f;
-	}
-	else if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
-	{
-		cameraSpeed /= 4.0f;
-	}
-	const float cameraSensitivity = 100.0f * deltaTime;
+	float cameraSpeed = 2.5f;
+	
+	const float cameraSensitivity = camera.sensitivity * deltaTime;
 
 	//Forward
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		//std::cout << "Forward: { " << camera.forward().x << ", " << camera.forward().y << ", " << camera.forward().z << " }" << std::endl;
-		camera.translate(camera.forward() * cameraSpeed);
+		camera.processKeyboardInput(Camera_Movement::FORWARD, deltaTime);
 	}
 	//Backward
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		camera.translate(camera.forward() * -cameraSpeed);
+		camera.processKeyboardInput(Camera_Movement::BACKWARD, deltaTime);
 	}
 	//Left
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		camera.translate(camera.right() * -cameraSpeed);
+		camera.processKeyboardInput(Camera_Movement::LEFT, deltaTime);
 	}
 	//Right
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
-		camera.translate(camera.right() * cameraSpeed);
+		camera.processKeyboardInput(Camera_Movement::RIGHT, deltaTime);
 	}
 	//Up
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
-		camera.translate(glm::vec3(0.0f, 1.0f, 0.0f) * cameraSpeed);
+		camera.processKeyboardInput(Camera_Movement::UP, deltaTime);
 	}
 	//Down
 	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
 	{
-		camera.translate(glm::vec3(0.0f, 1.0f, 0.0f) * -cameraSpeed);
+		camera.processKeyboardInput(Camera_Movement::DOWN, deltaTime);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
-		camera.rotate(glm::vec3(0.0f, 1.0f, 0.0f) * cameraSensitivity);
+		camera.rotate(glm::vec3(0.0f, 1.0f, 0.0f) * -cameraSensitivity);
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
-		camera.rotate(glm::vec3(0.0f, 1.0f, 0.0f) * -cameraSensitivity);
+		camera.rotate(glm::vec3(0.0f, 1.0f, 0.0f) * cameraSensitivity);
 	}
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 	{
