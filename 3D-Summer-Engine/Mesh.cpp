@@ -38,3 +38,16 @@ void Mesh::setupMesh() {
 
 	glBindVertexArray(0);
 }
+
+void Mesh::Draw(Shader& shader) {
+	for (unsigned int i = 0; i < textures.size(); i++)
+	{
+		glBindTexture(GL_TEXTURE_2D, textures[i].id);
+	}
+	glActiveTexture(0);
+
+	//Draw mesh
+	glBindVertexArray(VAO);
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+}

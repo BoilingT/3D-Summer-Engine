@@ -271,6 +271,8 @@ int main() {
 
 	//trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
 
+	//Mesh Cube(v, indices, textures);
+
 	//Draw
 	int frames = 0;
 	float time = 0;
