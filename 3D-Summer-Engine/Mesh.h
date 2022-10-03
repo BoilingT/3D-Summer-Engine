@@ -10,7 +10,7 @@
 struct Vertex {
 	glm::vec3 Pos;
 	glm::vec3 Normal;
-	glm::vec3 TexCoord;
+	glm::vec3 TexCoords;
 };
 
 struct Texture {
