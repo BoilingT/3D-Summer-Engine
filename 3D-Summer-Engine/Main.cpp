@@ -12,13 +12,14 @@
 #include "fileHandler.h"
 #include "Shader.h"
 #include "Camera.h"
+#include "Mesh.h"
 //GLM
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/type_ptr.hpp> 
 
-const int WIDTH = 1000;
-const int HEIGHT = 700;
+const int WIDTH = 1300;
+const int HEIGHT = 900;
 const char* WINDOW_NAME = "Summer Engine";
 
 const char* VERTEX_SHADER_PATH = "Shaders/vertex_shader.vert";
@@ -30,7 +31,7 @@ Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 //Previous mouse position during the last frame
 float lastX = WIDTH / 2;
 float lastY = HEIGHT / 2;
-bool firstMouseEnter = false;
+bool firstMouseEnter = true;
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -415,7 +416,7 @@ void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
 	lastX = xPos;
 	lastY = yPos;
 
-	const float sensitivity = camera.sensitivity * deltaTime;
+	const float sensitivity = camera.sensitivity/100.f;
 	camera.processMouseMovement(yTravel * -sensitivity, xTravel * -sensitivity);
 }
 
