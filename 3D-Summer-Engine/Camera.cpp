@@ -118,11 +118,11 @@ void Camera::processMouseMovement(float xTravel, float yTravel) {
 void Camera::translate(const glm::vec3 translation) {
 	cameraPos = cameraPos + translation;
 	updateRelativeCoordinates();
-	std::cout << "Position: { " << cameraPos.x << ", " << cameraPos.y << ", " << cameraPos.z << " }" << std::endl;
+	//std::cout << "Position: { " << cameraPos.x << ", " << cameraPos.y << ", " << cameraPos.z << " }" << std::endl;
 }
 
 void Camera::rotate(const glm::vec3 rotation) {
 	cameraRot = cameraRot + rotation;
 	updateRelativeCoordinates();
-	std::cout << "Rotation: { " << cameraRot.x << ", " << cameraRot.y << ", " << cameraRot.z << " }" << std::endl;
+	//std::cout << "Rotation: { " << cameraRot.x << ", " << cameraRot.y << ", " << cameraRot.z << " }" << std::endl;
 }

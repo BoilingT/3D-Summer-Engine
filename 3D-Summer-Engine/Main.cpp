@@ -18,8 +18,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp> 
 
-const int WIDTH = 1300;
-const int HEIGHT = 900;
+const int WIDTH = 1920;
+const int HEIGHT = 1080;
 const char* WINDOW_NAME = "Summer Engine";
 
 const char* VERTEX_SHADER_PATH = "Shaders/vertex_shader.vert";
@@ -276,15 +276,27 @@ int main() {
 	//Draw
 	int frames = 0;
 	float time = 0;
+	int fps = 0;
+	float sleepTime = 0;
 	while (!glfwWindowShouldClose(windowHandler.getWindow())) 
 	{
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
-		//fps = f/s => fps = 1/dt
-		//144 = 1/s => s = 1/144
-		//std::cout << 1/(deltaTime) << std::endl;
+		time += deltaTime;
+		frames++;
 
+		if (frames >= 1)
+		{
+			//fps = f/s => fps = 1/dt
+			//144 = 1/s => s = 1/144
+			fps = frames / (time);
+			std::cout << frames << " / " << time << " = " << fps << " sleep: " << sleepTime << std::endl;
+			frames = 0;
+			time = 0;
+			std::string title = "FPS: " + std::to_string(fps);
+			glfwSetWindowTitle(windowHandler.getWindow(), title.c_str());
+		}
+		sleepTime = 1000 / 144 - deltaTime;
 
 		processInput(windowHandler.getWindow());
 
@@ -370,10 +382,10 @@ int main() {
 		shader.setMat4f("model", modelM);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		/*float timeValue = glfwGetTime();
+		float timeValue = glfwGetTime();
 		float val = sin(timeValue);
 		int vertexColorLocation = glGetUniformLocation(shader.getID(), "ourColor");
-		glUniform4f(vertexColorLocation, 0.0f, val, timeValue, 1.0f);*/
+		glUniform4f(vertexColorLocation, 0.0f, val, timeValue, 1.0f);
 
 		//unsigned int verticesCount = sizeof(cubeVertices) / sizeof(float) / 3;
 		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -388,7 +400,12 @@ int main() {
 		glfwSwapBuffers(windowHandler.getWindow());
 		//Check if any events have been triggered
 		glfwPollEvents();
-		//std::this_thread::sleep_for(std::chrono::milliseconds((long)(sleepTime*1000)));
+		lastFrame = currentFrame;
+
+		if (sleepTime > 0)
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds((long)(sleepTime)));
+		}
 	}
 
 	glDeleteVertexArrays(1, &VAO);
@@ -429,7 +446,7 @@ void processInput(GLFWwindow* window) {
 	}
 	if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS)
 	{
-		glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, 1920, 1080, NULL);
+		glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, 1920, 1080, 144);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
