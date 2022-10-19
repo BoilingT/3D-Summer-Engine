@@ -22,6 +22,8 @@
 const int WIDTH = 1920;
 const int HEIGHT = 1080;
 const char* WINDOW_NAME = "Summer Engine";
+const float DEFAULT_CLEAR_COLOR[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+const float CLEAR_COLOR[4] = {0.28f, 0.41f, 0.61f, 1.0f};
 
 const char* VERTEX_SHADER_PATH = "Shaders/vertex_shader.vert";
 const char* FRAGMENT_SHADER_PATH = "Shaders/fragment_shader.frag";
@@ -302,7 +304,7 @@ int main() {
 		processInput(windowHandler.getWindow());
 
 		//Render
-		glClearColor(0.28f, 0.41f, 0.61f, 1.0f);
+		glClearColor(DEFAULT_CLEAR_COLOR[0], DEFAULT_CLEAR_COLOR[1], DEFAULT_CLEAR_COLOR[2], DEFAULT_CLEAR_COLOR[3]);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glActiveTexture(GL_TEXTURE0);
