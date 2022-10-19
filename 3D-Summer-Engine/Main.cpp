@@ -13,6 +13,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Mesh.h"
+#include "Cube.h"
 //GLM
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -290,7 +291,7 @@ int main() {
 			//fps = f/s => fps = 1/dt
 			//144 = 1/s => s = 1/144
 			fps = frames / (time);
-			std::cout << frames << " / " << time << " = " << fps << " sleep: " << sleepTime << std::endl;
+			//std::cout << frames << " / " << time << " = " << fps << " sleep: " << sleepTime << std::endl;
 			frames = 0;
 			time = 0;
 			std::string title = "FPS: " + std::to_string(fps);
@@ -360,7 +361,7 @@ int main() {
 
 		glBindVertexArray(VAO);
 
-		for (unsigned int i = 0; i < sizeof(cubePositions)/sizeof(glm::vec3); i++)
+		/*for (unsigned int i = 0; i < sizeof(cubePositions)/sizeof(glm::vec3); i++)
 		{
 			modelM = glm::mat4(1.0f);
 			modelM = glm::translate(modelM, cubePositions[i]);
@@ -373,15 +374,18 @@ int main() {
 			}
 			shader.setMat4f("model", modelM);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
+		}*/
 
-		modelM = glm::mat4(1.0f);
+		Cube cube(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
+		cube.Draw(shader);
+
+		/*modelM = glm::mat4(1.0f);
 		modelM = glm::translate(modelM, camera.getPos() + camera.forward());
 		modelM = glm::scale(modelM, glm::vec3(0.1f, 0.1f, 0.1f));
 
 		shader.setMat4f("model", modelM);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
-
+		*/
 		float timeValue = glfwGetTime();
 		float val = sin(timeValue);
 		int vertexColorLocation = glGetUniformLocation(shader.getID(), "ourColor");
