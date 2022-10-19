@@ -21,7 +21,7 @@ void Cube::SetupMesh() {
 	//Send vertices data
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	//glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_DYNAMIC_DRAW);
-	glBufferData(GL_ARRAY_BUFFER, (sizeof(cubeVertices) / sizeof(float)), cubeVertices, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_DYNAMIC_DRAW);
 
 	//Send indices data
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
