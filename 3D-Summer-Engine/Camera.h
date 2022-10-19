@@ -30,7 +30,7 @@ private:
 
 public:
 	float speed = 2.5f;
-	float sensitivity = 100.f;
+	float sensitivity = 40.f;
 	float fov = 1.f;
 	bool pitchConstraint = true;
 

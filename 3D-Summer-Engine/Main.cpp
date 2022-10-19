@@ -363,7 +363,7 @@ int main() {
 
 		glBindVertexArray(VAO);
 
-		/*for (unsigned int i = 0; i < sizeof(cubePositions)/sizeof(glm::vec3); i++)
+		for (unsigned int i = 0; i < sizeof(cubePositions)/sizeof(glm::vec3); i++)
 		{
 			modelM = glm::mat4(1.0f);
 			modelM = glm::translate(modelM, cubePositions[i]);
@@ -376,7 +376,7 @@ int main() {
 			}
 			shader.setMat4f("model", modelM);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}*/
+		}
 
 		Cube cube(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
 		cube.Draw(shader);
