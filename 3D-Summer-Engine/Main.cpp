@@ -326,25 +326,7 @@ int main() {
 		glm::mat4 viewM				= glm::mat4(1.0f);
 		glm::mat4 projectionM		= glm::mat4(1.0f);
 
-		glm::vec3 directionVec = glm::normalize(-camera.forward());
-
-		glm::mat4 lookAtRotation = glm::mat4(
-			-camera.right().x, -camera.right().y, -camera.right().z, 0.0f,
-			camera.up().x, camera.up().y, camera.up().z, 0.0f,
-			directionVec.x, directionVec.y, directionVec.z, 0.0f,
-			0.0f, 0.0f, 0.0f, 1.0f
-		);
-		
-		glm::mat4 lookAtTranslation = glm::mat4(
-			1.0f, 0.0f, 0.0f, -camera.getPos().x,
-			0.0f, 1.0f, 0.0f, -camera.getPos().y,
-			0.0f, 0.0f, 1.0f, -camera.getPos().z,
-			0.0f, 0.0f, 0.0f, 1.0f
-		);
-
-		glm::mat4 lookAtM = glm::transpose(lookAtRotation) * glm::transpose(lookAtTranslation);
-		
-		viewM = lookAtM;
+		viewM = camera.lookAt(camera.forward());
 		
 		//viewM = glm::lookAt(camera.getPos(), camera.getPos() + camera.forward(), camera.up());
 		shader.setMat4f("view", viewM);

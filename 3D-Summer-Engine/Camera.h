@@ -50,6 +50,7 @@ public:
 	glm::vec3 up();
 	glm::vec3 right();
 
+	glm::mat4 lookAt(glm::vec3 target);
 	void processKeyboardInput(Camera_Movement direction, float deltaTime);
 	void processMouseScroll(float fovOffset);
 	void processMouseMovement(float xTravel, float yTravel);

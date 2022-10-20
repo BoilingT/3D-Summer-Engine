@@ -75,6 +75,31 @@ glm::vec3 Camera::forward() {
 	return cameraForward;
 }
 
+glm::mat4 Camera::lookAt(glm::vec3 target) {
+	//Calculate cameraDirection
+	glm::vec3 zaxis = glm::normalize(-target);
+	//Get positive right axis vector
+	glm::vec3 xaxis = glm::normalize(glm::cross(glm::normalize(upDir), zaxis));
+	//Calculate camera up vector
+	glm::vec3 yaxis = glm::cross(zaxis, xaxis);
+
+	glm::mat4 lookAtRotation = glm::mat4(
+		xaxis.x, xaxis.y, xaxis.z, 0.0f,
+		yaxis.x, yaxis.y, yaxis.z, 0.0f,
+		zaxis.x, zaxis.y, zaxis.z, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
+	);
+
+	glm::mat4 lookAtTranslation = glm::mat4(
+		1.0f, 0.0f, 0.0f, -cameraPos.x,
+		0.0f, 1.0f, 0.0f, -cameraPos.y,
+		0.0f, 0.0f, 1.0f, -cameraPos.z,
+		0.0f, 0.0f, 0.0f, 1.0f
+	);
+
+	return glm::transpose(lookAtRotation) * glm::transpose(lookAtTranslation);
+}
+
 void Camera::processKeyboardInput(Camera_Movement dir, float dt) {
 
 	if (dir == Camera_Movement::FORWARD)
