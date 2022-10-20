@@ -44,6 +44,7 @@ public:
 	//Getters
 	glm::vec3 getPos();
 	glm::vec3 getRot();
+	glm::vec3 getDir();
 
 	glm::vec3 forward();
 	glm::vec3 up();

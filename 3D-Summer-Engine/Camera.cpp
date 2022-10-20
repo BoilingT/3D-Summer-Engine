@@ -40,8 +40,6 @@ void Camera::updateRelativeCoordinates() {
 
 	cameraRight = glm::normalize(glm::cross(upDir, cameraDirection));
 	cameraUp = glm::cross(cameraDirection, cameraRight);
-
-
 }
 
 void Camera::setPos(const glm::vec3 pos) {
@@ -59,6 +57,10 @@ glm::vec3 Camera::getPos() {
 
 glm::vec3 Camera::getRot() {
 	return cameraRot;
+}
+
+glm::vec3 Camera::getDir() {
+	return cameraDirection;
 }
 
 glm::vec3 Camera::up() {
@@ -118,7 +120,7 @@ void Camera::processMouseMovement(float xTravel, float yTravel) {
 void Camera::translate(const glm::vec3 translation) {
 	cameraPos = cameraPos + translation;
 	updateRelativeCoordinates();
-	//std::cout << "Position: { " << cameraPos.x << ", " << cameraPos.y << ", " << cameraPos.z << " }" << std::endl;
+	std::cout << "Position: { " << cameraPos.x << ", " << cameraPos.y << ", " << cameraPos.z << " }" << std::endl;
 }
 
 void Camera::rotate(const glm::vec3 rotation) {
