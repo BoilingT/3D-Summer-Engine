@@ -281,6 +281,9 @@ int main() {
 	float time = 0;
 	int fps = 0;
 	float sleepTime = 0;
+	Cube cube(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
+
+
 	while (!glfwWindowShouldClose(windowHandler.getWindow())) 
 	{
 		float currentFrame = glfwGetTime();
@@ -363,7 +366,6 @@ int main() {
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 
-		Cube cube(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
 		cube.Draw(shader);
 
 		/*modelM = glm::mat4(1.0f);
