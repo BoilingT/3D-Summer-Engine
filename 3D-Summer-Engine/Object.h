@@ -14,9 +14,10 @@ struct Transform {
 
 class Object
 {
-public:
-	unsigned int VBO, VAO, EBO;
+private:
 	int verticesSize;
+	unsigned int VBO, VAO, EBO;
+public:
 
 	Transform transform;
 
