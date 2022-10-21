@@ -14,6 +14,7 @@
 #include "Camera.h"
 #include "Mesh.h"
 #include "Cube.h"
+#include "Plane.h"
 //GLM
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -282,7 +283,19 @@ int main() {
 	int fps = 0;
 	float sleepTime = 0;
 	Cube cube(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
+	//Plane plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
 
+	glm::vec3 cubePositions[] = {
+			glm::vec3(0.0f, -1.0f, 0.0f),
+			glm::vec3(-1.5f, -2.2f, -2.5f),
+			glm::vec3(-3.8f, -2.0f, -12.3f),
+			glm::vec3(2.4f, -0.4f, -3.5f),
+			glm::vec3(-1.7f,  3.0f, -7.5f),
+			glm::vec3(1.3f, -2.0f, -2.5f),
+			glm::vec3(1.5f,  2.0f, -2.5f),
+			glm::vec3(1.5f,  0.2f, -1.5f),
+			glm::vec3(-1.3f,  1.0f, -1.5f)
+	};
 
 	while (!glfwWindowShouldClose(windowHandler.getWindow())) 
 	{
@@ -337,44 +350,25 @@ int main() {
 		projectionM = glm::perspective(glm::radians(60.0f), (float) WIDTH / (float) HEIGHT, 0.1f, 100.0f);
 		shader.setMat4f("projection", projectionM);
 
-		glm::vec3 cubePositions[] = {
-			glm::vec3(0.0f, -1.0f, 0.0f),
-			glm::vec3(-1.5f, -2.2f, -2.5f),
-			glm::vec3(-3.8f, -2.0f, -12.3f),
-			glm::vec3(2.4f, -0.4f, -3.5f),
-			glm::vec3(-1.7f,  3.0f, -7.5f),
-			glm::vec3(1.3f, -2.0f, -2.5f),
-			glm::vec3(1.5f,  2.0f, -2.5f),
-			glm::vec3(1.5f,  0.2f, -1.5f),
-			glm::vec3(-1.3f,  1.0f, -1.5f)
-		};
-
 		glBindVertexArray(VAO);
 
 		for (unsigned int i = 0; i < sizeof(cubePositions)/sizeof(glm::vec3); i++)
 		{
-			modelM = glm::mat4(1.0f);
-			modelM = glm::translate(modelM, cubePositions[i]);
+			cube.transform.pos = cubePositions[i];
 			if (i == 0) {
-				modelM = glm::scale(modelM, glm::vec3(50.0f, 0.0f, 50.0f));
+				cube.transform.dim = glm::vec3(50.0f, 0.0f, 50.0f);
 			}
 			else
 			{
-				modelM = glm::rotate(modelM, (float)glfwGetTime() * glm::radians(70.f) * (i+1)*0.1f, glm::vec3(0.0f, 1.0f, 1.0f));
+				cube.transform.dim = glm::vec3(1.0f);
 			}
-			shader.setMat4f("model", modelM);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
 
+			cube.Draw(shader);
+		}
 		cube.Draw(shader);
 
-		/*modelM = glm::mat4(1.0f);
-		modelM = glm::translate(modelM, camera.getPos() + camera.forward());
-		modelM = glm::scale(modelM, glm::vec3(0.1f, 0.1f, 0.1f));
+		//plane.Draw(shader);
 
-		shader.setMat4f("model", modelM);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		*/
 		float timeValue = glfwGetTime();
 		float val = sin(timeValue);
 		int vertexColorLocation = glGetUniformLocation(shader.getID(), "ourColor");

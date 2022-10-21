@@ -25,7 +25,9 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Object.cpp" />
     <ClCompile Include="WindowHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -33,7 +35,9 @@
     <ClInclude Include="Cube.h" />
     <ClInclude Include="fileHandler.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Plane.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="WindowHandler.h" />
   </ItemGroup>
