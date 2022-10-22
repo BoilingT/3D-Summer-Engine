@@ -63,6 +63,6 @@ public:
 		transform.pos = pos;
 		transform.dim = dim;
 		transform.rot = rot;
-		SetupMesh(cubeVertices, sizeof(cubeVertices));
+		SetupMesh(cubeVertices, sizeof(cubeVertices), NULL, NULL);
 	}
 };

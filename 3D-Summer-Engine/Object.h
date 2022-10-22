@@ -16,12 +16,15 @@ class Object
 {
 private:
 	int verticesSize;
+	int indicesSize;
+	unsigned int* indicesPtr;
 	unsigned int VBO, VAO, EBO;
 public:
 
 	Transform transform;
 
-	void SetupMesh(float* vertices, int size);
+	void SetupMesh(float* vertices, int vSize);
+	void SetupMesh(float* vertices, int vSize, unsigned int* indices, int iSize);
 	void Draw(Shader& shader);
 };
 

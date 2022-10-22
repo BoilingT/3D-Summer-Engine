@@ -283,7 +283,7 @@ int main() {
 	int fps = 0;
 	float sleepTime = 0;
 	Cube cube(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
-	//Plane plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
+	Plane plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
 
 	glm::vec3 cubePositions[] = {
 			glm::vec3(0.0f, -1.0f, 0.0f),
@@ -360,23 +360,19 @@ int main() {
 			}
 			else
 			{
-				cube.transform.dim = glm::vec3(1.0f);
+				cube.transform.dim = glm::vec3(1.0f, 1.0f, 1.0f);
 			}
 
 			cube.Draw(shader);
 		}
 		cube.Draw(shader);
-
-		//plane.Draw(shader);
+		
+		plane.Draw(shader);
 
 		float timeValue = glfwGetTime();
 		float val = sin(timeValue);
 		int vertexColorLocation = glGetUniformLocation(shader.getID(), "ourColor");
 		glUniform4f(vertexColorLocation, 0.0f, val, timeValue, 1.0f);
-
-		//unsigned int verticesCount = sizeof(cubeVertices) / sizeof(float) / 3;
-		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glBindVertexArray(0);
 		/*Double buffer
