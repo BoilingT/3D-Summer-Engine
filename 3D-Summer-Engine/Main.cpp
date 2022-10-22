@@ -23,7 +23,7 @@
 const int WIDTH = 1920;
 const int HEIGHT = 1080;
 const char* WINDOW_NAME = "Summer Engine";
-const float DEFAULT_CLEAR_COLOR[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+const float DEFAULT_CLEAR_COLOR[4] = {0.0f, 0.0f, 0.0f, 1.0f};
 const float CLEAR_COLOR[4] = {0.28f, 0.41f, 0.61f, 1.0f};
 
 const char* VERTEX_SHADER_PATH = "Shaders/vertex_shader.vert";
@@ -371,6 +371,7 @@ int main() {
 		cube.Draw(shader);*/
 		
 		int resolution = 256;
+
 		plane.transform.dim = glm::vec3(WIDTH/(resolution/2.f), HEIGHT/(resolution/2.f), 0.0f);
 
 		glm::vec3 origin = glm::vec3(-WIDTH/2.f, HEIGHT/2.f, 0);
@@ -382,7 +383,7 @@ int main() {
 				plane.transform.pos.x = origin.x + plane.transform.dim.x/2.f + plane.transform.dim.x * col;
 				plane.transform.pos.y = origin.y - plane.transform.dim.y/2.f - plane.transform.dim.y * row;
 				int vLocation = glGetUniformLocation(shader.getID(), "color");
-				glUniform4f(vLocation, ((col + 1.f) / resolution / 2.f), (row + 1.f) / resolution / 2.f, 0.0f, 1.0f);
+				glUniform4f(vLocation, ((col + 1.f) / (resolution / 2.f)), (row + 1.f) / (resolution / 2.f), 0.0f, 1.0f);
 				plane.Draw(shader);
 			}
 		}
