@@ -23,7 +23,7 @@
 const int WIDTH = 1920;
 const int HEIGHT = 1080;
 const char* WINDOW_NAME = "Summer Engine";
-const float DEFAULT_CLEAR_COLOR[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+const float DEFAULT_CLEAR_COLOR[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 const float CLEAR_COLOR[4] = {0.28f, 0.41f, 0.61f, 1.0f};
 
 const char* VERTEX_SHADER_PATH = "Shaders/vertex_shader.vert";
@@ -285,6 +285,8 @@ int main() {
 	Cube cube(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
 	Plane plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
 
+
+
 	glm::vec3 cubePositions[] = {
 			glm::vec3(0.0f, -1.0f, 0.0f),
 			glm::vec3(-1.5f, -2.2f, -2.5f),
@@ -342,33 +344,49 @@ int main() {
 		glm::mat4 viewM				= glm::mat4(1.0f);
 		glm::mat4 projectionM		= glm::mat4(1.0f);
 
-		viewM = camera.lookAt(camera.forward());
+		//viewM = camera.lookAt(camera.forward());
 		
 		//viewM = glm::lookAt(camera.getPos(), camera.getPos() + camera.forward(), camera.up());
 		shader.setMat4f("view", viewM);
 
-		projectionM = glm::perspective(glm::radians(60.0f), (float) WIDTH / (float) HEIGHT, 0.1f, 100.0f);
+		//projectionM = glm::perspective(glm::radians(60.0f), (float) WIDTH / (float) HEIGHT, 0.1f, 100.0f);
+		projectionM = glm::ortho(-(float)WIDTH/2, (float)WIDTH/2, -(float)HEIGHT/2, (float)HEIGHT/2, -1000.0f, 1000.0f);
 		shader.setMat4f("projection", projectionM);
 
 		glBindVertexArray(VAO);
 		float timeValue = glfwGetTime();
-		float val = sin(timeValue);
-		for (unsigned int i = 0; i < sizeof(cubePositions)/sizeof(glm::vec3); i++)
+		float val = sin(timeValue/2);
+		/*for (unsigned int i = 0; i < sizeof(cubePositions)/sizeof(glm::vec3); i++)
 		{
 			cube.transform.pos = cubePositions[i];
 			if (i == 0) {
-				cube.transform.dim = glm::vec3(50.0f, 50.0f, 50.0f);
+				cube.transform.dim = glm::vec3(WIDTH, HEIGHT, 50.0f);
 			}
 			else
 			{
 				cube.transform.dim = glm::vec3(val, val, val);
 			}
-
 			cube.Draw(shader);
 		}
-		cube.Draw(shader);
+		cube.Draw(shader);*/
 		
-		plane.Draw(shader);
+		int resolution = 256;
+		plane.transform.dim = glm::vec3(WIDTH/(resolution/2.f), HEIGHT/(resolution/2.f), 0.0f);
+
+		glm::vec3 origin = glm::vec3(-WIDTH/2.f, HEIGHT/2.f, 0);
+
+		for (unsigned int row = 0; row < resolution/2; row++)
+		{
+			for (unsigned int col = 0; col < resolution/2; col++)
+			{
+				plane.transform.pos.x = origin.x + plane.transform.dim.x/2.f + plane.transform.dim.x * col;
+				plane.transform.pos.y = origin.y - plane.transform.dim.y/2.f - plane.transform.dim.y * row;
+				int vLocation = glGetUniformLocation(shader.getID(), "color");
+				glUniform4f(vLocation, ((col + 1.f) / resolution / 2.f), (row + 1.f) / resolution / 2.f, 0.0f, 1.0f);
+				plane.Draw(shader);
+			}
+		}
+
 
 		
 		int vertexColorLocation = glGetUniformLocation(shader.getID(), "ourColor");
@@ -387,7 +405,7 @@ int main() {
 
 		if (sleepTime > 0)
 		{
-			std::this_thread::sleep_for(std::chrono::milliseconds((long)(sleepTime)));
+			//std::this_thread::sleep_for(std::chrono::milliseconds((long)(sleepTime)));
 		}
 	}
 
