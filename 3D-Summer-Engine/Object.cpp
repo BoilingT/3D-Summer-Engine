@@ -73,8 +73,6 @@ void Object::SetupMesh(float* vertices, int vSize) {
 void Object::Draw(Shader& shader) {
 	//Draw mesh
 	glBindVertexArray(VAO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	//glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0)
 
 	glm::mat4 modelM = glm::mat4(1.0f);
 
@@ -92,5 +90,4 @@ void Object::Draw(Shader& shader) {
 		glDrawArrays(GL_TRIANGLES, 0, (verticesSize / sizeof(float)));
 	}
 	glBindVertexArray(0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
