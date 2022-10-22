@@ -357,7 +357,7 @@ int main() {
 		{
 			cube.transform.pos = cubePositions[i];
 			if (i == 0) {
-				cube.transform.dim = glm::vec3(50.0f, 0.0f, 50.0f);
+				cube.transform.dim = glm::vec3(50.0f, 50.0f, 50.0f);
 			}
 			else
 			{
