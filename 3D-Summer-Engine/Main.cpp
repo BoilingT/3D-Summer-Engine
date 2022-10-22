@@ -45,7 +45,7 @@ void mouse_callback(GLFWwindow* window, double xPos, double yPos);
 void processInput(GLFWwindow* window);
 int main() {
 
-	std::cout << "Engine Starting..." << std::endl;
+	std::cout << "Opening Window..." << std::endl;
 	
 	WindowHandler windowHandler(WIDTH, HEIGHT, WINDOW_NAME);
 	FileHandler fileHandler;
@@ -103,6 +103,8 @@ int main() {
 			After all the color values have been determined the final object will then go through the "Alpha test" and "Blending stage". This stage checks the
 			depth values of the fragment to determine if a fragment is in front or behind another object and should thus be discarded accordingly.
 	*/
+	std::cout << "Setting up Shader Program..." << std::endl;
+	glfwSetWindowTitle(windowHandler.getWindow(), "Setting up Shader Program...");
 
 	//Vertex Shader
 	Shader shader(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH);
@@ -210,7 +212,9 @@ int main() {
 	*/
 
 	//Textures
-	
+	std::cout << "Setting up textures..." << std::endl;
+	glfwSetWindowTitle(windowHandler.getWindow(), "Setting up textures...");
+
 	//Generate Texture
 	unsigned int textures[2];
 	glGenTextures(2, textures);
@@ -270,7 +274,9 @@ int main() {
 	shader.setInt("texture2", 1);
 
 
-	std::cout << "Engine Started" << std::endl;
+	std::cout << "Engine Initialized" << std::endl;
+	glfwSetWindowTitle(windowHandler.getWindow(), "Engine Initialized");
+
 	glUniform4f(glGetUniformLocation(shader.getID(), "posOffset"), 0.0f, 0.0f, 0.0f, 0.0f);
 
 	//trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
@@ -278,6 +284,10 @@ int main() {
 	//Mesh Cube(v, indices, textures);
 
 	//Draw
+	std::cout << "Setting up objects to be drawn..." << std::endl;
+	glfwSetWindowTitle(windowHandler.getWindow(), "Setting up objects to be drawn...");
+
+
 	int frames = 0;
 	float time = 0;
 	int fps = 0;
@@ -317,6 +327,8 @@ int main() {
 			glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
 
+	std::cout << "Started rendering loop..." << std::endl;
+	glfwSetWindowTitle(windowHandler.getWindow(), "Started rendering loop...");
 	while (!glfwWindowShouldClose(windowHandler.getWindow())) 
 	{
 		float currentFrame = glfwGetTime();
@@ -433,11 +445,16 @@ int main() {
 		}
 	}
 
+	std::cout << "Cleaning up buffers..." << std::endl;
+	glfwSetWindowTitle(windowHandler.getWindow(), "Cleaning up buffers...");
+
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
 	glDeleteProgram(shader.getID());
 
+	std::cout << "Terminating..." << std::endl;
+	glfwSetWindowTitle(windowHandler.getWindow(), "Terminating...");
 	glfwTerminate();
 	std::cout << "Engine Stopped" << std::endl;
 	return 0;
