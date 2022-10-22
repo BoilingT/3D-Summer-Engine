@@ -351,7 +351,8 @@ int main() {
 		shader.setMat4f("projection", projectionM);
 
 		glBindVertexArray(VAO);
-
+		float timeValue = glfwGetTime();
+		float val = sin(timeValue);
 		for (unsigned int i = 0; i < sizeof(cubePositions)/sizeof(glm::vec3); i++)
 		{
 			cube.transform.pos = cubePositions[i];
@@ -360,7 +361,7 @@ int main() {
 			}
 			else
 			{
-				cube.transform.dim = glm::vec3(1.0f, 1.0f, 1.0f);
+				cube.transform.dim = glm::vec3(val, val, val);
 			}
 
 			cube.Draw(shader);
@@ -369,8 +370,7 @@ int main() {
 		
 		plane.Draw(shader);
 
-		float timeValue = glfwGetTime();
-		float val = sin(timeValue);
+		
 		int vertexColorLocation = glGetUniformLocation(shader.getID(), "ourColor");
 		glUniform4f(vertexColorLocation, 0.0f, val, timeValue, 1.0f);
 
