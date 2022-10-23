@@ -10,8 +10,8 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
 	fileHandler.readFile(vertexPath, vShaderContent);
 	fileHandler.readFile(fragmentPath, fShaderContent);
 	
-	std::cout << "Vertex Shader:\n" << vShaderContent << "\nEND OF FILE" << std::endl;
-	std::cout << "Fragment Shader:\n" << fShaderContent << "\nEND OF FILE" << std::endl;
+	//std::cout << "Vertex Shader:\n" << vShaderContent << "\nEND OF FILE" << std::endl;
+	//std::cout << "Fragment Shader:\n" << fShaderContent << "\nEND OF FILE" << std::endl;
 
 	const char* vShaderSource = vShaderContent.c_str();
 	const char* fShaderSource = fShaderContent.c_str();

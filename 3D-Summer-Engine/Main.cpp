@@ -295,7 +295,7 @@ int main() {
 	Cube cube(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
 	Plane plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
 
-	const int quadGridSize = 100*100;
+	const int quadGridSize = 256*9;
 	const int gridWidth = sqrt(quadGridSize);
 	std::vector<Plane> Quads;
 	//Plane Quads[quadGridSize];
@@ -336,7 +336,7 @@ int main() {
 		time += deltaTime;
 		frames++;
 
-		if (frames >= 1)
+		if (frames >= 2)
 		{
 			//fps = f/s => fps = 1/dt
 			//144 = 1/s => s = 1/144
@@ -347,7 +347,7 @@ int main() {
 			std::string title = "FPS: " + std::to_string(fps);
 			glfwSetWindowTitle(windowHandler.getWindow(), title.c_str());
 		}
-		sleepTime = 1000 / 144 - deltaTime;
+		//sleepTime = 1000 / 60 - deltaTime;
 
 		processInput(windowHandler.getWindow());
 
@@ -441,7 +441,7 @@ int main() {
 
 		if (sleepTime > 0)
 		{
-			//std::this_thread::sleep_for(std::chrono::milliseconds((long)(sleepTime)));
+			std::this_thread::sleep_for(std::chrono::milliseconds((long)(sleepTime)));
 		}
 	}
 
