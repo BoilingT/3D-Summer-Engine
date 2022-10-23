@@ -297,7 +297,7 @@ int main() {
 
 	const int quadGridSize = 36000;
 	const int gridWidth = sqrt(quadGridSize);
-	std::vector<Plane> Quads;
+	//std::vector<Plane> Quads;
 	//Plane Quads[quadGridSize];
 
 	glm::vec3 o = glm::vec3(-WIDTH / 2.f, HEIGHT / 2.f, 0);
