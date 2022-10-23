@@ -295,7 +295,7 @@ int main() {
 	Cube cube(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
 	Plane plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
 
-	const int quadGridSize = 256*9;
+	const int quadGridSize = 36000;
 	const int gridWidth = sqrt(quadGridSize);
 	std::vector<Plane> Quads;
 	//Plane Quads[quadGridSize];
@@ -303,7 +303,7 @@ int main() {
 	glm::vec3 o = glm::vec3(-WIDTH / 2.f, HEIGHT / 2.f, 0);
 
 
-	for (unsigned int r = 0; r < gridWidth; r++)
+	/*for (unsigned int r = 0; r < gridWidth; r++)
 	{
 		for (unsigned int c = 0; c < gridWidth; c++)
 		{
@@ -313,7 +313,7 @@ int main() {
 			q->transform.pos.x = o.x + q->transform.dim.x/2 + q->transform.dim.x * c;
 			q->transform.pos.y = o.y - q->transform.dim.y / 2.f - q->transform.dim.y * r;
 		}
-	}
+	}*/
 
 	glm::vec3 cubePositions[] = {
 			glm::vec3(0.0f, -1.0f, 0.0f),
@@ -420,8 +420,12 @@ int main() {
 			{
 				int vLocation = glGetUniformLocation(shader.getID(), "color");
 				glUniform4f(vLocation, ((c + 1.f) / gridWidth), (r + 1.f) / gridWidth, 0.0f, 1.0f);
-				Plane q = Quads[r * gridWidth + c];
-				q.Draw(shader);
+				//Plane q = Quads[r * gridWidth + c];
+				Plane* q = &plane;
+				q->transform.dim = glm::vec3(WIDTH / (float)gridWidth, HEIGHT / (float)gridWidth, 0.0f);
+				q->transform.pos.x = o.x + q->transform.dim.x / 2 + q->transform.dim.x * c;
+				q->transform.pos.y = o.y - q->transform.dim.y / 2.f - q->transform.dim.y * r;
+				q->Draw(shader);
 			}
 		}
 
