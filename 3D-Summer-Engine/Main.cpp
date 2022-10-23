@@ -402,18 +402,6 @@ int main() {
 		
 		//plane.transform.dim = glm::vec3(WIDTH/(resolution/2.f), HEIGHT/(resolution/2.f), 0.0f);
 
-		/*for (unsigned int row = 0; row < resolution/2; row++)
-		{
-			for (unsigned int col = 0; col < resolution/2; col++)
-			{
-				plane.transform.pos.x = origin.x + plane.transform.dim.x/2.f + plane.transform.dim.x * col;
-				plane.transform.pos.y = origin.y - plane.transform.dim.y/2.f - plane.transform.dim.y * row;
-				int vLocation = glGetUniformLocation(shader.getID(), "color");
-				glUniform4f(vLocation, ((col + 1.f) / (resolution / 2.f)), (row + 1.f) / (resolution / 2.f), 0.0f, 1.0f);
-				plane.Draw(shader);
-			}
-		}*/
-
 		for (unsigned int r = 0; r < gridWidth; r++)
 		{
 			for (unsigned int c = 0; c < gridWidth; c++)
