@@ -295,7 +295,7 @@ int main() {
 	Cube cube(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
 	Plane plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
 
-	const int quadGridSize = 36000;
+	const int quadGridSize = 256;
 	const int gridWidth = sqrt(quadGridSize);
 	//std::vector<Plane> Quads;
 	//Plane Quads[quadGridSize];
