@@ -40,13 +40,13 @@ void Engine::Run() {
 	float time = 0;
 	int fps = 0;
 	float sleepTime = 0;
-	Cube cube(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
+	//Cube cube(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
 	Plane plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
 
-	const int quadGridSize = 10000;
+	const int quadGridSize = 256;
 	const int gridWidth = sqrt(quadGridSize);
 
-	glm::vec3 o = glm::vec3(-_window->getWidth() / 2.f, _window->getHeight() / 2.f, 0);
+	glm::vec3 o = glm::vec3(-c_WIDTH / 2.f, c_HEIGHT / 2.f, 0);
 
 	std::cout << "Started rendering loop..." << std::endl;
 	glfwSetWindowTitle(_window->getWindow(), "Started rendering loop...");
@@ -57,7 +57,7 @@ void Engine::Run() {
 		time += deltaTime;
 		frames++;
 
-		if (frames >= 2)
+		if (frames >= 50)
 		{
 			//fps = f/s => fps = 1/dt
 			//144 = 1/s => s = 1/144
@@ -68,7 +68,7 @@ void Engine::Run() {
 			std::string title = "FPS: " + std::to_string(fps);
 			glfwSetWindowTitle(_window->getWindow(), title.c_str());
 		}
-		//sleepTime = 1000 / 60 - deltaTime;
+		//sleepTime = 1000.f / 60.f - deltaTime;
 
 		POLL_EVENTS(_window->getWindow());
 
@@ -104,7 +104,7 @@ void Engine::Run() {
 			for (unsigned int c = 0; c < gridWidth; c++)
 			{
 				int vLocation = glGetUniformLocation(_shader->getID(), "color");
-				glUniform4f(vLocation, ((c + 1.f) / gridWidth), (r + 1.f) / gridWidth, 0.0f, 1.0f);
+				glUniform4f(vLocation, ((c + 1.f) / gridWidth), 0.0f, (r + 1.f) / gridWidth, 1.0f);
 				//Plane q = Quads[r * gridWidth + c];
 				Plane* q = &plane;
 				q->transform.dim = glm::vec3(c_WIDTH / (float)gridWidth, c_HEIGHT / (float)gridWidth, 0.0f);
