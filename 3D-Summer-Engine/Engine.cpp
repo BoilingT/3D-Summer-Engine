@@ -137,6 +137,38 @@ void Engine::Run() {
 	return;
 }
 
+/*
+	Graphics Pipeline:
+		Vertex data -> Vertex Shader -> Shape Assembly (Opt) -> Geometry Shader -> Rasterization (Opt) -> Fragment Shader -> Tests and Blending (Opt)
+		Essentials: Vertex data -> Vertex Shader -> Geometry Shader -> Fragent Shader
+
+		Vertex Shader:
+			The vertex shader takes a single vertex as data input. Its main purpose is to transform 3D coordinates into different 3D coordinates.
+			It also allows for basic processing on the vertex attributes.
+
+		Shape Assembly:
+			The assembly stage uses the data from all vertices to create a primitve form and "assembles all the point(s) in the primitive shape given",
+			as for an example a triangle.
+
+		Geometry Shader:
+			The data collection from the assembly stage is transferred onto the geometry shader. Its job is to take a collection of vertices
+			that form a primitive form. It has the ability to use the primitive to generate other shapes by making new vertices to form new or different
+			primitives.
+
+		Rasterization:
+			The data from the Geometry Shader is passed on to the Rasterization stage where it maps the resulting primitives
+			to the corresponding pixels on the screen. This results in fragments for the fragment shader to use. Before the fragment shaders run
+			fragments that are outside the screen are clipped and discarded which improves the performance.
+
+		Fragment Shader:
+			A Fragments Shader's main purpose is to calculate the final color of a pixel. During this stage is usally when all
+			the advanced OpenGL effects occur. The Fragment Shader usally contains data bout the 3D scene that it can use to calculate the final pixel color.
+
+		Tests and Blending
+			After all the color values have been determined the final object will then go through the "Alpha test" and "Blending stage". This stage checks the
+			depth values of the fragment to determine if a fragment is in front or behind another object and should thus be discarded accordingly.
+	*/
+
 void Engine::POLL_EVENTS(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
