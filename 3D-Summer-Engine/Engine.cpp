@@ -9,8 +9,6 @@ void Engine::Init()
 	}
 
 	//GLAD
-
-	//GLAD
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		std::cout << "ERROR :: Unable to initialize GLAD";
