@@ -82,10 +82,10 @@ public:
 		Start the rendering sequence
 	*/
 	void Run();
-	static void FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow* window, int width, int height);
-	static void MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos);
 
 private:
+	static void FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow* window, int width, int height);
+	static void MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos);
 	void POLL_EVENTS(GLFWwindow* window);
 };
 
