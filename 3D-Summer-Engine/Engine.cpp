@@ -1,5 +1,5 @@
 #include "Engine.h"
-
+#include "FluidField.h"
 
 void Engine::Init()
 {
@@ -31,20 +31,18 @@ void Engine::Run() {
 	std::cout << "Starting Engine..." << std::endl;
 	glfwSetWindowTitle(_window->getWindow(), "Starting Engine...");
 
-	//Setup shader
-	Shader shader(p_VERTEX_SHADER, p_FRAGMENT_SHADER);
-	_shader = &shader;
-	_shader->use();
-
 	int frames = 0;
 	float time = 0;
 	int fps = 0;
 	float sleepTime = 0;
-	//Cube cube(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
+	
+	//Setup shader
+	Shader shader(p_VERTEX_SHADER, p_FRAGMENT_SHADER);
+	_shader = &shader;
+	_shader->use();
 	Plane plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
 
-	const int quadGridSize = 256;
-	const int gridWidth = sqrt(quadGridSize);
+	FluidField fluid(c_WIDTH, c_HEIGHT, 256);
 
 	glm::vec3 o = glm::vec3(-c_WIDTH / 2.f, c_HEIGHT / 2.f, 0);
 
@@ -99,25 +97,13 @@ void Engine::Run() {
 		float timeValue = glfwGetTime();
 		float val = sin(timeValue / 2);
 		
-		for (unsigned int r = 0; r < gridWidth; r++)
-		{
-			for (unsigned int c = 0; c < gridWidth; c++)
-			{
-				int vLocation = glGetUniformLocation(_shader->getID(), "color");
-				glUniform4f(vLocation, ((c + 1.f) / gridWidth), 0.0f, (r + 1.f) / gridWidth, 1.0f);
-				//Plane q = Quads[r * gridWidth + c];
-				Plane* q = &plane;
-				q->transform.dim = glm::vec3(c_WIDTH / (float)gridWidth, c_HEIGHT / (float)gridWidth, 0.0f);
-				q->transform.pos.x = o.x + q->transform.dim.x / 2 + q->transform.dim.x * c;
-				q->transform.pos.y = o.y - q->transform.dim.y / 2.f - q->transform.dim.y * r;
-				q->Draw(*_shader);
-			}
-		}
+		fluid.DrawCellField(o, _shader);
 
 		int vertexColorLocation = glGetUniformLocation(_shader->getID(), "ourColor");
 		glUniform4f(vertexColorLocation, 0.0f, val, timeValue, 1.0f);
 
 		glBindVertexArray(0);
+
 		/*Double buffer
 			When rendering, the front buffer contains the final output of an image and is rendered to the screen.
 			While it is being drawn to the screen a back buffer is being drawn behind the scenes in order to reduce flickering issues.

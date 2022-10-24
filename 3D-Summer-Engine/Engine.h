@@ -23,9 +23,6 @@
 
 class Engine
 {
-private:
-
-
 public:
 	WindowHandler* _window;
 	Shader* _shader;
