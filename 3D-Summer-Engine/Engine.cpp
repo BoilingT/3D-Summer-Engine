@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "FluidField.h"
+#include "Compute.h"
 
 void Engine::Init()
 {
@@ -42,9 +43,10 @@ void Engine::Run() {
 	_shader->use();
 	Plane plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
 
-	FluidField fluid(c_WIDTH, c_HEIGHT, 256);
+	//FluidField fluid(c_WIDTH, c_HEIGHT, 256);
 
-	glm::vec3 o = glm::vec3(-c_WIDTH / 2.f, c_HEIGHT / 2.f, 0);
+	//glm::vec3 o = glm::vec3(-c_WIDTH / 2.f, c_HEIGHT / 2.f, 0);
+	glm::vec3 o = glm::vec3(0, 0, 0);
 
 	std::cout << "Started rendering loop..." << std::endl;
 	glfwSetWindowTitle(_window->getWindow(), "Started rendering loop...");
@@ -91,13 +93,14 @@ void Engine::Run() {
 		_shader->setMat4f("view", viewM);
 
 		//projectionM = glm::perspective(glm::radians(60.0f), (float) WIDTH / (float) HEIGHT, 0.1f, 100.0f);
-		projectionM = glm::ortho(-(float)c_WIDTH / 2, (float)c_WIDTH / 2, -(float)c_HEIGHT / 2, (float)c_HEIGHT / 2, -1000.0f, 1000.0f);
+		//projectionM = glm::ortho(-(float)c_WIDTH / 2, (float)c_WIDTH / 2, -(float)c_HEIGHT / 2, (float)c_HEIGHT / 2, -1000.0f, 1000.0f);
+		projectionM = glm::ortho(0.0f, (float)c_WIDTH, 0.0f, (float)c_HEIGHT, -1000.0f, 1000.0f);
 		_shader->setMat4f("projection", projectionM);
 
 		float timeValue = glfwGetTime();
 		float val = sin(timeValue / 2);
 		
-		fluid.DrawCellField(o, _shader);
+		//fluid.DrawCellField(o, _shader);
 
 		int vertexColorLocation = glGetUniformLocation(_shader->getID(), "ourColor");
 		glUniform4f(vertexColorLocation, 0.0f, val, timeValue, 1.0f);

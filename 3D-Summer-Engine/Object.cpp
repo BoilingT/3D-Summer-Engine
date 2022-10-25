@@ -1,6 +1,9 @@
 #include "Object.h"
 
 void Object::SetupMesh(float* vertices, int vSize, unsigned int* indices, int iSize) {
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
 
 	verticesSize = vSize;
 	indicesSize = iSize;
@@ -39,7 +42,9 @@ void Object::SetupMesh(float* vertices, int vSize, unsigned int* indices, int iS
 }
 
 void Object::SetupMesh(float* vertices, int vSize) {
-
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
 	//VAOs
 	glGenVertexArrays(1, &VAO);
 	//VBOs
@@ -81,7 +86,11 @@ void Object::Draw(Shader& shader) {
 	//modelM = glm::rotate(modelM, transform.rot.y, glm::vec3(0.0f, 1.0f, 1.0f));
 
 	shader.setMat4f("model", modelM);
-	if (indicesSize > 0)
+	if (verticesSize / sizeof(float) / 3 <= 2)
+	{
+		glDrawArrays(GL_LINES, 0, (verticesSize / sizeof(float)));
+	}
+	else if (indicesSize > 0)
 	{
 		glDrawElements(GL_TRIANGLES, indicesSize / sizeof(float), GL_UNSIGNED_INT, 0);
 	}

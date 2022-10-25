@@ -26,5 +26,14 @@ public:
 	void SetupMesh(float* vertices, int vSize);
 	void SetupMesh(float* vertices, int vSize, unsigned int* indices, int iSize);
 	void Draw(Shader& shader);
+
+	~Object() {
+		glDeleteVertexArrays(1, &VAO);
+		glDeleteBuffers(1, &VBO);
+		glDeleteBuffers(1, &EBO);
+		VAO = NULL;
+		VBO = NULL;
+		EBO = NULL;
+	}
 };
 
