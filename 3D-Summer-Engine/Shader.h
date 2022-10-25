@@ -15,6 +15,7 @@ private:
 public:
 	//Read, Compile, Link
 	Shader(const char* vertexPath, const char* fragmentPath);
+	Shader(const char* shaderPath, GLenum type);
 
 	void use();
 	void setBool(const std::string name, bool value) const;

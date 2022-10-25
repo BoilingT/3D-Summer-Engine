@@ -61,6 +61,51 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
 	glDeleteShader(fShader);
 }
 
+Shader::Shader(const char* shaderPath, GLenum type) {
+	unsigned int shader;
+	int success;
+	char compileInfo[512];
+	std::string shaderContent;
+
+	//Read shader files
+	fileHandler.readFile(shaderPath, shaderContent);
+
+	//std::cout << "Vertex Shader:\n" << vShaderContent << "\nEND OF FILE" << std::endl;
+	//std::cout << "Fragment Shader:\n" << fShaderContent << "\nEND OF FILE" << std::endl;
+
+	const char* shaderSource = shaderContent.c_str();
+
+	//Create each shader
+	shader = glCreateShader(type);
+
+	//Compile Shader
+	glShaderSource(shader, 1, &shaderSource, NULL);
+	glCompileShader(shader);
+
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+
+	if (!success)
+	{
+		glGetShaderInfoLog(shader, sizeof(compileInfo), NULL, compileInfo);
+		std::cout << "ERROR::SHADER::COMPILATION_FAILED\n" << compileInfo << std::endl;
+		return;
+	}
+
+	//Create and link Shader Program
+	ID = glCreateProgram();
+	glAttachShader(ID, shader);
+	glLinkProgram(ID);
+
+	glGetProgramiv(ID, GL_LINK_STATUS, &success);
+	if (!success)
+	{
+		glGetProgramInfoLog(ID, 512, NULL, compileInfo);
+		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << compileInfo << std::endl;
+	}
+
+	glDeleteShader(shader);
+}
+
 void Shader::use() {
 	glUseProgram(ID);
 }

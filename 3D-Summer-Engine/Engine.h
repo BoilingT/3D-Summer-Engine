@@ -20,6 +20,8 @@
 #include "Mesh.h"
 #include "Cube.h"
 #include "Plane.h"
+#include "FluidField.h"
+#include "Compute.h"
 
 class Engine
 {
@@ -27,6 +29,7 @@ public:
 	WindowHandler* _window;
 	Shader* _shader;
 	Camera* _camera;
+	Compute* _compute_shader;
 
 	FileHandler fileSystem;
 
@@ -36,6 +39,7 @@ public:
 	const float c_DEFAULT_CLEAR_COLOR[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	const float c_CLEAR_COLOR[4] = { 0.28f, 0.41f, 0.61f, 1.0f };
 
+	const char* p_COMPUTE_SHADER = "Shaders/compute_shader.glsl";
 	const char* p_VERTEX_SHADER = "Shaders/vertex_shader.vert";
 	const char* p_FRAGMENT_SHADER = "Shaders/fragment_shader.frag";
 	const char* p_CONTAINER_IMAGE = "Images/LearnOpenGL/container.jpg";
@@ -66,8 +70,10 @@ public:
 
 		delete _window;
 		delete _camera;
+		delete _compute_shader;
 		_window = NULL;
 		_camera = NULL;
+		_compute_shader = NULL;
 		std::cout << "Window has been destroyed" << std::endl;
 	}
 

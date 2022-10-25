@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Compute.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="fileHandler.cpp" />
@@ -50,6 +49,7 @@
     <ClInclude Include="WindowHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shaders\compute_shader.glsl" />
     <None Include="Shaders\default_fragment_shader.frag" />
     <None Include="Shaders\default_vertex_shader.vert" />
     <None Include="Shaders\fragment_shader.frag" />

@@ -1,6 +1,4 @@
 #include "Engine.h"
-#include "FluidField.h"
-#include "Compute.h"
 
 void Engine::Init()
 {
@@ -15,7 +13,7 @@ void Engine::Init()
 		std::cout << "ERROR :: Unable to initialize GLAD";
 		return;
 	}
-
+	
 	glEnable(GL_DEPTH_TEST);
 
 	//Set the viewport size
@@ -26,6 +24,8 @@ void Engine::Init()
 	glfwSetCursorPosCallback(_window->getWindow(), MOUSE_CALLBACK);
 	//Key Events
 	glfwSetInputMode(_window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	_compute_shader = new Compute(p_COMPUTE_SHADER, glm::vec2(10.0f, 1.0f));
 }
 
 void Engine::Run() {
@@ -42,12 +42,11 @@ void Engine::Run() {
 	_shader = &shader;
 	_shader->use();
 	Plane plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
-
-	//FluidField fluid(c_WIDTH, c_HEIGHT, 256);
+	FluidField fluid(c_WIDTH, c_HEIGHT, 256);
 
 	//glm::vec3 o = glm::vec3(-c_WIDTH / 2.f, c_HEIGHT / 2.f, 0);
 	glm::vec3 o = glm::vec3(0, 0, 0);
-
+	
 	std::cout << "Started rendering loop..." << std::endl;
 	glfwSetWindowTitle(_window->getWindow(), "Started rendering loop...");
 	while (!glfwWindowShouldClose(_window->getWindow()))
@@ -100,7 +99,7 @@ void Engine::Run() {
 		float timeValue = glfwGetTime();
 		float val = sin(timeValue / 2);
 		
-		//fluid.DrawCellField(o, _shader);
+		fluid.DrawCellField(o, _shader);
 
 		int vertexColorLocation = glGetUniformLocation(_shader->getID(), "ourColor");
 		glUniform4f(vertexColorLocation, 0.0f, val, timeValue, 1.0f);

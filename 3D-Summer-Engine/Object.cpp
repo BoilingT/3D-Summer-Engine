@@ -76,6 +76,7 @@ void Object::SetupMesh(float* vertices, int vSize) {
 }
 
 void Object::Draw(Shader& shader) {
+	shader.use();
 	//Draw mesh
 	glBindVertexArray(VAO);
 
