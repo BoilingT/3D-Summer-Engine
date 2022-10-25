@@ -42,7 +42,7 @@ void Engine::Run() {
 	_shader = &shader;
 	_shader->use();
 	Plane plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
-	FluidField fluid(c_WIDTH, c_HEIGHT, 256);
+	FluidField fluid(c_WIDTH, c_HEIGHT, 64*64);
 
 	//glm::vec3 o = glm::vec3(-c_WIDTH / 2.f, c_HEIGHT / 2.f, 0);
 	glm::vec3 o = glm::vec3(0, 0, 0);
