@@ -46,7 +46,7 @@ public:
 	const char* p_AWESOMEFACE_IMAGE = "Images/LearnOpenGL/awesomeface.png";
 
 	float deltaTime = 0.0f;
-	float lastFrame = 0.0f;
+	float lastTime = 0.0f;
 	float lastX = Engine::c_WIDTH / 2;
 	float lastY = Engine::c_HEIGHT / 2;
 	bool firstMouseEnter = true;

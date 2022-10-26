@@ -33,7 +33,6 @@ void Engine::Run() {
 	glfwSetWindowTitle(_window->getWindow(), "Starting Engine...");
 
 	int frames = 0;
-	float time = 0;
 	int fps = 0;
 	float sleepTime = 0;
 	
@@ -42,32 +41,33 @@ void Engine::Run() {
 	_shader = &shader;
 	_shader->use();
 	Plane plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
-	FluidField fluid(c_WIDTH, c_HEIGHT, 64*64);
+	FluidField fluid(c_WIDTH, c_HEIGHT, 256*256);
 
 	//glm::vec3 o = glm::vec3(-c_WIDTH / 2.f, c_HEIGHT / 2.f, 0);
 	glm::vec3 o = glm::vec3(0, 0, 0);
 	
 	std::cout << "Started rendering loop..." << std::endl;
 	glfwSetWindowTitle(_window->getWindow(), "Started rendering loop...");
+
+	lastTime = glfwGetTime();
 	while (!glfwWindowShouldClose(_window->getWindow()))
 	{
-		float currentFrame = glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
-		time += deltaTime;
+		float currentTime = glfwGetTime();
+		deltaTime = currentTime - lastTime;
 		frames++;
 
-		if (frames >= 50)
+		if (deltaTime >= 1.f)
 		{
-			//fps = f/s => fps = 1/dt
-			//144 = 1/s => s = 1/144
-			fps = frames / (time);
-			//std::cout << frames << " / " << time << " = " << fps << " sleep: " << sleepTime << std::endl;
+			//double TPF = 1000.0 / (double)frames;
+			//std::cout << TPF << "ms/frame" << std::endl;
+			double TPF = 1000.0 / (double)frames;
+			//sleepTime = 1000.f / 144.f - TPF;
+			fps = frames/deltaTime;
 			frames = 0;
-			time = 0;
-			std::string title = "FPS: " + std::to_string(fps);
+			lastTime += 1.f;
+			std::string title = "FPS: " + std::to_string(fps) + " TPF: " + std::to_string(TPF) + "ms";
 			glfwSetWindowTitle(_window->getWindow(), title.c_str());
 		}
-		//sleepTime = 1000.f / 60.f - deltaTime;
 
 		POLL_EVENTS(_window->getWindow());
 
@@ -114,7 +114,6 @@ void Engine::Run() {
 		glfwSwapBuffers(_window->getWindow());
 		//Check if any events have been triggered
 		glfwPollEvents();
-		lastFrame = currentFrame;
 
 		if (sleepTime > 0)
 		{

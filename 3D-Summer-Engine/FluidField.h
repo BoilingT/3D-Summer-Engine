@@ -9,8 +9,8 @@ class FluidField
 private:
 	//Field
 	float m_WIDTH, m_HEIGHT;
-	int m_resolution;
-	float m_fieldWidth;
+	const int m_resolution;
+	const int m_fieldWidth;
 	//Forcefield containing vector information
 	float* m_cellField;
 	Plane* m_quad;
@@ -19,11 +19,9 @@ private:
 	void Init();
 
 public:
-	FluidField(const float WIDTH, const float HEIGHT, int resolution) {
+	FluidField(const float WIDTH, const float HEIGHT, int resolution) : m_resolution(resolution), m_fieldWidth(sqrt(resolution)) {
 		m_WIDTH = WIDTH;
 		m_HEIGHT = HEIGHT;
-		m_resolution = resolution;
-		m_fieldWidth = sqrt(resolution);
 		m_quad = new Plane(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
 		m_line = new Line(0.0f, 0.0f, 0.0f, 0.0f);
 		Init();

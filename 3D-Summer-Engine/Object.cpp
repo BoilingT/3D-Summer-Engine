@@ -75,6 +75,47 @@ void Object::SetupMesh(float* vertices, int vSize) {
 	glBindVertexArray(0);
 }
 
+void Object::DrawInstanced(Shader& shader, glm::vec2* values, int count) {
+	shader.use();
+
+	glBindVertexArray(VAO);
+	glGenBuffers(1, &instanceVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+	glBufferData(GL_ARRAY_BUFFER, count * sizeof(glm::vec2), values, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)(0));
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glVertexAttribDivisor(1, 1);
+
+
+	//Draw mesh
+
+	glm::mat4 modelM = glm::mat4(1.0f);
+
+	modelM = glm::translate(modelM, transform.pos);
+	modelM = glm::scale(modelM, transform.dim);
+	//modelM = glm::rotate(modelM, transform.rot.y, glm::vec3(0.0f, 1.0f, 1.0f));
+
+	shader.setMat4f("model", modelM);
+	if (verticesSize / sizeof(float) / 3 <= 2)
+	{
+		glDrawArraysInstanced(GL_LINES, 0, (verticesSize / sizeof(float)), count);
+	}
+	else if (indicesSize > 0)
+	{
+		glDrawElementsInstanced(GL_TRIANGLES, indicesSize / sizeof(float), GL_UNSIGNED_INT, 0, count);
+	}
+	else
+	{
+		glDrawArraysInstanced(GL_TRIANGLES, 0, (verticesSize / sizeof(float)), count);
+	}
+	glDeleteBuffers(1, &instanceVBO);
+	glBindVertexArray(0);
+}
+
 void Object::Draw(Shader& shader) {
 	shader.use();
 	//Draw mesh

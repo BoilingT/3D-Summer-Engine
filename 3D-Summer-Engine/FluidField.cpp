@@ -9,17 +9,24 @@ void FluidField::Draw(glm::vec3 origin) {
 }
 
 void FluidField::DrawCellField(glm::vec3 o, Shader* visualizeShader) {
-	int vLocation = glGetUniformLocation(visualizeShader->getID(), "color");
+	visualizeShader->use();
+	int cLocation = glGetUniformLocation(visualizeShader->getID(), "color");
+	glm::vec2 translations[256*256];
+	m_quad->transform.dim = glm::vec3(m_WIDTH / (float)m_fieldWidth, m_HEIGHT / (float)m_fieldWidth, 0.0f);
+	m_quad->transform.pos.x = o.x + m_quad->transform.dim.x / 2.f + m_quad->transform.dim.x * 0;
+	m_quad->transform.pos.y = o.y + m_quad->transform.dim.y / 2.f + m_quad->transform.dim.y * 0;
 	for (unsigned int r = 0; r < m_fieldWidth; r++)
 	{
 		for (unsigned int c = 0; c < m_fieldWidth; c++)
 		{
-			glUniform4f(vLocation, (c + 1.f) / m_fieldWidth, 0.0f, (r + 1.f) / m_fieldWidth, 1.0f);
+			glUniform4f(cLocation, (c + 1.f) / m_fieldWidth, 0.0f, (r + 1.f) / m_fieldWidth, 1.0f);
 			//Plane m_quad = Quads[r * gridWidth + c];
-			m_quad->transform.dim = glm::vec3(m_WIDTH / (float)m_fieldWidth, m_HEIGHT / (float)m_fieldWidth, 0.0f);
-			m_quad->transform.pos.x = o.x + m_quad->transform.dim.x / 2.f + m_quad->transform.dim.x * c;
-			m_quad->transform.pos.y = o.y + m_quad->transform.dim.y / 2.f + m_quad->transform.dim.y * r;
-			m_quad->Draw(*visualizeShader);
+			//m_quad->transform.pos.x = o.x + m_quad->transform.dim.x / 2.f + m_quad->transform.dim.x * c;
+			//m_quad->transform.pos.y = o.y + m_quad->transform.dim.y / 2.f + m_quad->transform.dim.y * r;
+			//glm::vec3 pos = glm::vec3(o.x + m_quad->transform.dim.x / 2.f + m_quad->transform.dim.x * c, o.y + m_quad->transform.dim.y / 2.f + m_quad->transform.dim.y * r, 0.0f);
+			//translations[r * m_fieldWidth + c] = pos;
+			translations[r * m_fieldWidth + c] = glm::vec2(c, r);
+			
 			/*glUniform4f(vLocation, 0.0f, 1.0f, 0.0f, 1.0f);
 			glm::vec3 offset = glm::vec3(0.0f, 0.0f, 0.0f);
  			m_line->set(m_quad->transform.pos + offset, m_quad->transform.pos + offset + glm::vec3(20.0f, 20.0f, 0.0f));
@@ -29,6 +36,13 @@ void FluidField::DrawCellField(glm::vec3 o, Shader* visualizeShader) {
 			
 		}
 	}
+	/*for (unsigned int i = 0; i < m_resolution; i++)
+	{
+		int tLocation = glGetUniformLocation(visualizeShader->getID(), ("offsets[" + std::to_string(i) + "]").c_str());
+		glUniform2f(tLocation, translations[i].x, translations[i].y);
+	}*/
+	//m_line->DrawInstanced(*visualizeShader, translations, m_resolution);
+ 	m_quad->DrawInstanced(*visualizeShader, translations, m_resolution);
 }
 
 void FluidField::timeStep() {
