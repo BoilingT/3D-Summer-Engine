@@ -49,11 +49,21 @@
     <ClInclude Include="WindowHandler.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\compute_shader.glsl" />
-    <None Include="Shaders\default_fragment_shader.frag" />
-    <None Include="Shaders\default_vertex_shader.vert" />
-    <None Include="Shaders\fragment_shader.frag" />
-    <None Include="Shaders\vertex_shader.vert" />
+    <None Include="Shaders\compute_shader.glsl">
+      <FileType>Text</FileType>
+    </None>
+    <None Include="Shaders\default_fragment_shader.frag">
+      <FileType>Text</FileType>
+    </None>
+    <None Include="Shaders\default_vertex_shader.vert">
+      <FileType>Text</FileType>
+    </None>
+    <None Include="Shaders\fragment_shader.frag">
+      <FileType>Text</FileType>
+    </None>
+    <None Include="Shaders\vertex_shader.vert">
+      <FileType>Text</FileType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Images\LearnOpenGL\awesomeface.png" />
