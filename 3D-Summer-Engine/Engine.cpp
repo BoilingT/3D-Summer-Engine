@@ -3,7 +3,7 @@
 void Engine::Init()
 {
 	//Open window
-	if (_window->init() == -1) {
+	if (m_window->init() == -1) {
 		return;
 	}
 
@@ -19,18 +19,18 @@ void Engine::Init()
 	//Set the viewport size
 	glViewport(0, 0, c_WIDTH, c_HEIGHT);
 	//Resize the viewport when the window size is changed
-	glfwSetFramebufferSizeCallback(_window->getWindow(), FRAME_BUFFER_SIZE_CALLBACK);
+	glfwSetFramebufferSizeCallback(m_window->getWindow(), FRAME_BUFFER_SIZE_CALLBACK);
 	//Mouse Events
-	glfwSetCursorPosCallback(_window->getWindow(), MOUSE_CALLBACK);
+	glfwSetCursorPosCallback(m_window->getWindow(), MOUSE_CALLBACK);
 	//Key Events
-	glfwSetInputMode(_window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(m_window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	_compute_shader = new Compute(p_COMPUTE_SHADER, glm::vec2(10.0f, 1.0f));
+	m_compute_shader = new Compute(p_COMPUTE_SHADER, glm::vec2(10.0f, 1.0f));
 }
 
 void Engine::Run() {
 	std::cout << "Starting Engine..." << std::endl;
-	glfwSetWindowTitle(_window->getWindow(), "Starting Engine...");
+	glfwSetWindowTitle(m_window->getWindow(), "Starting Engine...");
 
 	int frames = 0;
 	int fps = 0;
@@ -38,19 +38,19 @@ void Engine::Run() {
 	
 	//Setup shader
 	Shader shader(p_VERTEX_SHADER, p_FRAGMENT_SHADER);
-	_shader = &shader;
-	_shader->use();
+	m_shader = &shader;
+	m_shader->use();
 	Plane plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
-	FluidField fluid(c_WIDTH, c_HEIGHT, 256*256);
+	FluidField fluid(c_WIDTH, c_HEIGHT, c_resolution);
 
-	//glm::vec3 o = glm::vec3(-c_WIDTH / 2.f, c_HEIGHT / 2.f, 0);
-	glm::vec3 o = glm::vec3(0, 0, 0);
+	//glm::vec3 origin = glm::vec3(-c_WIDTH / 2.f, c_HEIGHT / 2.f, 0);
+	glm::vec3 origin = glm::vec3(0, 0, 0);
 	
 	std::cout << "Started rendering loop..." << std::endl;
-	glfwSetWindowTitle(_window->getWindow(), "Started rendering loop...");
+	glfwSetWindowTitle(m_window->getWindow(), "Started rendering loop...");
 
 	lastTime = glfwGetTime();
-	while (!glfwWindowShouldClose(_window->getWindow()))
+	while (!glfwWindowShouldClose(m_window->getWindow()))
 	{
 		float currentTime = glfwGetTime();
 		deltaTime = currentTime - lastTime;
@@ -66,10 +66,10 @@ void Engine::Run() {
 			frames = 0;
 			lastTime += 1.f;
 			std::string title = "FPS: " + std::to_string(fps) + " TPF: " + std::to_string(TPF) + "ms";
-			glfwSetWindowTitle(_window->getWindow(), title.c_str());
+			glfwSetWindowTitle(m_window->getWindow(), title.c_str());
 		}
 
-		POLL_EVENTS(_window->getWindow());
+		IO_EVENTS(m_window->getWindow());
 
 		//Render
 		glClearColor(c_DEFAULT_CLEAR_COLOR[0], c_DEFAULT_CLEAR_COLOR[1], c_DEFAULT_CLEAR_COLOR[2], c_DEFAULT_CLEAR_COLOR[3]);
@@ -86,22 +86,22 @@ void Engine::Run() {
 		glm::mat4 viewM = glm::mat4(1.0f);
 		glm::mat4 projectionM = glm::mat4(1.0f);
 
-		//viewM = _camera->lookAt(_camera->forward());
+		//viewM = m_camera->lookAt(m_camera->forward());
 
-		//viewM = glm::lookAt(_camera->getPos(), _camera->getPos() + _camera->forward(), _camera->up());
-		_shader->setMat4f("view", viewM);
+		//viewM = glm::lookAt(m_camera->getPos(), m_camera->getPos() + m_camera->forward(), m_camera->up());
+		m_shader->setMat4f("view", viewM);
 
 		//projectionM = glm::perspective(glm::radians(60.0f), (float) WIDTH / (float) HEIGHT, 0.1f, 100.0f);
 		//projectionM = glm::ortho(-(float)c_WIDTH / 2, (float)c_WIDTH / 2, -(float)c_HEIGHT / 2, (float)c_HEIGHT / 2, -1000.0f, 1000.0f);
 		projectionM = glm::ortho(0.0f, (float)c_WIDTH, 0.0f, (float)c_HEIGHT, -1000.0f, 1000.0f);
-		_shader->setMat4f("projection", projectionM);
+		m_shader->setMat4f("projection", projectionM);
 
 		float timeValue = glfwGetTime();
 		float val = sin(timeValue / 2);
 		
-		fluid.DrawCellField(o, _shader);
+		fluid.DrawCellField(origin, m_shader);
 
-		int vertexColorLocation = glGetUniformLocation(_shader->getID(), "ourColor");
+		int vertexColorLocation = glGetUniformLocation(m_shader->getID(), "ourColor");
 		glUniform4f(vertexColorLocation, 0.0f, val, timeValue, 1.0f);
 
 		glBindVertexArray(0);
@@ -111,7 +111,7 @@ void Engine::Run() {
 			While it is being drawn to the screen a back buffer is being drawn behind the scenes in order to reduce flickering issues.
 		*/
 		//Swap color buffer in order to render new images
-		glfwSwapBuffers(_window->getWindow());
+		glfwSwapBuffers(m_window->getWindow());
 		//Check if any events have been triggered
 		glfwPollEvents();
 
@@ -156,7 +156,7 @@ void Engine::Run() {
 			depth values of the fragment to determine if a fragment is in front or behind another object and should thus be discarded accordingly.
 	*/
 
-void Engine::POLL_EVENTS(GLFWwindow* window) {
+void Engine::IO_EVENTS(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
 		glfwSetWindowShouldClose(window, true);
@@ -181,55 +181,55 @@ void Engine::POLL_EVENTS(GLFWwindow* window) {
 
 	float cameraSpeed = 2.5f;
 
-	const float cameraSensitivity = _camera->sensitivity * deltaTime;
+	const float cameraSensitivity = m_camera->sensitivity * deltaTime;
 
 	//Forward
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		//std::cout << "Forward: { " << _camera->forward().x << ", " << _camera->forward().y << ", " << _camera->forward().z << " }" << std::endl;
-		_camera->processKeyboardInput(Camera_Movement::FORWARD, deltaTime);
+		//std::cout << "Forward: { " << m_camera->forward().x << ", " << m_camera->forward().y << ", " << m_camera->forward().z << " }" << std::endl;
+		m_camera->processKeyboardInput(Camera_Movement::FORWARD, deltaTime);
 	}
 	//Backward
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		_camera->processKeyboardInput(Camera_Movement::BACKWARD, deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::BACKWARD, deltaTime);
 	}
 	//Left
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		_camera->processKeyboardInput(Camera_Movement::LEFT, deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::LEFT, deltaTime);
 	}
 	//Right
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
-		_camera->processKeyboardInput(Camera_Movement::RIGHT, deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::RIGHT, deltaTime);
 	}
 	//Up
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
-		_camera->processKeyboardInput(Camera_Movement::UP, deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::UP, deltaTime);
 	}
 	//Down
 	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
 	{
-		_camera->processKeyboardInput(Camera_Movement::DOWN, deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::DOWN, deltaTime);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
-		_camera->rotate(glm::vec3(0.0f, 1.0f, 0.0f) * -cameraSensitivity);
+		m_camera->rotate(glm::vec3(0.0f, 1.0f, 0.0f) * -cameraSensitivity);
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
-		_camera->rotate(glm::vec3(0.0f, 1.0f, 0.0f) * cameraSensitivity);
+		m_camera->rotate(glm::vec3(0.0f, 1.0f, 0.0f) * cameraSensitivity);
 	}
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 	{
-		_camera->rotate(glm::vec3(1.0f, 0.0f, 0.0f) * cameraSensitivity);
+		m_camera->rotate(glm::vec3(1.0f, 0.0f, 0.0f) * cameraSensitivity);
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 	{
-		_camera->rotate(glm::vec3(1.0f, 0.0f, 0.0f) * -cameraSensitivity);
+		m_camera->rotate(glm::vec3(1.0f, 0.0f, 0.0f) * -cameraSensitivity);
 	}
 }
 
@@ -246,8 +246,8 @@ void Engine::MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos) {
 	lastX = xPos;
 	lastY = yPos;
 	*/
-	//const float sensitivity = _camera->sensitivity / 100.f;
-	//_camera->processMouseMovement(yTravel * -sensitivity, xTravel * -sensitivity);
+	//const float sensitivity = m_camera->sensitivity / 100.f;
+	//m_camera->processMouseMovement(yTravel * -sensitivity, xTravel * -sensitivity);
 }
 
 void Engine::FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow* window, int width, int height) {

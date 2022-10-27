@@ -8,22 +8,26 @@ class FluidField
 {
 private:
 	//Field
-	float m_WIDTH, m_HEIGHT;
-	const int m_resolution;
-	const int m_fieldWidth;
+	float		 m_WIDTH, m_HEIGHT;
+	const int	 m_resolution;
+	const int	 m_fieldWidth;
+
 	//Forcefield containing vector information
-	float* m_cellField;
-	Plane* m_quad;
-	Line* m_line;
+	float*					m_cellField;
+	std::vector<glm::vec2>	m_translations;
+	Plane*					m_quad;
+	Line*					m_line;
+
 	//Initialize the grid
 	void Init();
 
 public:
-	FluidField(const float WIDTH, const float HEIGHT, int resolution) : m_resolution(resolution), m_fieldWidth(sqrt(resolution)) {
+	FluidField(const float WIDTH, const float HEIGHT, const int resolution) : m_resolution(resolution), m_fieldWidth(sqrt(resolution)) {
 		m_WIDTH = WIDTH;
 		m_HEIGHT = HEIGHT;
 		m_quad = new Plane(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
-		m_line = new Line(0.0f, 0.0f, 0.0f, 0.0f);
+		//m_line = new Line(0.0f, 0.0f, 0.0f, 0.0f);
+		m_translations.resize(resolution);
 		Init();
 	}
 
