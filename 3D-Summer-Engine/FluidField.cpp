@@ -27,7 +27,7 @@ void FluidField::DrawCellField(glm::vec3 o, Shader* visualizeShader) {
 			//m_quad->transform.pos.y = o.y + m_quad->transform.dim.y / 2.f + m_quad->transform.dim.y * r;
 			//glm::vec3 pos = glm::vec3(o.x + m_quad->transform.dim.x / 2.f + m_quad->transform.dim.x * c, o.y + m_quad->transform.dim.y / 2.f + m_quad->transform.dim.y * r, 0.0f);
 			//m_translations[r * m_fieldWidth + c] = pos;
-			m_translations[r * m_fieldWidth + c] = glm::vec2(c, r);
+			m_translations[(double) r * m_fieldWidth + (double) c] = glm::vec2(c, r);
 			
 			/*glUniform4f(vLocation, 0.0f, 1.0f, 0.0f, 1.0f);
 			glm::vec3 offset = glm::vec3(0.0f, 0.0f, 0.0f);
