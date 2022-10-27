@@ -17,14 +17,6 @@ void main(){
 	float c = aOffset.x;
 	float r = aOffset.y;
 	float k = sqrt(resolution);
-	#if 1
-	if(ID % 2 == 0){
-		vColor = vec4(0.5f, 0.5f, 0.5f, 1.0f);	
-	}else{
-		vColor = vec4(1.0f);
-	}
-	#else
-		vColor = vec4((c+1.f) /k, 0.0f, (r+1.f) /k, 1.0f);	
-	#endif
+	vColor = vec4((c+1.f) /k, 0.0f, (r+1.f) /k, 1.0f);
 	gl_Position = clip_space * vec4(aPos.x + aOffset.x, aPos.y + aOffset.y, aPos.z, 1.0f);
 }

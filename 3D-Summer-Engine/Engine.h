@@ -57,7 +57,7 @@ public:
 	float lastTime							 = 0.0f;
 
 	//Fluid Simulation
-	const int c_resolution					 = 128; // aka Gridarea
+	const int c_resolution					 = 256; // aka Gridarea
 
 	Engine() {
 		std::cout << "Initializing Engine..." << std::endl;
