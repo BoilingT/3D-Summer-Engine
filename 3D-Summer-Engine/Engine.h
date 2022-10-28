@@ -16,8 +16,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Mesh.h"
-#include "Cube.h"
-#include "Plane.h"
+#include "object_includes.h";
 #include "FluidField.h"
 #include "Compute.h"
 
@@ -26,37 +25,32 @@ class Engine
 {
 private:
 	WindowHandler*		m_window;
-	Shader*				m_shader;
 	Camera*				m_camera;
-	Compute*			m_compute_shader;
-
-	FileHandler fileSystem;
+	FluidField*			m_fluid;
+	FileHandler			fileSystem;
 
 	//Window Properties
-	static const int c_WIDTH				 = 1920;
-	static const int c_HEIGHT				 = 1080;
-	const char*	c_WINDOW_NAME				 = "Summer Engine";
-	const float	c_DEFAULT_CLEAR_COLOR[4]	 = { 0.0f, 0.0f, 0.0f, 1.0f };
-	const float	c_CLEAR_COLOR[4]			 = { 0.28f, 0.41f, 0.61f, 1.0f };
+	static const int c_WIDTH								 = 700;
+	static const int c_HEIGHT								 = 700;
+	const char*	c_WINDOW_NAME								 = "Summer Engine";
+	const float	c_DEFAULT_CLEAR_COLOR[4]					 = { 0.0f, 0.0f, 0.0f, 1.0f };
+	const float	c_CLEAR_COLOR[4]							 = { 0.28f, 0.41f, 0.61f, 1.0f };
 
 	//Filepaths
-	const char* p_COMPUTE_SHADER			 = "Shaders/compute_shader.glsl";
-	const char* p_VERTEX_SHADER				 = "Shaders/vertex_shader.vert";
-	const char* p_FRAGMENT_SHADER			 = "Shaders/fragment_shader.frag";
-	const char* p_CONTAINER_IMAGE			 = "Images/LearnOpenGL/container.jpg";
-	const char* p_AWESOMEFACE_IMAGE			 = "Images/LearnOpenGL/awesomeface.png";
+	const char* p_CONTAINER_IMAGE							 = "Images/LearnOpenGL/container.jpg";
+	const char* p_AWESOMEFACE_IMAGE							 = "Images/LearnOpenGL/awesomeface.png";
 	
 	//Mouse Events (not included)
-	float g_lastX							 = Engine::c_WIDTH / 2;
-	float g_lastY							 = Engine::c_HEIGHT / 2;
-	bool g_firstMouseEnter					 = true;
+	float g_lastX											 = Engine::c_WIDTH / 2;
+	float g_lastY											 = Engine::c_HEIGHT / 2;
+	bool g_firstMouseEnter									 = true;
 
 	//dT
-	float g_deltaTime						 = 0.0f;
-	float g_lastTime						 = 0.0f;
+	float g_deltaTime										 = 0.0f;
+	float g_lastTime										 = 0.0f;
 
 	//Fluid Simulation
-	const int c_resolution					 = 256*256; // aka Gridarea
+	const int c_RESOLUTION									 = 256; // aka Gridarea
 
 public:
 
@@ -65,7 +59,7 @@ public:
 
 		m_window = new WindowHandler(c_WIDTH, c_HEIGHT, c_WINDOW_NAME);
 		m_camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-
+		
 		Init();
 		std::cout << "Engine Initialized" << std::endl;
 		glfwSetWindowTitle(m_window->getWindow(), "Engine Initialized");
@@ -77,11 +71,11 @@ public:
 
 		delete m_window;
 		delete m_camera;
-		delete m_compute_shader;
+		delete m_fluid;
 
 		m_window = NULL;
 		m_camera = NULL;
-		m_compute_shader = NULL;
+		m_fluid = NULL;
 		std::cout << "Window has been destroyed" << std::endl;
 	}
 

@@ -1,6 +1,6 @@
 #pragma once
 #include "Object.h"
-class Plane :
+class Rect :
     public Object
 {
 private:
@@ -19,14 +19,14 @@ private:
 
 public:
 
-    Plane() {
+    Rect() {
         transform.pos = glm::vec3(0.0f);
         transform.dim = glm::vec3(1.0f);
         transform.rot = glm::vec3(0.0f);
         SetupMesh(planeVertices, sizeof(planeVertices), indices, sizeof(indices));
     }
 
-    Plane(glm::vec3 pos, glm::vec3 dim, glm::vec3 rot) {
+    Rect(glm::vec3 pos, glm::vec3 dim, glm::vec3 rot) {
         transform.pos = pos;
         transform.dim = dim;
         transform.rot = rot;

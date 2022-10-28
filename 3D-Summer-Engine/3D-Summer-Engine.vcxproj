@@ -28,7 +28,7 @@
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="Plane.cpp" />
+    <ClCompile Include="Rect.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="WindowHandler.cpp" />
@@ -42,9 +42,11 @@
     <ClInclude Include="FluidField.h" />
     <ClInclude Include="Line.h" />
     <ClInclude Include="Mesh.h" />
-    <ClInclude Include="Plane.h" />
+    <ClInclude Include="Rect.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="glm_includes.h" />
+    <ClInclude Include="object_includes.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="stb_image_write.h" />
     <ClInclude Include="WindowHandler.h" />
@@ -70,6 +72,10 @@
     <Image Include="Images\LearnOpenGL\awesomeface.png" />
     <Image Include="Images\LearnOpenGl\container.jpg" />
     <Image Include="Images\LearnOpenGl\wall.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\visualise_grid_fragment_shader.frag" />
+    <None Include="Shaders\visualise_grid_vertex_shader.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

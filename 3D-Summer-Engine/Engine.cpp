@@ -30,7 +30,7 @@ void Engine::Init()
 	//Key Events
 	glfwSetInputMode(m_window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	m_compute_shader = new Compute(p_COMPUTE_SHADER, glm::vec2(10.0f, 1.0f));
+	m_fluid = new FluidField(c_WIDTH, c_HEIGHT, c_RESOLUTION);
 }
 
 void Engine::Run() {
@@ -41,12 +41,7 @@ void Engine::Run() {
 	int fps = 0;
 	float sleepTime = 0;
 	
-	//Setup shader
-	Shader shader(p_VERTEX_SHADER, p_FRAGMENT_SHADER);
-	m_shader = &shader;
-	m_shader->use();
-	Plane plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
-	FluidField fluid(c_WIDTH, c_HEIGHT, c_resolution);
+	//Rect plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
 
 	//glm::vec3 origin = glm::vec3(-c_WIDTH / 2.f, c_HEIGHT / 2.f, 0);
 	glm::vec3 origin = glm::vec3(0, 0, 0);
@@ -94,20 +89,19 @@ void Engine::Run() {
 		//viewM = m_camera->lookAt(m_camera->forward());
 
 		//viewM = glm::lookAt(m_camera->getPos(), m_camera->getPos() + m_camera->forward(), m_camera->up());
-		m_shader->setMat4f("view", viewM);
 
 		//projectionM = glm::perspective(glm::radians(60.0f), (float) WIDTH / (float) HEIGHT, 0.1f, 100.0f);
 		//projectionM = glm::ortho(-(float)c_WIDTH / 2, (float)c_WIDTH / 2, -(float)c_HEIGHT / 2, (float)c_HEIGHT / 2, -1000.0f, 1000.0f);
-		projectionM = glm::ortho(0.0f, (float)c_WIDTH, 0.0f, (float)c_HEIGHT, -1000.0f, 1000.0f);
-		m_shader->setMat4f("projection", projectionM);
+		////projectionM = glm::ortho(0.0f, (float)c_WIDTH, 0.0f, (float)c_HEIGHT, -1000.0f, 1000.0f);
 
 		float timeValue = glfwGetTime();
 		float val = sin(timeValue / 2);
 		
-		fluid.DrawCellField(origin, m_shader);
+		m_fluid->Draw(origin);
+		//m_fluid->DrawCellField(origin);
 		
-		int vertexColorLocation = glGetUniformLocation(m_shader->getID(), "ourColor");
-		glUniform4f(vertexColorLocation, 0.0f, val, timeValue, 1.0f);
+		//int vertexColorLocation = glGetUniformLocation(m_shader->getID(), "ourColor");
+		//glUniform4f(vertexColorLocation, 0.0f, val, timeValue, 1.0f);
 
 		glBindVertexArray(0);
 
@@ -126,20 +120,19 @@ void Engine::Run() {
 		}
 
 	}
-	glDeleteProgram(shader.getID());
 	return;
 }
 
 void Engine::saveImage(const char* path, GLFWwindow* window)
 {
 	std::cout << "Writing file..." << std::endl;
-	int width			 = 0;
-	int height			 = 0;
+	int width											 = 0;
+	int height											 = 0;
 	glfwGetFramebufferSize(window, &width, &height);
-	int channelAmount	 = 3;
-	int stride			 = channelAmount * width;
-	stride				 += (stride % 4) ? (4 - stride % 4) : 0;
-	int bufferSize		 = stride * height;
+	int channelAmount									 = 3;
+	int stride											 = channelAmount * width;
+	stride												 += (stride % 4) ? (4 - stride % 4) : 0;
+	int bufferSize										 = stride * height;
 	std::vector<char> buffer(bufferSize);
 
 	glPixelStorei(GL_PACK_ALIGNMENT, 4);
