@@ -5,9 +5,7 @@
 #include <chrono>
 
 //GLM
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp> 
+#include "glm_includes.h"
 
 #include <glad/glad.h> //Needs to be included before GLFW
 #include <GLFW/glfw3.h>
