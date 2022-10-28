@@ -1,4 +1,9 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "Engine.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
 
 void Engine::Init()
 {
@@ -48,23 +53,23 @@ void Engine::Run() {
 	
 	std::cout << "Started rendering loop..." << std::endl;
 	glfwSetWindowTitle(m_window->getWindow(), "Started rendering loop...");
-
-	lastTime = glfwGetTime();
+	
+	g_lastTime = glfwGetTime();
 	while (!glfwWindowShouldClose(m_window->getWindow()))
 	{
 		float currentTime = glfwGetTime();
-		deltaTime = currentTime - lastTime;
+		g_deltaTime = currentTime - g_lastTime;
 		frames++;
 
-		if (deltaTime >= 1.f)
+		if (g_deltaTime >= 1.f)
 		{
 			//double TPF = 1000.0 / (double)frames;
 			//std::cout << TPF << "ms/frame" << std::endl;
 			double TPF = 1000.0 / (double)frames;
 			//sleepTime = 1000.f / 144.f - TPF;
-			fps = frames/deltaTime;
+			fps = frames/g_deltaTime;
 			frames = 0;
-			lastTime += 1.f;
+			g_lastTime += 1.f;
 			std::string title = "FPS: " + std::to_string(fps) + " TPF: " + std::to_string(TPF) + "ms";
 			glfwSetWindowTitle(m_window->getWindow(), title.c_str());
 		}
@@ -100,7 +105,7 @@ void Engine::Run() {
 		float val = sin(timeValue / 2);
 		
 		fluid.DrawCellField(origin, m_shader);
-
+		
 		int vertexColorLocation = glGetUniformLocation(m_shader->getID(), "ourColor");
 		glUniform4f(vertexColorLocation, 0.0f, val, timeValue, 1.0f);
 
@@ -114,14 +119,34 @@ void Engine::Run() {
 		glfwSwapBuffers(m_window->getWindow());
 		//Check if any events have been triggered
 		glfwPollEvents();
-
+		
 		if (sleepTime > 0)
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds((long)(sleepTime)));
 		}
+
 	}
 	glDeleteProgram(shader.getID());
 	return;
+}
+
+void Engine::saveImage(const char* path, GLFWwindow* window)
+{
+	std::cout << "Writing file..." << std::endl;
+	int width, height;
+	glfwGetFramebufferSize(window, &width, &height);
+	int channelAmount = 3;
+	int stride = channelAmount * width;
+	stride += (stride % 4) ? (4 - stride % 4) : 0;
+	int bufferSize = stride * height;
+	std::vector<char> buffer(bufferSize);
+
+	glPixelStorei(GL_PACK_ALIGNMENT, 4);
+	glReadBuffer(GL_FRONT);
+	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer.data());
+	stbi_flip_vertically_on_write(true);
+	stbi_write_png(path, width, height, channelAmount, buffer.data(), stride);
+	std::cout << "File has been written at " << path << std::endl;
 }
 
 /*
@@ -159,7 +184,15 @@ void Engine::Run() {
 void Engine::IO_EVENTS(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
+		std::cout << "Terminating..." << std::endl;
+		glfwSetWindowTitle(m_window->getWindow(), "Terminating...");
 		glfwSetWindowShouldClose(window, true);
+	}
+	if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS)
+	{
+		if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_RELEASE) {
+			saveImage("C:/Users/to9751/Pictures/Generated Images/Framebuffer.png", window);
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS)
 	{
@@ -181,38 +214,38 @@ void Engine::IO_EVENTS(GLFWwindow* window) {
 
 	float cameraSpeed = 2.5f;
 
-	const float cameraSensitivity = m_camera->sensitivity * deltaTime;
+	const float cameraSensitivity = m_camera->sensitivity * g_deltaTime;
 
 	//Forward
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		//std::cout << "Forward: { " << m_camera->forward().x << ", " << m_camera->forward().y << ", " << m_camera->forward().z << " }" << std::endl;
-		m_camera->processKeyboardInput(Camera_Movement::FORWARD, deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::FORWARD, g_deltaTime);
 	}
 	//Backward
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		m_camera->processKeyboardInput(Camera_Movement::BACKWARD, deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::BACKWARD, g_deltaTime);
 	}
 	//Left
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		m_camera->processKeyboardInput(Camera_Movement::LEFT, deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::LEFT, g_deltaTime);
 	}
 	//Right
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
-		m_camera->processKeyboardInput(Camera_Movement::RIGHT, deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::RIGHT, g_deltaTime);
 	}
 	//Up
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
-		m_camera->processKeyboardInput(Camera_Movement::UP, deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::UP, g_deltaTime);
 	}
 	//Down
 	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
 	{
-		m_camera->processKeyboardInput(Camera_Movement::DOWN, deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::DOWN, g_deltaTime);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
@@ -234,17 +267,17 @@ void Engine::IO_EVENTS(GLFWwindow* window) {
 }
 
 void Engine::MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos) {
-	/*if (firstMouseEnter)
+	/*if (g_firstMouseEnter)
 	{
-		lastX = xPos;
-		lastY = yPos;
-		firstMouseEnter = false;
+		g_lastX = xPos;
+		g_lastY = yPos;
+		g_firstMouseEnter = false;
 	}
 	float xTravel, yTravel;
-	xTravel = xPos - lastX;
-	yTravel = yPos - lastY;
-	lastX = xPos;
-	lastY = yPos;
+	xTravel = xPos - g_lastX;
+	yTravel = yPos - g_lastY;
+	g_lastX = xPos;
+	g_lastY = yPos;
 	*/
 	//const float sensitivity = m_camera->sensitivity / 100.f;
 	//m_camera->processMouseMovement(yTravel * -sensitivity, xTravel * -sensitivity);

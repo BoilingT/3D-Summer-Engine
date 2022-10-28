@@ -11,8 +11,6 @@
 
 #include <glad/glad.h> //Needs to be included before GLFW
 #include <GLFW/glfw3.h>
-#include "stb_image.h"
-#define STB_IMAGE_IMPLEMENTATION
 #include "WindowHandler.h"
 #include "fileHandler.h"
 #include "Shader.h"
@@ -23,9 +21,10 @@
 #include "FluidField.h"
 #include "Compute.h"
 
+
 class Engine
 {
-public:
+private:
 	WindowHandler*		m_window;
 	Shader*				m_shader;
 	Camera*				m_camera;
@@ -48,16 +47,18 @@ public:
 	const char* p_AWESOMEFACE_IMAGE			 = "Images/LearnOpenGL/awesomeface.png";
 	
 	//Mouse Events (not included)
-	float lastX								 = Engine::c_WIDTH / 2;
-	float lastY								 = Engine::c_HEIGHT / 2;
-	bool firstMouseEnter					 = true;
+	float g_lastX							 = Engine::c_WIDTH / 2;
+	float g_lastY							 = Engine::c_HEIGHT / 2;
+	bool g_firstMouseEnter					 = true;
 
 	//dT
-	float deltaTime							 = 0.0f;
-	float lastTime							 = 0.0f;
+	float g_deltaTime						 = 0.0f;
+	float g_lastTime						 = 0.0f;
 
 	//Fluid Simulation
-	const int c_resolution					 = 256; // aka Gridarea
+	const int c_resolution					 = 256*256; // aka Gridarea
+
+public:
 
 	Engine() {
 		std::cout << "Initializing Engine..." << std::endl;
@@ -71,28 +72,25 @@ public:
 	}
 
 	~Engine() {
-		std::cout << "Terminating..." << std::endl;
-		glfwSetWindowTitle(m_window->getWindow(), "Terminating...");
 		glfwTerminate();
 		std::cout << "Engine Stopped" << std::endl;
 
 		delete m_window;
 		delete m_camera;
 		delete m_compute_shader;
+
 		m_window = NULL;
 		m_camera = NULL;
 		m_compute_shader = NULL;
 		std::cout << "Window has been destroyed" << std::endl;
 	}
 
-	/*
-		Initialize the window and its components
-	*/
+	//Initialize the window and its components
 	void Init();
-	/*
-		Start the rendering sequence
-	*/
+	//Start the rendering sequence
 	void Run();
+	
+	void saveImage(const char* path, GLFWwindow* window);
 
 private:
 	static void FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow* window, int width, int height);
