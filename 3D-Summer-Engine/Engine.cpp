@@ -133,12 +133,13 @@ void Engine::Run() {
 void Engine::saveImage(const char* path, GLFWwindow* window)
 {
 	std::cout << "Writing file..." << std::endl;
-	int width, height;
+	int width			 = 0;
+	int height			 = 0;
 	glfwGetFramebufferSize(window, &width, &height);
-	int channelAmount = 3;
-	int stride = channelAmount * width;
-	stride += (stride % 4) ? (4 - stride % 4) : 0;
-	int bufferSize = stride * height;
+	int channelAmount	 = 3;
+	int stride			 = channelAmount * width;
+	stride				 += (stride % 4) ? (4 - stride % 4) : 0;
+	int bufferSize		 = stride * height;
 	std::vector<char> buffer(bufferSize);
 
 	glPixelStorei(GL_PACK_ALIGNMENT, 4);
