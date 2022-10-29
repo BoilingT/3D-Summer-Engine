@@ -21,6 +21,13 @@
 
 class Engine
 {
+public:
+	//Mouse Events (not included)
+	static double g_lastX;
+	static double g_lastY;
+	static bool g_mouseDown;
+	static bool g_firstMouseEnter;
+
 private:
 	WindowHandler*		m_window;
 	Camera*				m_camera;
@@ -37,11 +44,6 @@ private:
 	//Filepaths
 	const char* p_CONTAINER_IMAGE							 = "Images/LearnOpenGL/container.jpg";
 	const char* p_AWESOMEFACE_IMAGE							 = "Images/LearnOpenGL/awesomeface.png";
-	
-	//Mouse Events (not included)
-	float g_lastX											 = Engine::c_WIDTH / 2;
-	float g_lastY											 = Engine::c_HEIGHT / 2;
-	bool g_firstMouseEnter									 = true;
 
 	//dT
 	float g_deltaTime										 = 0.0f;

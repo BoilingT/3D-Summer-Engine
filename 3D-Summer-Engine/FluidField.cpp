@@ -15,10 +15,25 @@ void FluidField::Init() {
 	m_shader->use();
 	m_shader->setMat4f("view", viewM);
 	m_shader->setMat4f("projection", projectionM);
+
+	float vals[256];
+	for (unsigned int i = 0; i < 256; i++)
+	{
+		vals[i] = i;
+	}
+	m_compute_shader = new Compute(p_COMPUTE_SHADER, glm::vec2(1, 256));
+	m_compute_shader->setValues(vals);
+	m_compute_shader->use();
+	m_compute_shader->dispatch();
+	m_compute_shader->wait();
 }
 
 void FluidField::Draw(glm::vec3 origin) {
 	m_shader->use();
+	float time = glfwGetTime();
+	int uTimeLocation = glGetUniformLocation(m_shader->getID(), "u_time");
+	glUniform1f(uTimeLocation, time);
+	//std::cout << time << std::endl;
 	m_fieldQuad->Draw(*m_shader);
 }
 
@@ -65,4 +80,18 @@ void FluidField::DrawCellField(glm::vec3 o) {
 	}*/
 	//m_line->DrawInstanced(*m_visualise_grid_shader, m_translations, m_resolution);
  	m_quad->DrawInstanced(*m_visualise_grid_shader, m_translations.data(), m_resolution);
+}
+
+void FluidField::updateMouse(double* mouseX, double* mouseY, bool* mouse_down)
+{
+	m_mouse_down = false;
+	m_mouseTravelX = *mouseX - m_prevMouseX;
+	m_mouse_down = *mouse_down;
+	m_prevMouseX = *mouseX;
+	m_prevMouseY = *mouseY;
+
+	if (m_mouse_down && (abs(m_mouseTravelX) > 0 || abs(m_mouseTravelY) > 0))
+	{
+		std::cout << "X: " << m_prevMouseX << " Y: " << m_prevMouseY << " down:" << m_mouse_down << std::endl;
+	}
 }

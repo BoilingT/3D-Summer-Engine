@@ -5,7 +5,7 @@
 
 class Compute
 {
-public:
+private:
 	glm::vec2 m_workSize;
 	Shader* m_computeShader;
 	unsigned int m_out_texture;

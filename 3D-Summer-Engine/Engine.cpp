@@ -5,8 +5,14 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
+double Engine::g_lastX = 0;
+double Engine::g_lastY = 0;
+bool Engine::g_mouseDown = 0;
+bool Engine::g_firstMouseEnter = 0;
+
 void Engine::Init()
 {
+
 	//Open window
 	if (m_window->init() == -1) {
 		return;
@@ -28,7 +34,7 @@ void Engine::Init()
 	//Mouse Events
 	glfwSetCursorPosCallback(m_window->getWindow(), MOUSE_CALLBACK);
 	//Key Events
-	glfwSetInputMode(m_window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(m_window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
 	m_fluid = new FluidField(c_WIDTH, c_HEIGHT, c_RESOLUTION);
 }
@@ -61,10 +67,10 @@ void Engine::Run() {
 			//double TPF = 1000.0 / (double)frames;
 			//std::cout << TPF << "ms/frame" << std::endl;
 			double TPF = 1000.0 / (double)frames;
-			//sleepTime = 1000.f / 144.f - TPF;
 			fps = frames/g_deltaTime;
 			frames = 0;
 			g_lastTime += 1.f;
+			//sleepTime = 1000.f / 60.f - TPF;
 			std::string title = "FPS: " + std::to_string(fps) + " TPF: " + std::to_string(TPF) + "ms";
 			glfwSetWindowTitle(m_window->getWindow(), title.c_str());
 		}
@@ -97,6 +103,7 @@ void Engine::Run() {
 		float timeValue = glfwGetTime();
 		float val = sin(timeValue / 2);
 		
+		m_fluid->updateMouse(&g_lastX, &g_lastY, &g_mouseDown);
 		m_fluid->Draw(origin);
 		//m_fluid->DrawCellField(origin);
 		
@@ -158,7 +165,7 @@ void Engine::saveImage(const char* path, GLFWwindow* window)
 
 		Geometry Shader:
 			The data collection from the assembly stage is transferred onto the geometry shader. Its job is to take a collection of vertices
-			that form a primitive form. It has the ability to use the primitive to generate other shapes by making new vertices to form new or different
+			that form a primitive form. It has the ability to use the primitive to generateFrom other shapes by making new vertices to form new or different
 			primitives.
 
 		Rasterization:
@@ -261,7 +268,24 @@ void Engine::IO_EVENTS(GLFWwindow* window) {
 }
 
 void Engine::MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos) {
-	/*if (g_firstMouseEnter)
+	if (xPos <= 10.0)
+	{
+		std::cout << "HELLO";
+		glfwSetCursorPos(window, 11.0, yPos);
+	}
+	else if (xPos >= c_WIDTH-10.0)
+	{
+		glfwSetCursorPos(window, c_WIDTH-11.0, yPos);
+	}
+	if (yPos <= 10.0)
+	{
+		glfwSetCursorPos(window, xPos, 11.0);
+	}
+	else if(yPos >= c_HEIGHT-10.0)
+	{
+		glfwSetCursorPos(window, xPos, c_HEIGHT-11.0);
+	}
+	if (g_firstMouseEnter)
 	{
 		g_lastX = xPos;
 		g_lastY = yPos;
@@ -272,7 +296,7 @@ void Engine::MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos) {
 	yTravel = yPos - g_lastY;
 	g_lastX = xPos;
 	g_lastY = yPos;
-	*/
+	g_mouseDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
 	//const float sensitivity = m_camera->sensitivity / 100.f;
 	//m_camera->processMouseMovement(yTravel * -sensitivity, xTravel * -sensitivity);
 }

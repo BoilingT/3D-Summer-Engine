@@ -9,6 +9,10 @@
 layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 layout(r32f, binding = 0) uniform image2D out_texture;
 
+vec4 calculateValues(float val){
+	return vec4(val * 2.0f, 0.0f, 0.0f, 0.0f);
+}
+
 void main(){
 	//Get position to read/write data from/to
 	ivec2 pos = ivec2(gl_GlobalInvocationID.xy);
@@ -17,5 +21,5 @@ void main(){
 	float texture_val = imageLoad(out_texture, pos).r;
 
 	//Store a new value in the texture
-	imageStore(out_texture, pos, vec4(texture_val + 1.0f, 0.0f, 0.0f, 0.0f));
+	imageStore(out_texture, pos, calculateValues(texture_val));
 }

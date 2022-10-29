@@ -7,9 +7,13 @@ layout (location = 1) in vec2 aOffset;
 uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
+
 uniform int resolution;
+uniform float u_time;
 
 out vec2 texCoord;
+out float time;
+out float res;
 
 void main(){
 	mat4 clip_space = projection * view * model;
@@ -18,7 +22,8 @@ void main(){
 	float c = aOffset.x;
 	float r = aOffset.y;
 	float k = sqrt(resolution);
-
+	time = u_time;
 	texCoord = aTexCoord;
+	res = resolution;
 	gl_Position = clip_space * vec4(aPos.x + aOffset.x, aPos.y + aOffset.y, aPos.z, 1.0f);
 }
