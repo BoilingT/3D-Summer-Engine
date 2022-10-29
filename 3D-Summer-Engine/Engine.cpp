@@ -97,8 +97,8 @@ void Engine::Run() {
 		float timeValue = glfwGetTime();
 		float val = sin(timeValue / 2);
 		
-		m_fluid->Draw(origin);
-		//m_fluid->DrawCellField(origin);
+		//m_fluid->Draw(origin);
+		m_fluid->DrawCellField(origin);
 		
 		//int vertexColorLocation = glGetUniformLocation(m_shader->getID(), "ourColor");
 		//glUniform4f(vertexColorLocation, 0.0f, val, timeValue, 1.0f);

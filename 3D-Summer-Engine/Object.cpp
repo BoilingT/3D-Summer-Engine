@@ -76,7 +76,7 @@ void Object::SetupMesh(float* vertices, int vSize) {
 
 void Object::DrawInstanced(Shader& shader, glm::vec2* values, int count) {
 	shader.use();
-	glBindTexture(GL_TEXTURE_2D, *texture);
+	glBindTexture(GL_TEXTURE_2D, texture ? *texture : 0);
 	glBindVertexArray(VAO);
 	glGenBuffers(1, &instanceVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
@@ -118,7 +118,7 @@ void Object::DrawInstanced(Shader& shader, glm::vec2* values, int count) {
 void Object::Draw(Shader& shader) {
 	shader.use();
 	//Draw mesh
-	glBindTexture(GL_TEXTURE_2D, *texture);
+	glBindTexture(GL_TEXTURE_2D, texture ? *texture : 0);
 	glBindVertexArray(VAO);
 
 	glm::mat4 modelM = glm::mat4(1.0f);

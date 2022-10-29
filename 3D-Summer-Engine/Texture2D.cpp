@@ -1,7 +1,7 @@
 #include "Texture2D.h"
 
 Texture2D::Texture2D(const char* filepath) {
-	//stbi_set_flip_vertically_on_load(true);
+	stbi_set_flip_vertically_on_load(true);
 	m_texture = 0;
 	glGenTextures(1, &m_texture);
 	glBindTexture(GL_TEXTURE_2D, m_texture);

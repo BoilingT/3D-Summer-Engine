@@ -16,7 +16,7 @@ private:
 	const char* p_VISUALISE_GRID_FRAGMENT_SHADER		 = "Shaders/visualise_grid_fragment_shader.frag";
 	const char* p_VERTEX_SHADER							 = "Shaders/vertex_shader.vert";
 	const char* p_FRAGMENT_SHADER						 = "Shaders/fragment_shader.frag";
-	const char* p_TEXTURE								 = "C:/Users/to9751/Pictures/Generated Images/Checkerpattern.png";
+	const char* p_TEXTURE								 = "C:/Users/to9751/Pictures/Generated Images/Multicolored_pattern.png";
 
 	Compute* m_compute_shader;
 	Shader* m_shader;
@@ -48,6 +48,7 @@ public:
 		m_shader = new Shader(p_VERTEX_SHADER, p_FRAGMENT_SHADER);
 		m_visualise_grid_shader = new Shader(p_VISUALISE_GRID_VERTEX_SHADER, p_VISUALISE_GRID_FRAGMENT_SHADER);
 		m_texture = new Texture2D(p_TEXTURE);
+		m_quad = new Rect();
 		m_fieldQuad = new Rect(glm::vec3(m_WIDTH / 2.f, m_HEIGHT / 2.f, 0.0f), glm::vec3(m_WIDTH, m_HEIGHT, 0.0f), glm::vec3(0.0f), m_texture->get());
 		//m_line = new Line(0.0f, 0.0f, 0.0f, 0.0f);
 		m_translations.resize(resolution);
