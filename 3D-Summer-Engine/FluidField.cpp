@@ -11,14 +11,23 @@ void FluidField::Init() {
 	m_visualise_grid_shader->use();
 	m_visualise_grid_shader->setMat4f("view", viewM);
 	m_visualise_grid_shader->setMat4f("projection", projectionM);
+
+	m_shader->use();
+	m_shader->setMat4f("view", viewM);
+	m_shader->setMat4f("projection", projectionM);
 }
 
 void FluidField::Draw(glm::vec3 origin) {
 	m_shader->use();
-	glm::mat4 projectionM = glm::mat4(1.0f);
-	m_shader->setMat4f("projection", projectionM);
+	m_fieldQuad->Draw(*m_shader);
 }
 
+//Do the math and update values
+void FluidField::timeStep() {
+
+}
+
+//Draw a visual representation of the dimensions of a grid containing data
 void FluidField::DrawCellField(glm::vec3 o) {
 	m_visualise_grid_shader->use();
 	
@@ -56,8 +65,4 @@ void FluidField::DrawCellField(glm::vec3 o) {
 	}*/
 	//m_line->DrawInstanced(*m_visualise_grid_shader, m_translations, m_resolution);
  	m_quad->DrawInstanced(*m_visualise_grid_shader, m_translations.data(), m_resolution);
-}
-
-void FluidField::timeStep() {
-
 }

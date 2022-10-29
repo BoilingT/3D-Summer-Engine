@@ -22,6 +22,7 @@ private:
 public:
 
 	Transform transform;
+	GLuint* texture;
 
 	void SetupMesh(float* vertices, int vSize);
 	void SetupMesh(float* vertices, int vSize, unsigned int* indices, int iSize);

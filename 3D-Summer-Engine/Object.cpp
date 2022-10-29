@@ -6,30 +6,29 @@ void Object::SetupMesh(float* vertices, int vSize, unsigned int* indices, int iS
 	glDeleteBuffers(1, &EBO);
 
 	verticesSize = vSize;
-	indicesSize = iSize;
-	indicesPtr = indices;
+	indicesSize	 = iSize;
+	indicesPtr	 = indices;
 
 	//VAOs
 	glGenVertexArrays(1, &VAO);
-	//VBOs
 	glGenBuffers(1, &VBO);
-	//EBOs
 	glGenBuffers(1, &EBO);
 
 	glBindVertexArray(VAO);
-
-	//Send vertices data
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	
-	//glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_DYNAMIC_DRAW);
+	//Send vertices data
 	glBufferData(GL_ARRAY_BUFFER, vSize, vertices, GL_DYNAMIC_DRAW);
 	//Send indices data
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
  	glBufferData(GL_ELEMENT_ARRAY_BUFFER, iSize, indices, GL_DYNAMIC_DRAW);
 
+
 	//Vertex position
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
+	//Enable texture coordinates data
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 	/*
 	//Vertex normals
 	glEnableVertexAttribArray(1);
@@ -62,8 +61,8 @@ void Object::SetupMesh(float* vertices, int vSize) {
 	verticesSize = vSize;
 
 	//Vertex position
-	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
+	glEnableVertexAttribArray(0);
 	/*
 	//Vertex normals
 	glEnableVertexAttribArray(1);
@@ -77,7 +76,7 @@ void Object::SetupMesh(float* vertices, int vSize) {
 
 void Object::DrawInstanced(Shader& shader, glm::vec2* values, int count) {
 	shader.use();
-
+	glBindTexture(GL_TEXTURE_2D, *texture);
 	glBindVertexArray(VAO);
 	glGenBuffers(1, &instanceVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
@@ -119,6 +118,7 @@ void Object::DrawInstanced(Shader& shader, glm::vec2* values, int count) {
 void Object::Draw(Shader& shader) {
 	shader.use();
 	//Draw mesh
+	glBindTexture(GL_TEXTURE_2D, *texture);
 	glBindVertexArray(VAO);
 
 	glm::mat4 modelM = glm::mat4(1.0f);

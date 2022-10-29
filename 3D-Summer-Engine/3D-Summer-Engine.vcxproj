@@ -31,6 +31,7 @@
     <ClCompile Include="Rect.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="WindowHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -49,6 +50,7 @@
     <ClInclude Include="object_includes.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="stb_image_write.h" />
+    <ClInclude Include="Texture2D.h" />
     <ClInclude Include="WindowHandler.h" />
   </ItemGroup>
   <ItemGroup>
