@@ -21,5 +21,5 @@ void main(){
 	vec2 pixelSize = vec2(1.0, 1.0) / res;
  
 	// average the left, middle, and right pixels.
-	gl_FragColor = texture(u_image, texCoord) + texture(u_image, texCoord);
+	gl_FragColor = texture(u_image, texCoord) + texture(u_image, texCoord) * 0;
 }

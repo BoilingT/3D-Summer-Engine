@@ -27,6 +27,7 @@ public:
 	static double g_lastY;
 	static bool g_mouseDown;
 	static bool g_firstMouseEnter;
+	static bool g_mouse_constrain;
 
 private:
 	WindowHandler*		m_window;

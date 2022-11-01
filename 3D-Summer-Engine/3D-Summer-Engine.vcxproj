@@ -54,7 +54,7 @@
     <ClInclude Include="WindowHandler.h" />
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="Shaders\compute_shader.glsl">
+    <CopyFileToFolders Include="Shaders\compute_shader_backup.glsl">
       <FileType>Text</FileType>
     </CopyFileToFolders>
     <CopyFileToFolders Include="Shaders\default_fragment_shader.frag">
@@ -76,6 +76,9 @@
     <Image Include="Images\LearnOpenGl\wall.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="Shaders\compute_shader.glsl">
+      <FileType>Text</FileType>
+    </Text>
     <None Include="Shaders\visualise_grid_fragment_shader.frag" />
     <None Include="Shaders\visualise_grid_vertex_shader.vert" />
   </ItemGroup>

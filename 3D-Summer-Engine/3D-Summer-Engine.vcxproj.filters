@@ -131,7 +131,7 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="Shaders\compute_shader.glsl">
+    <CopyFileToFolders Include="Shaders\compute_shader_backup.glsl">
       <Filter>Resource Files\Shaders</Filter>
     </CopyFileToFolders>
     <CopyFileToFolders Include="Shaders\default_fragment_shader.frag">
@@ -154,5 +154,10 @@
     <None Include="Shaders\visualise_grid_vertex_shader.vert">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Shaders\compute_shader.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
   </ItemGroup>
 </Project>

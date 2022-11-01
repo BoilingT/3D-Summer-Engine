@@ -13,19 +13,23 @@
 class FluidField
 {
 private:
-	const char* p_COMPUTE_SHADER						 = "Shaders/compute_shader.glsl";
+	const char* p_COMPUTE_SHADER						 = "Shaders/compute_shader_backup.glsl";
 	const char* p_VISUALISE_GRID_VERTEX_SHADER			 = "Shaders/visualise_grid_vertex_shader.vert";
 	const char* p_VISUALISE_GRID_FRAGMENT_SHADER		 = "Shaders/visualise_grid_fragment_shader.frag";
 	const char* p_VERTEX_SHADER							 = "Shaders/vertex_shader.vert";
 	const char* p_FRAGMENT_SHADER						 = "Shaders/fragment_shader.frag";
-	const char* p_TEXTURE								 = "C:/Users/to9751/Pictures/Generated Images/notGenerated.jpg";
+	const char* p_TEXTURE								 = "C:/Users/to9751/Pictures/Generated Images/Multicolored_pattern.png";
 
 	Compute* m_compute_shader;
-	Shader* m_shader;
+	Shader* m_primary_shader;
 	Shader* m_visualise_grid_shader;
 
 	//Field
+	//unsigned const int m_COMPUTE_TEXTURE_WIDTH;
+	//unsigned const int m_COMPUTE_TEXTURE_HEIGHT;
+
 	Texture2D*	 m_texture;
+	unsigned int texture;
 	Texture2D*	 m_texture_buffer;
 	Rect*		 m_fieldQuad;
 	const float	 m_WIDTH, m_HEIGHT;
@@ -55,7 +59,7 @@ public:
 		m_WIDTH(WIDTH),
 		m_HEIGHT(HEIGHT)
 	{
-		m_shader							 = new Shader(p_VERTEX_SHADER, p_FRAGMENT_SHADER);
+		m_primary_shader					 = new Shader(p_VERTEX_SHADER, p_FRAGMENT_SHADER);
 		m_visualise_grid_shader				 = new Shader(p_VISUALISE_GRID_VERTEX_SHADER, p_VISUALISE_GRID_FRAGMENT_SHADER);
 		m_texture							 = new Texture2D(p_TEXTURE);
 		m_texture_buffer					 = new Texture2D();
@@ -70,12 +74,13 @@ public:
 	}
 
 	~FluidField() {
-		glDeleteProgram(m_shader->getID());
+		glDeleteProgram(m_primary_shader->getID());
 		glDeleteProgram(m_visualise_grid_shader->getID());
 		glDeleteTextures(1, m_texture->get());
 		glDeleteTextures(1, m_texture_buffer->get());
-		delete(m_shader);
+		delete(m_primary_shader);
 		delete(m_visualise_grid_shader);
+		delete(m_compute_shader);
 		delete(m_fieldQuad);
 		delete(m_quad);
 		delete(m_line);

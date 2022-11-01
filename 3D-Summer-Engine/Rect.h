@@ -42,5 +42,13 @@ public:
         texture = texture2D;
         SetupMesh(planeVertices, sizeof(planeVertices), indices, sizeof(indices));
     }
+
+    void setTexture(GLuint* texture2D) {
+        texture = texture2D;
+    }
+
+    void updateMesh() {
+        SetupMesh(planeVertices, sizeof(planeVertices), indices, sizeof(indices));
+    }
 };
 

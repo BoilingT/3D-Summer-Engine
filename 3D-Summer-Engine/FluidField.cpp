@@ -12,29 +12,49 @@ void FluidField::Init() {
 	m_visualise_grid_shader->setMat4f("view", viewM);
 	m_visualise_grid_shader->setMat4f("projection", projectionM);
 
-	m_shader->use();
-	m_shader->setMat4f("view", viewM);
-	m_shader->setMat4f("projection", projectionM);
+	m_primary_shader->use();
+	m_primary_shader->setMat4f("view", viewM);
+	m_primary_shader->setMat4f("projection", projectionM);
 
-	float vals[256];
-	for (unsigned int i = 0; i < 256; i++)
-	{
-		vals[i] = i;
-	}
-	m_compute_shader = new Compute(p_COMPUTE_SHADER, glm::vec2(1, 256));
-	m_compute_shader->setValues(vals);
+
+	m_compute_shader = new Compute(p_COMPUTE_SHADER, glm::vec2(m_fieldWidth, m_fieldWidth));
 	m_compute_shader->use();
-	m_compute_shader->dispatch();
-	m_compute_shader->wait();
+	//glDeleteTextures(1, &compute_texture);
+
+	std::vector<unsigned char> image((m_fieldWidth * m_fieldWidth) * 3 /* bytes per pixel */);
+
+	for (unsigned int row = 0; row < m_fieldWidth; row++)
+	{
+		for (unsigned int col = 0; col < m_fieldWidth; col++)
+		{
+			unsigned int location = (col + (row * m_fieldWidth)) * 3;
+			image[location + 0] = (float) col/m_fieldWidth * 255; // R
+			image[location + 1] = 0; // G
+			image[location + 2] = (float) row / m_fieldWidth * 255; // B
+		}
+ 	}
+	/*int c = 0;
+	int r = 0;
+	unsigned int location = (c + (r * m_fieldWidth))*3;
+	image[location + 0] = 1; // R
+	image[location + 1] = 1; // G
+	image[location + 2] = 0; // B*/
+	m_compute_shader->setValues(image.data());
 }
 
 void FluidField::Draw(glm::vec3 origin) {
-	m_shader->use();
+	m_primary_shader->use();
 	float time = glfwGetTime();
-	int uTimeLocation = glGetUniformLocation(m_shader->getID(), "u_time");
+	int uTimeLocation = glGetUniformLocation(m_primary_shader->getID(), "u_time");
 	glUniform1f(uTimeLocation, time);
-	//std::cout << time << std::endl;
-	m_fieldQuad->Draw(*m_shader);
+	
+	m_compute_shader->use();
+	m_compute_shader->dispatch();
+	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+	//m_compute_shader->setFloat("t", time);
+	//m_compute_shader->setFloat("textureWidth", m_fieldWidth);
+	m_fieldQuad->setTexture(m_compute_shader->getTexture());
+	m_fieldQuad->Draw(*m_primary_shader);
 }
 
 //Do the math and update values

@@ -87,7 +87,7 @@ Shader::Shader(const char* shaderPath, GLenum type) {
 	if (!success)
 	{
 		glGetShaderInfoLog(shader, sizeof(compileInfo), NULL, compileInfo);
-		std::cout << "ERROR::SHADER::COMPILATION_FAILED\n" << compileInfo << std::endl;
+		std::cout << "ERROR::SHADER::COMPILATION::FAILED\n" << compileInfo << std::endl;
 		return;
 	}
 
@@ -104,6 +104,34 @@ Shader::Shader(const char* shaderPath, GLenum type) {
 	}
 
 	glDeleteShader(shader);
+}
+
+Shader::~Shader()
+{
+	glDeleteProgram(ID);
+	glDeleteTextures(1, &m_compute_texture);
+}
+
+void Shader::generateTexture(unsigned int TEXTURE_WIDTH, unsigned int TEXTURE_HEIGHT)
+{
+	glGenTextures(1, &m_compute_texture);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_compute_texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, GL_RGBA, GL_FLOAT, NULL);
+	glBindImageTexture(0, m_compute_texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA32F);
+}
+
+void Shader::setValues(float* values, int width, int height) {
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, values);
+}
+
+unsigned int* Shader::getTexture()
+{
+	return &m_compute_texture;
 }
 
 void Shader::use() {

@@ -6,6 +6,7 @@
 class Compute
 {
 private:
+	unsigned int m_ID;
 	glm::vec2 m_workSize;
 	Shader* m_computeShader;
 	unsigned int m_out_texture;
@@ -21,12 +22,14 @@ private:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 		//Create empty 2D textures
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, size.x, size.y, 0, GL_RED, GL_FLOAT, NULL);
-		glBindImageTexture(0, m_out_texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32F);
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, size.x, size.y, 0, GL_RED, GL_FLOAT, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_workSize.x, m_workSize.y, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+		glBindImageTexture(0, m_out_texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
 	}
 public:
 	Compute(const char* path, glm::vec2 size) {
 		m_computeShader = new Shader(path, GL_COMPUTE_SHADER);
+		m_ID = m_computeShader->getID();
 		m_workSize = size;
 		createTexture(size);
 	}
@@ -54,8 +57,10 @@ public:
 	}
 
 	//Set compute shader values
-	void setValues(float* values) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, m_workSize.x, m_workSize.y, 0, GL_RED, GL_FLOAT, values);
+	void setValues(void* values) {
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, m_workSize.x, m_workSize.y, 0, GL_RED, GL_FLOAT, values);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_workSize.x, m_workSize.y, 0, GL_RGB, GL_UNSIGNED_BYTE, values);
 	}
 
 	std::vector<float> get_values() {
@@ -63,6 +68,18 @@ public:
 		std::vector<float> compute_data(collection_size);
 		glGetTexImage(GL_TEXTURE_2D, 0, GL_RED, GL_FLOAT, compute_data.data());
 		return compute_data;
+	}
+
+	GLuint* getTexture() {
+		return &m_out_texture;
+	}
+
+	unsigned int getID() {
+		return m_ID;
+	}
+
+	Shader* getShader() {
+		return m_computeShader;
 	}
 };
 

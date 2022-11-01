@@ -5,10 +5,11 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
-double Engine::g_lastX = 0;
-double Engine::g_lastY = 0;
-bool Engine::g_mouseDown = 0;
-bool Engine::g_firstMouseEnter = 0;
+double Engine::g_lastX				 = 0;
+double Engine::g_lastY				 = 0;
+bool Engine::g_mouseDown			 = 0;
+bool Engine::g_firstMouseEnter		 = 0;
+bool Engine::g_mouse_constrain		 = false;
 
 void Engine::Init()
 {
@@ -107,7 +108,7 @@ void Engine::Run() {
 		m_fluid->Draw(origin);
 		//m_fluid->DrawCellField(origin);
 		
-		//int vertexColorLocation = glGetUniformLocation(m_shader->getID(), "ourColor");
+		//int vertexColorLocation = glGetUniformLocation(m_primary_shader->getID(), "ourColor");
 		//glUniform4f(vertexColorLocation, 0.0f, val, timeValue, 1.0f);
 
 		glBindVertexArray(0);
@@ -268,22 +269,25 @@ void Engine::IO_EVENTS(GLFWwindow* window) {
 }
 
 void Engine::MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos) {
-	if (xPos <= 10.0)
+	if (g_mouse_constrain)
 	{
-		std::cout << "HELLO";
-		glfwSetCursorPos(window, 11.0, yPos);
-	}
-	else if (xPos >= c_WIDTH-10.0)
-	{
-		glfwSetCursorPos(window, c_WIDTH-11.0, yPos);
-	}
-	if (yPos <= 10.0)
-	{
-		glfwSetCursorPos(window, xPos, 11.0);
-	}
-	else if(yPos >= c_HEIGHT-10.0)
-	{
-		glfwSetCursorPos(window, xPos, c_HEIGHT-11.0);
+		if (xPos <= 10.0)
+		{
+			std::cout << "HELLO";
+			glfwSetCursorPos(window, 11.0, yPos);
+		}
+		else if (xPos >= c_WIDTH - 10.0)
+		{
+			glfwSetCursorPos(window, c_WIDTH - 11.0, yPos);
+		}
+		if (yPos <= 10.0)
+		{
+			glfwSetCursorPos(window, xPos, 11.0);
+		}
+		else if (yPos >= c_HEIGHT - 10.0)
+		{
+			glfwSetCursorPos(window, xPos, c_HEIGHT - 11.0);
+		}
 	}
 	if (g_firstMouseEnter)
 	{

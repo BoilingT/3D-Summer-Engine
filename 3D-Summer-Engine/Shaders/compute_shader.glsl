@@ -1,25 +1,27 @@
 #version 430 core
 
-//in uvec3 gl_NumWorkGroups;
-//in uvec3 gl_WorkGroupID;
-//in uvec3 gl_LocalInvocationID;
-//in uvec3 gl_GlobalInvocationID;
-//in uint gl_LocalInvocationIndex;
+// 1 pixel per workgroup
+layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+layout (rgba32f, binding = 0) uniform image2D imgOutput;
 
-layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
-layout(r32f, binding = 0) uniform image2D out_texture;
-
-vec4 calculateValues(float val){
-	return vec4(val * 2.0f, 0.0f, 0.0f, 0.0f);
-}
+layout(location = 0) uniform float t;
+layout(location = 1) uniform float textureWidth;
 
 void main(){
-	//Get position to read/write data from/to
-	ivec2 pos = ivec2(gl_GlobalInvocationID.xy);
+	//vec4 val = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	ivec2 texelCoord = ivec2(gl_GlobalInvocationID.xy);
+	vec4 val = imageLoad(imgOutput, texelCoord);
+	float distance = 5.f;
 
-	//Get value stored in the texture (from the red channel)
-	float texture_val = imageLoad(out_texture, pos).r;
+	float speed = 10;
+	if(float(texelCoord.y) > textureWidth/2.f){
+		//val.y = float(texelCoord.y + sin(t) * speed) / (gl_NumWorkGroups.y);
+	}else{
+		//val.y = float(texelCoord.y + sin(-t) * speed) / (gl_NumWorkGroups.y);
+	}
+	//val.x = float(texelCoord.x) / (gl_NumWorkGroups.x);
 
-	//Store a new value in the texture
-	imageStore(out_texture, pos, calculateValues(texture_val));
+	ivec2 texelOffset = ivec2(1, 0);
+
+	imageStore(imgOutput, texelCoord, val);
 }
