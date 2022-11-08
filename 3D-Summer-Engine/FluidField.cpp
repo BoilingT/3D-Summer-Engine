@@ -21,16 +21,38 @@ void FluidField::Init() {
 	m_compute_shader->use();
 	//glDeleteTextures(1, &compute_texture);
 
-	std::vector<unsigned char> image((m_fieldWidth * m_fieldWidth) * 3 /* bytes per pixel */);
+	std::vector<unsigned char> quantityImage((m_fieldWidth * m_fieldWidth) * 3 /* bytes per pixel */);
+	unsigned int coordinate = (m_fieldWidth/2 + (m_fieldWidth/2 * m_fieldWidth)) * 3;
+	quantityImage[coordinate + 0] = 255 * 0.5f;;
+	quantityImage[coordinate + 1] = 255 * 0.5f;
+	quantityImage[coordinate + 2] = 255 * 0.5f;
+
+	std::vector<unsigned char> pressureImage((m_fieldWidth * m_fieldWidth) * 3 /* bytes per pixel */);
+	std::vector<unsigned char> velocityImage((m_fieldWidth * m_fieldWidth) * 3 /* bytes per pixel */);
 
 	for (unsigned int row = 0; row < m_fieldWidth; row++)
 	{
 		for (unsigned int col = 0; col < m_fieldWidth; col++)
 		{
 			unsigned int location = (col + (row * m_fieldWidth)) * 3;
-			image[location + 0] = (float) col/m_fieldWidth * 255; // R
-			image[location + 1] = 0; // G
-			image[location + 2] = (float) row / m_fieldWidth * 255; // B
+			if (row <= m_fieldWidth / 2)
+			{
+				glm::vec3 v = glm::vec3(0.0f, 1.0f, 0.0f);
+				v *= 255;
+				velocityImage[location + 0] = v.x;	 // X
+				velocityImage[location + 1] = v.y;	 // Y
+				velocityImage[location + 2] = v.z;	 // Z
+			}
+			else {
+				glm::vec3 v = glm::vec3(0.0f, 0.0f, 0.0f);
+				
+				velocityImage[location + 0] = v.x;	 // X
+				velocityImage[location + 1] = v.y;	 // Y
+				velocityImage[location + 2] = v.z;	 // Z
+			}
+			//velocityImage[location + 0] = (float) col/m_fieldWidth * 255;	 // R
+			//velocityImage[location + 1] = 0;								 // G
+			//velocityImage[location + 2] = (float) row / m_fieldWidth * 255;	 // B
 		}
  	}
 	/*int c = 0;
@@ -39,7 +61,7 @@ void FluidField::Init() {
 	image[location + 0] = 1; // R
 	image[location + 1] = 1; // G
 	image[location + 2] = 0; // B*/
-	m_compute_shader->setValues(image.data());
+	m_compute_shader->setValues(quantityImage.data());
 }
 
 void FluidField::Draw(glm::vec3 origin) {
@@ -51,15 +73,16 @@ void FluidField::Draw(glm::vec3 origin) {
 	m_compute_shader->use();
 	m_compute_shader->dispatch();
 	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
-	//m_compute_shader->setFloat("t", time);
+	uTimeLocation = glGetUniformLocation(m_compute_shader->getID(), "t");
+	glUniform1f(uTimeLocation, time);
 	//m_compute_shader->setFloat("textureWidth", m_fieldWidth);
 	m_fieldQuad->setTexture(m_compute_shader->getTexture());
 	m_fieldQuad->Draw(*m_primary_shader);
 }
 
-//Do the math and update values
+//Simulate for the next timestep
 void FluidField::timeStep() {
-
+	
 }
 
 //Draw a visual representation of the dimensions of a grid containing data

@@ -46,6 +46,7 @@ void Engine::Run() {
 
 	int frames = 0;
 	int fps = 0;
+	int maxFps = 0;
 	float sleepTime = 0;
 	
 	//Rect plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
@@ -69,10 +70,11 @@ void Engine::Run() {
 			//std::cout << TPF << "ms/frame" << std::endl;
 			double TPF = 1000.0 / (double)frames;
 			fps = frames/g_deltaTime;
+			maxFps = fps > maxFps ? fps : maxFps;
 			frames = 0;
 			g_lastTime += 1.f;
 			//sleepTime = 1000.f / 60.f - TPF;
-			std::string title = "FPS: " + std::to_string(fps) + " TPF: " + std::to_string(TPF) + "ms";
+			std::string title = "FPS: " + std::to_string(fps) + " Max FPS: " + std::to_string(maxFps) + " TPF: " + std::to_string(TPF) + "ms";
 			glfwSetWindowTitle(m_window->getWindow(), title.c_str());
 		}
 

@@ -57,17 +57,22 @@ public:
 	}
 
 	//Set compute shader values
-	void setValues(void* values) {
+	void setValues(unsigned char* values) {
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		//glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, m_workSize.x, m_workSize.y, 0, GL_RED, GL_FLOAT, values);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_workSize.x, m_workSize.y, 0, GL_RGB, GL_UNSIGNED_BYTE, values);
 	}
 
-	std::vector<float> get_values() {
+	std::vector<unsigned char> get_values() {
+		//unsigned int collection_size = m_workSize.x * m_workSize.y;
+		//std::vector<float> compute_data(collection_size);
+		//glGetTexImage(GL_TEXTURE_2D, 0, GL_RED, GL_FLOAT, compute_data.data());
+		//return compute_data;
 		unsigned int collection_size = m_workSize.x * m_workSize.y;
-		std::vector<float> compute_data(collection_size);
-		glGetTexImage(GL_TEXTURE_2D, 0, GL_RED, GL_FLOAT, compute_data.data());
+		std::vector<unsigned char> compute_data(collection_size);
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA32F, GL_UNSIGNED_BYTE, compute_data.data());
 		return compute_data;
+
 	}
 
 	GLuint* getTexture() {

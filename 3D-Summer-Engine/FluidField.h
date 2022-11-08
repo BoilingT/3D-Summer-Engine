@@ -14,6 +14,13 @@ class FluidField
 {
 private:
 	const char* p_COMPUTE_SHADER						 = "Shaders/compute_shader_backup.glsl";
+	const char* p_advection_shader						 = "Shaders/compute.glsl";
+	const char* p_diffusion_shader						 = "Shaders/compute.glsl";
+	const char* p_force_shader							 = "Shaders/compute.glsl";
+	const char* p_divergence_shader						 = "Shaders/compute.glsl";
+	const char* p_gradient_subtraction_shader			 = "Shaders/compute.glsl";
+	const char* p_bounds_shader							 = "Shaders/compute.glsl";
+
 	const char* p_VISUALISE_GRID_VERTEX_SHADER			 = "Shaders/visualise_grid_vertex_shader.vert";
 	const char* p_VISUALISE_GRID_FRAGMENT_SHADER		 = "Shaders/visualise_grid_fragment_shader.frag";
 	const char* p_VERTEX_SHADER							 = "Shaders/vertex_shader.vert";
@@ -21,6 +28,14 @@ private:
 	const char* p_TEXTURE								 = "C:/Users/to9751/Pictures/Generated Images/Multicolored_pattern.png";
 
 	Compute* m_compute_shader;
+
+	Compute* m_advection_shader;
+	Compute* m_diffusion_shader;
+	Compute* m_force_shader;
+	Compute* m_divergence_shader;
+	Compute* m_gradient_subtraction_shader;
+	Compute* m_bounds_shader;
+
 	Shader* m_primary_shader;
 	Shader* m_visualise_grid_shader;
 

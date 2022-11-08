@@ -8,7 +8,7 @@
 
 layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 layout(rgba32f, binding = 0) uniform image2D out_texture;
-
+layout(location = 0) uniform float t;
 
 vec4 calculateValues(float val){
 	return vec4((val), 1.0f, 0.0f, 0.0f);
