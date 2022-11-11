@@ -154,6 +154,12 @@
     <None Include="Shaders\visualise_grid_vertex_shader.vert">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="Shaders\compute_advection_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\compute_jacobi_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Shaders\compute_shader.glsl">

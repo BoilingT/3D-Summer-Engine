@@ -14,12 +14,12 @@ class FluidField
 {
 private:
 	const char* p_COMPUTE_SHADER						 = "Shaders/compute_shader_backup.glsl";
-	const char* p_advection_shader						 = "Shaders/compute.glsl";
-	const char* p_diffusion_shader						 = "Shaders/compute.glsl";
-	const char* p_force_shader							 = "Shaders/compute.glsl";
-	const char* p_divergence_shader						 = "Shaders/compute.glsl";
-	const char* p_gradient_subtraction_shader			 = "Shaders/compute.glsl";
-	const char* p_bounds_shader							 = "Shaders/compute.glsl";
+	const char* p_advection_shader						 = "Shaders/compute_advection_shader.frag";
+	const char* p_diffusion_shader						 = "Shaders/compute_jacobi_shader.frag";
+	const char* p_force_shader							 = "Shaders/compute_force_shader.frag";
+	const char* p_divergence_shader						 = "Shaders/compute_divergence_shader.frag";
+	const char* p_gradient_subtraction_shader			 = "Shaders/compute_gradient_subtraction_shader.frag";
+	const char* p_bounds_shader							 = "Shaders/compute_bounds_shader.frag";
 
 	const char* p_VISUALISE_GRID_VERTEX_SHADER			 = "Shaders/visualise_grid_vertex_shader.vert";
 	const char* p_VISUALISE_GRID_FRAGMENT_SHADER		 = "Shaders/visualise_grid_fragment_shader.frag";
@@ -28,10 +28,14 @@ private:
 	const char* p_TEXTURE								 = "C:/Users/to9751/Pictures/Generated Images/Multicolored_pattern.png";
 
 	Compute* m_compute_shader;
+	Compute* m_compute_temp;
 
-	Compute* m_advection_shader;
-	Compute* m_diffusion_shader;
-	Compute* m_force_shader;
+	//Order of operations:
+	//Advection -> Diffusion -> Force Application -> Projection
+
+	Compute* m_advection_program;
+	Compute* m_jacobi_iteration_program; //Diffusion
+	Compute* m_force_program;
 	Compute* m_divergence_shader;
 	Compute* m_gradient_subtraction_shader;
 	Compute* m_bounds_shader;
