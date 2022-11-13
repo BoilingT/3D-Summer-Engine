@@ -41,7 +41,7 @@ void Engine::Init()
 }
 
 void Engine::Run() {
-	std::cout << "Starting Engine..." << std::endl;
+	std::cout << "STARTING::ENGINE" << std::endl;
 	glfwSetWindowTitle(m_window->getWindow(), "Starting Engine...");
 
 	int frames = 0;
@@ -54,7 +54,7 @@ void Engine::Run() {
 	//glm::vec3 origin = glm::vec3(-c_WIDTH / 2.f, c_HEIGHT / 2.f, 0);
 	glm::vec3 origin = glm::vec3(0, 0, 0);
 	
-	std::cout << "Started rendering loop..." << std::endl;
+	std::cout << "STARTING::RENDER::LOOP" << std::endl;
 	glfwSetWindowTitle(m_window->getWindow(), "Started rendering loop...");
 	
 	g_lastTime = glfwGetTime();
@@ -107,6 +107,7 @@ void Engine::Run() {
 		float val = sin(timeValue / 2);
 		
 		m_fluid->updateMouse(&g_lastX, &g_lastY, &g_mouseDown);
+		m_fluid->timeStep(g_deltaTime);
 		m_fluid->Draw(origin);
 		//m_fluid->DrawCellField(origin);
 		
@@ -188,7 +189,7 @@ void Engine::saveImage(const char* path, GLFWwindow* window)
 void Engine::IO_EVENTS(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
-		std::cout << "Terminating..." << std::endl;
+		std::cout << "TERMINATING::APPLICATION" << std::endl;
 		glfwSetWindowTitle(m_window->getWindow(), "Terminating...");
 		glfwSetWindowShouldClose(window, true);
 	}

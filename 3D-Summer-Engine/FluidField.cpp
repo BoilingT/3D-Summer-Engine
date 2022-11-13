@@ -64,6 +64,31 @@ void FluidField::Init() {
 	m_compute_shader->setValues(quantityImage.data());
 }
 
+void initFramebuffers() {
+
+}
+
+void FluidField::blit(Framebuffer target) {
+	//Bind framebuffer
+	glBindFramebuffer(GL_FRAMEBUFFER, target.fbo);
+
+	//Draw to framebuffer
+}
+
+void FluidField::timeStep(float dt) {
+	//curl
+	// blit
+	//vorticity / force / jacobi
+	// blit
+	//divergence / jacobi
+	// blit
+	//pressure	/ jacobi?
+	// blit
+	//gradientSubtract
+	// blit
+	//advection
+}
+
 void FluidField::Draw(glm::vec3 origin) {
 	m_primary_shader->use();
 	float time = glfwGetTime();
@@ -78,11 +103,6 @@ void FluidField::Draw(glm::vec3 origin) {
 	//m_compute_shader->setFloat("textureWidth", m_fieldWidth);
 	m_fieldQuad->setTexture(m_compute_shader->getTexture());
 	m_fieldQuad->Draw(*m_primary_shader);
-}
-
-//Simulate for the next timestep
-void FluidField::timeStep() {
-	
 }
 
 //Draw a visual representation of the dimensions of a grid containing data

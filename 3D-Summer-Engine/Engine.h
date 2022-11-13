@@ -56,28 +56,27 @@ private:
 public:
 
 	Engine() {
-		std::cout << "Initializing Engine..." << std::endl;
+		std::cout << "INITIALIZING::ENGINE" << std::endl;
 
 		m_window = new WindowHandler(c_WIDTH, c_HEIGHT, c_WINDOW_NAME);
 		m_camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 		
 		Init();
-		std::cout << "Engine Initialized" << std::endl;
+		std::cout << "SUCCESS::INITIALIZATION::ENGINE" << std::endl;
 		glfwSetWindowTitle(m_window->getWindow(), "Engine Initialized");
 	}
 
 	~Engine() {
 		glfwTerminate();
-		std::cout << "Engine Stopped" << std::endl;
 
-		delete m_window;
-		delete m_camera;
 		delete m_fluid;
+		delete m_camera;
+		delete m_window;
 
 		m_window = NULL;
 		m_camera = NULL;
 		m_fluid = NULL;
-		std::cout << "Window has been destroyed" << std::endl;
+		std::cout << "DESTROYED::ENGINE" << std::endl;
 	}
 
 	//Initialize the window and its components

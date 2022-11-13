@@ -24,6 +24,7 @@
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="fileHandler.cpp" />
     <ClCompile Include="FluidField.cpp" />
+    <ClCompile Include="Framebuffer.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -41,6 +42,7 @@
     <ClInclude Include="Engine.h" />
     <ClInclude Include="fileHandler.h" />
     <ClInclude Include="FluidField.h" />
+    <ClInclude Include="Framebuffer.h" />
     <ClInclude Include="Line.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Rect.h" />

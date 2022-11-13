@@ -14,6 +14,10 @@ public:
 		window = nullptr;
 	}
 
+	~WindowHandler() {
+		std::cout << "DESTROYED::WINDOW" << std::endl;
+	}
+
 	int getWidth() {
 		return WIDTH;
 	}

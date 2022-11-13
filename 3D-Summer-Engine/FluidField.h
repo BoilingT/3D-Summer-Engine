@@ -5,6 +5,7 @@
 #include "Line.h"
 
 #include "Shader.h"
+#include "Framebuffer.h"
 #include "Texture2D.h"
 #include "Compute.h"
 
@@ -78,6 +79,7 @@ public:
 		m_WIDTH(WIDTH),
 		m_HEIGHT(HEIGHT)
 	{
+		std::cout << "INITIALIZING::FLUIDFIELD" << std::endl;
 		m_primary_shader					 = new Shader(p_VERTEX_SHADER, p_FRAGMENT_SHADER);
 		m_visualise_grid_shader				 = new Shader(p_VISUALISE_GRID_VERTEX_SHADER, p_VISUALISE_GRID_FRAGMENT_SHADER);
 		m_texture							 = new Texture2D(p_TEXTURE);
@@ -88,8 +90,9 @@ public:
 												glm::vec3(m_WIDTH, m_HEIGHT, 0.0f), 
 												glm::vec3(0.0f), 
 												m_texture->get());
-		m_translations.resize(resolution);
+		m_translations.resize(resolution);		//reserve memory
 		Init();
+		std::cout << "SUCCESS::INITIALIZATION::FLUIDFIELD" << std::endl;
 	}
 
 	~FluidField() {
@@ -103,6 +106,7 @@ public:
 		delete(m_fieldQuad);
 		delete(m_quad);
 		delete(m_line);
+		std::cout << "DESTROYED::FLUIDFIELD" << std::endl;
 	}
 
 	//Draw the fluid
@@ -112,7 +116,9 @@ public:
 
 	void updateMouse(double* mouseX, double* mouseY, bool* mouse_down);
 	//Move forward in time, update values
-	void timeStep(); 
+	void timeStep(float dt); 
+	//Draw the fluid to a framebuffer
+	void blit(Framebuffer target);
 	void addDye(glm::vec2 pos, float amount);
 	//Clear everything and start from the beginning
 	void reset();

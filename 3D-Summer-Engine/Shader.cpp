@@ -54,7 +54,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
 	if (!success)
 	{
 		glGetProgramInfoLog(ID, 512, NULL, compileInfo);
-		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << compileInfo << std::endl;
+		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << "FRAGMENT::SHADER::" << fragmentPath << "\n" << "VERTEX::SHADER::" << vertexPath << "\n" << compileInfo << std::endl;
 	}
 
 	glDeleteShader(vShader);
@@ -87,7 +87,7 @@ Shader::Shader(const char* shaderPath, GLenum type) {
 	if (!success)
 	{
 		glGetShaderInfoLog(shader, sizeof(compileInfo), NULL, compileInfo);
-		std::cout << "ERROR::SHADER::COMPILATION::FAILED\n" << compileInfo << std::endl;
+		std::cout << "ERROR::SHADER::COMPILATION::FAILED\n" << "SHADER:: " << shaderPath << "\n" << compileInfo << std::endl;
 		return;
 	}
 
@@ -100,7 +100,7 @@ Shader::Shader(const char* shaderPath, GLenum type) {
 	if (!success)
 	{
 		glGetProgramInfoLog(ID, 512, NULL, compileInfo);
-		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << compileInfo << std::endl;
+		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << "SHADER:: " << shaderPath << "\n" << compileInfo << std::endl;
 	}
 
 	glDeleteShader(shader);

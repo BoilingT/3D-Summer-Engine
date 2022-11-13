@@ -1,6 +1,5 @@
 #version 430 core
-
-out vec4 xNew;
+vec4 xNew; //Out
 uniform float timestep;
 uniform float rdx;		//1 / Grid scale
 uniform sampler2D u;	//Input velocity
@@ -33,11 +32,11 @@ vec4 f4texRECTbilerp(sampler2D q, vec2 coords){
 	return lerp(lerp(a, b, fc.x), lerp(d, c, fc.x), fc.y);
 }
 
-void advect(vec2 coords){
+vec4 advect(vec2 coords){
 	//Track the velocity back in time
 	vec2 pos = coords - timestep * rdx * f2texRect(u, coords); 
 	//Interpolate and write to the output fragment
-	xNew = f4texRECTbilerp(x, pos);
+	return f4texRECTbilerp(x, pos);
 }
 
 //Transport quantities in the fluid
@@ -45,6 +44,6 @@ void main(){
 	//Get the current coordinates
 	vec2 coords = gl_FragCoord.xy;
 	//Advect the current quantities at the current coordinates
-	advect(coords);
+	xNew = advect(coords);
 	gl_FragColor = xNew;
 }
