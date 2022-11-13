@@ -1,2 +1,2 @@
 # Fluid Simulation
-## Created by Tobias Andersson
+## Created by *Tobias Andersson*
