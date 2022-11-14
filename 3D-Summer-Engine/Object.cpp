@@ -118,7 +118,7 @@ void Object::DrawInstanced(Shader& shader, glm::vec2* values, int count) {
 void Object::Draw(Shader& shader) {
 	shader.use();
 	//Draw mesh
-	glBindTexture(GL_TEXTURE_2D, texture ? *texture : 0);
+	//glBindTexture(GL_TEXTURE_2D, texture != nullptr && texture > 0? *texture : 0);
 	glBindVertexArray(VAO);
 
 	glm::mat4 modelM = glm::mat4(1.0f);

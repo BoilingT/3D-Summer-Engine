@@ -2,7 +2,7 @@
 
 //Fill the cellgrid with the corresponding x- and y-values
 void FluidField::Init() {
-	glm::mat4 modelM = glm::mat4(1.0f);
+	/*glm::mat4 modelM = glm::mat4(1.0f);
 	glm::mat4 viewM = glm::mat4(1.0f);
 	glm::mat4 projectionM = glm::mat4(1.0f);
 
@@ -15,7 +15,7 @@ void FluidField::Init() {
 	m_primary_shader->use();
 	m_primary_shader->setMat4f("view", viewM);
 	m_primary_shader->setMat4f("projection", projectionM);
-
+	*/
 
 	m_compute_shader = new Compute(p_COMPUTE_SHADER, glm::vec2(m_fieldWidth, m_fieldWidth));
 	m_compute_shader->use();
@@ -24,7 +24,7 @@ void FluidField::Init() {
 	std::vector<unsigned char> quantityImage((m_fieldWidth * m_fieldWidth) * 3 /* bytes per pixel */);
 	unsigned int coordinate = (m_fieldWidth/2 + (m_fieldWidth/2 * m_fieldWidth)) * 3;
 	quantityImage[coordinate + 0] = 255 * 0.5f;;
-	quantityImage[coordinate + 1] = 255 * 0.5f;
+	quantityImage[coordinate + 1] = 0;
 	quantityImage[coordinate + 2] = 255 * 0.5f;
 
 	std::vector<unsigned char> pressureImage((m_fieldWidth * m_fieldWidth) * 3 /* bytes per pixel */);
@@ -64,45 +64,143 @@ void FluidField::Init() {
 	m_compute_shader->setValues(quantityImage.data());
 }
 
-void initFramebuffers() {
+void FluidField::blit(Framebuffer* target, Shader* shader) {
+	glm::mat4 modelM = glm::mat4(1.0f);
+	glm::mat4 viewM = glm::mat4(1.0f);
+	glm::mat4 projectionM = glm::mat4(1.0f);
 
-}
+	projectionM = glm::ortho(0.0f, (float)m_WIDTH, 0.0f, (float)m_HEIGHT, -1000.0f, 1000.0f);
 
-void FluidField::blit(Framebuffer target) {
+	shader->use();
+	shader->setMat4f("view", viewM);
+	shader->setMat4f("projection", projectionM);
+
+	glClearColor(0, 0, 0, 1);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	//Bind framebuffer
-	glBindFramebuffer(GL_FRAMEBUFFER, target.fbo);
+	if (target == nullptr || target->fbo == NULL)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+	}
+	else
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, target->fbo);
+	}
 
 	//Draw to framebuffer
+	if (!target->status())
+	{
+		std::cout << "ERROR::BLIT::FRAMEBUFFER::STATUS::INCOMPLETE" << std::endl;
+	}
+
+	m_fieldQuad->Draw(*shader);
+	int boundBuffer = 0;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &boundBuffer);
+	if (target != nullptr && boundBuffer == target->fbo)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
 }
 
 void FluidField::timeStep(float dt) {
-	//curl
-	// blit
-	//vorticity / force / jacobi
-	// blit
-	//divergence / jacobi
-	// blit
-	//pressure	/ jacobi?
-	// blit
-	//gradientSubtract
-	// blit
-	//advection
+	//Order of operations:
+	//Advection -> Diffusion -> Force Application -> Projection
+
+	//Advection
+	//timestep = m_timestep
+	//u = velocity texture
+	//x = quantity texture
+	//rdx = 1 / gridscale 
+	blit(m_velocity_buffer->writeBuffer(), &m_advection_shader);
+	m_velocity_buffer->swap();
+	//Advect dye
+	//timestep = m_timestep
+	//u = velocity texture
+	//x = quantity scalar texture
+	//rdx = 1 / gridscale
+	blit(m_dye_buffer->writeBuffer(), &m_advection_shader);
+	m_dye_buffer->swap();
+
+	//Diffusion, by using jacobi iterations
+	// x = b = u (velocity)
+	//Alpha = pow(x, 2)/t
+	//rBeta = 1/(4+Alpha)
+	for (unsigned int i = 0; i < 50; i++) //20 to 50 iterations
+	{
+		blit(m_velocity_buffer->writeBuffer(), &m_jacobi_iteration_shader);
+		m_velocity_buffer->swap();
+	}
+	//Force Application / Dye Manipulation
+	blit(m_velocity_buffer->writeBuffer(), &m_force_shader);
+	m_velocity_buffer->swap();
+	//Projection, by removing any divergence
+	////Solve Pressure
+	//x = p (pressure)
+	//b = gradient of w (divergent velocity)
+	//Alpha = -pow(x,2)
+	//rBeta = 1/4
+	for (unsigned int i = 0; i < 20; i++)
+	{
+		blit(m_pressure_buffer->writeBuffer(), &m_jacobi_iteration_shader);
+		m_pressure_buffer->swap();
+	}
+	////Subtract Gradient of pressure field from velocity field to achieve divergence free velocity
+	//p = pressure
+	//w = divergent velocity
+	blit(m_velocity_buffer->writeBuffer(), &m_gradient_subtraction_shader);
+	m_velocity_buffer->swap();
+	////Boundary conditions
+
+	/*
+	// Curl <- Curl
+	//blit(m_curl_buffer, m_curl_shader);
+	// Vorticity <- Veloctiy
+	//blit(m_velocity_buffer->writeBuffer(), m_vorticity_shader);
+	//m_velocity_buffer->swap();
+	// Divergence <- Divergence
+	blit(m_divergence_buffer, m_divergence_shader);
+	// Clear <- Pressure
+	
+	// Pressure <- Pressure
+	for (unsigned int i = 0; i < 1; i++)
+	{
+		blit(m_pressure_buffer->writeBuffer(), m_jacobi_iteration_shader);
+		m_pressure_buffer->swap();
+	}
+	// Gradient Subtract <- Velocity
+	blit(m_velocity_buffer->writeBuffer(), m_gradient_subtraction_shader);
+	m_velocity_buffer->swap();
+	// Advection <- Velocity
+	blit(m_velocity_buffer->writeBuffer(), m_advection_shader);
+	m_velocity_buffer->swap();
+	// Dye
+	blit(m_dye_buffer->writeBuffer(), m_advection_shader);
+	m_dye_buffer->swap();
+	*/
 }
 
 void FluidField::Draw(glm::vec3 origin) {
-	m_primary_shader->use();
+	
 	float time = glfwGetTime();
-	int uTimeLocation = glGetUniformLocation(m_primary_shader->getID(), "u_time");
-	glUniform1f(uTimeLocation, time);
 	
 	m_compute_shader->use();
+	//glBindTexture(GL_TEXTURE_2D, *m_compute_shader->getTexture());
 	m_compute_shader->dispatch();
 	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
-	uTimeLocation = glGetUniformLocation(m_compute_shader->getID(), "t");
+	int uTimeLocation = glGetUniformLocation(m_compute_shader->getID(), "t");
 	glUniform1f(uTimeLocation, time);
 	//m_compute_shader->setFloat("textureWidth", m_fieldWidth);
-	m_fieldQuad->setTexture(m_compute_shader->getTexture());
-	m_fieldQuad->Draw(*m_primary_shader);
+	//m_fieldQuad->setTexture(m_compute_shader->getTexture());
+	
+	m_primary_shader->use();
+	uTimeLocation = glGetUniformLocation(m_primary_shader->getID(), "u_time");
+	glUniform1f(uTimeLocation, time);
+
+	//blit(nullptr, &m_gradient_subtraction_shader);
+	glBindTexture(GL_TEXTURE_2D, m_velocity_buffer->readBuffer()->texture);
+	blit(nullptr, m_primary_shader);
+
 }
 
 //Draw a visual representation of the dimensions of a grid containing data

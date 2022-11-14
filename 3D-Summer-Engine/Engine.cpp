@@ -26,7 +26,7 @@ void Engine::Init()
 		return;
 	}
 	
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 
 	//Set the viewport size
 	glViewport(0, 0, c_WIDTH, c_HEIGHT);

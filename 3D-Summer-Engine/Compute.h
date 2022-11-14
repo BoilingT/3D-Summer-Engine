@@ -45,7 +45,6 @@ public:
 	void use() {
 		m_computeShader->use();
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, m_out_texture);
 	}
 
 	//Start the compute shader with the given work group size

@@ -3,7 +3,7 @@ vec4 div;	//Out
 uniform float frdx;		//0.5 / Gridscale
 uniform sampler2D w;	//Vector field
 
-//
+//Calculate change in density of a fluid
 void divergence(vec2 coords){
 	vec4 wL = texture2D(w, coords - vec2(1, 0));
 	vec4 wR = texture2D(w, coords + vec2(1, 0));

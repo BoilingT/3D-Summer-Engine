@@ -108,8 +108,9 @@ Shader::Shader(const char* shaderPath, GLenum type) {
 
 Shader::~Shader()
 {
-	glDeleteProgram(ID);
-	glDeleteTextures(1, &m_compute_texture);
+	//glDeleteProgram(ID);
+	//glDeleteTextures(1, &m_compute_texture);
+	std::cout << "DESTROYED::SHADER" << std::endl;
 }
 
 void Shader::generateTexture(unsigned int TEXTURE_WIDTH, unsigned int TEXTURE_HEIGHT)
