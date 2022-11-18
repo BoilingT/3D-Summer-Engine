@@ -8,6 +8,7 @@ uniform sampler2D u;	//Input velocity
 uniform sampler2D x;	//Quantity to advect
 uniform vec2 texelSize;
 uniform bool linearFiltering;
+uniform float dissipation;
 
 //Get the velocity vector from a texture at the given coordinates
 vec4 f2texRect(sampler2D v, vec2 coords){
@@ -62,7 +63,7 @@ void main(){
 	vec2 coords = gl_FragCoord.xy * texelSize;
 	//Advect the current quantities at the current coordinates
 	vec4 result = advect(coords);
-	float decay = 1.0 + 0.5f * timestep;
+	float decay = 1.0 + dissipation * timestep;
 	fragColor = result / decay;
 	//gl_FragColor = vec4(f2texRect(x, coords * rdx * rdx), 0.0f, 1.0f);
 	//gl_FragColor = texture2D(x, vec2(1.0f, 1.0f)/rdx * rdx * rdx * coords);

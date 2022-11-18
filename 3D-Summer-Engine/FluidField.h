@@ -122,6 +122,7 @@ private:
 	Framebuffer* m_curl_buffer;
 	DoubleFramebuffer* m_pressure_buffer;
 	unsigned int* m_current_read_buffer;
+	Framebuffer* m_current_buffer;
 
 	Compute* m_compute_shader;
 	Shader* m_compute_temp;
@@ -148,7 +149,16 @@ private:
 	const float	 m_WIDTH, m_HEIGHT;
 	const int	 m_resolution;
 	const int	 m_fieldWidth;
-	float		 m_timestep								 = 0;
+
+	const float	 m_dye_dissipation						 = 0.5f;
+	const float	 m_dye_radius							 = 0.25f;
+	const float	 m_dye_force							 = 6000.0f;
+	const float	 m_velocity_dissipation					 = 0.5f;
+	const float	 m_timestep								 = 1;
+	const int	 m_diffuseIterations					 = 40;
+	const float	 m_viscosity							 = 0.0f;
+	const int	 m_pressureIterations					 = 40;
+	const float	 m_pressure								 = 0.0f;
 
 	//Visualisation
 	bool					m_showDataVectors;
@@ -238,14 +248,31 @@ public:
 	void swapBuffer(int i) {
 		if (i == 1)
 		{
-			std::cout << "BUFFER::VELOCITY" << std::endl;
-			//m_current_read_buffer = &m_divergence_buffer->texture;
-			m_current_read_buffer = &m_pressure_buffer->readBuffer()->texture;
-			//m_current_read_buffer = &m_velocity_buffer->readBuffer()->texture;
-		}
-		else {
 			std::cout << "BUFFER::DYE" << std::endl;
-			m_current_read_buffer = &m_dye_buffer->readBuffer()->texture;
+			m_current_buffer = 0;
+		}
+		else if (i == 2)
+		{
+			std::cout << "BUFFER::VELOCITY" << std::endl;
+			//m_current_read_buffer = &m_velocity_buffer->readBuffer()->texture;
+			m_current_buffer = m_velocity_buffer->readBuffer();
+		}
+		else if(i == 3){
+			std::cout << "BUFFER::DIVERGENCE" << std::endl;
+			//m_current_read_buffer = &m_divergence_buffer->texture;
+			m_current_buffer = m_divergence_buffer;
+
+		}
+		else if (i == 4) {
+			std::cout << "BUFFER::PRESSURE" << std::endl;
+			//m_current_read_buffer = &m_pressure_buffer->readBuffer()->texture;
+			m_current_buffer = m_pressure_buffer->readBuffer();
+
+		}
+		else if (i == 5) {
+			std::cout << "BUFFER::CURL" << std::endl;
+			//m_current_read_buffer = &m_curl_buffer->texture;
+			m_current_buffer = m_curl_buffer;
 		}
 	}
 

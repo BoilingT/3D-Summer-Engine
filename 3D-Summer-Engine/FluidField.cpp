@@ -108,10 +108,10 @@ void FluidField::blit(Framebuffer* target, Shader* shader) {
 void FluidField::timeStep(float dt) {
 	//Order of operations:
 	//Advection -> Diffusion -> Force Application -> Projection
-	float time = dt;
-	project(time);
+	float time = dt * m_timestep;
 	advect(time);
-	//diffuse(time);
+	diffuse(time);
+	project(time);
 	//addForces(time);
 	//blit(m_velocity_buffer->writeBuffer(), &m_gradient_subtraction_shader);
 	//m_velocity_buffer->swap();
@@ -154,8 +154,10 @@ void FluidField::advect(float dt) {
 	int uLoc = m_advection_shader.uniforms["u"];
 	int xLoc = m_advection_shader.uniforms["x"];
 	int texelLoc = m_advection_shader.uniforms["texelSize"];
+	int dissipationLoc = m_advection_shader.uniforms["dissipation"];
 	int velocityId = m_velocity_buffer->readBuffer()->setTexture(0);
 	glUniform1f(timestepLoc, dt); //timestep = m_timestep
+	glUniform1f(dissipationLoc, m_velocity_dissipation);
 	glUniform1i(uLoc, velocityId); //u = velocity texture
 	glUniform1i(xLoc, velocityId); //x = quantity texture
 	glUniform2f(texelLoc, m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
@@ -167,6 +169,7 @@ void FluidField::advect(float dt) {
 	m_velocity_buffer->swap();
 	
 	//Advect dye
+	glUniform1f(dissipationLoc, m_dye_dissipation);
 	glUniform1i(uLoc, m_velocity_buffer->readBuffer()->setTexture(0)); //u = velocity texture
 	glUniform1i(xLoc, m_dye_buffer->readBuffer()->setTexture(1)); //x = quantity scalar texture
 	glUniform2f(texelLoc, m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
@@ -176,43 +179,42 @@ void FluidField::advect(float dt) {
 
 //Diffusion, by using jacobi iterations
 void FluidField::diffuse(float dt) {
-	float viscosity = 0.f;
-	int jacobiIterations = 20;
+	
 
-	if (viscosity > 0) {
+	if (m_viscosity > 0) {
+		m_jacobi_iteration_shader.use();
 		int xLoc = m_jacobi_iteration_shader.uniforms["x"];
 		int bLoc = m_jacobi_iteration_shader.uniforms["b"];
-		float alphaLoc = m_jacobi_iteration_shader.uniforms["alpha"];
-		float rBetaLoc = m_jacobi_iteration_shader.uniforms["rBeta"];
-		int xTexelLoc = m_jacobi_iteration_shader.uniforms["xTx"];
+		int xTexelLoc = m_jacobi_iteration_shader.uniforms["texelSize"];
+		int alphaLoc = m_jacobi_iteration_shader.uniforms["alpha"];
+		int rBetaLoc = m_jacobi_iteration_shader.uniforms["rBeta"];
 		// Velocity
-		m_jacobi_iteration_shader.use();
-		glUniform2f(xTexelLoc, m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
-		glUniform1i(xLoc, m_velocity_buffer->readBuffer()->setTexture(0)); // x = b = u (velocity)
-		glUniform1i(bLoc, m_velocity_buffer->readBuffer()->setTexture(1));
-		float alpha = pow(1, 2) / (dt * viscosity);
-		float rBeta = 1 / (4 + alpha);
+		float alpha = pow(1, 2) / (dt * m_viscosity);
+		float rBeta = 1.0f / (4.0f + alpha);
 		glUniform1f(alphaLoc, alpha);  //Alpha = pow(dx, 2)/t
-		glUniform1f(rBetaLoc, 1 / (4 + alpha)); //rBeta = 1/(4+Alpha)
+		glUniform1f(rBetaLoc, rBeta); //rBeta = 1/(4+Alpha)
+		glUniform2f(xTexelLoc, m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
+		glUniform1i(bLoc, m_velocity_buffer->readBuffer()->setTexture(0));
 
-		for (unsigned int k = 0; k < jacobiIterations; k++) //20 to 50 iterations
+		for (unsigned int k = 0; k < m_diffuseIterations; k++) //20 to 50 iterations
 		{
+			glUniform1i(xLoc, m_velocity_buffer->readBuffer()->setTexture(1)); // x = b = u (velocity)
 			blit(m_velocity_buffer->writeBuffer(), &m_jacobi_iteration_shader);
 			m_velocity_buffer->swap();
 		}
 		//Diffusion
 		// Dye
 
-		glUniform2f(xTexelLoc, m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
-		glUniform1i(xLoc, m_dye_buffer->readBuffer()->setTexture(0)); // x = b = u (velocity)
-		glUniform1i(bLoc, m_dye_buffer->readBuffer()->setTexture(1));
 		//float alpha = pow(1, 2) / m_timestep;
 		//float rBeta = 1 / (4 + alpha);
 		glUniform1f(alphaLoc, alpha);  //Alpha = pow(dx, 2)/t
-		glUniform1f(rBetaLoc, 1 / (4 + alpha)); //rBeta = 1/(4+Alpha)
+		glUniform1f(rBetaLoc, rBeta); //rBeta = 1/(4+Alpha)
+		glUniform2f(xTexelLoc, m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
+		glUniform1i(bLoc, m_dye_buffer->readBuffer()->setTexture(0));
 
-		for (unsigned int k = 0; k < jacobiIterations; k++) //20 to 50 iterations
+		for (unsigned int k = 0; k < m_diffuseIterations; k++) //20 to 50 iterations
 		{
+			glUniform1i(xLoc, m_dye_buffer->readBuffer()->setTexture(1)); // x = b = u (velocity)
 			blit(m_dye_buffer->writeBuffer(), &m_jacobi_iteration_shader);
 			m_dye_buffer->swap();
 		}
@@ -243,7 +245,7 @@ void FluidField::project(float dt) {
 		int valueLoc = m_clear_shader.uniforms["value"];
 		int textureLoc = m_clear_shader.uniforms["uTexture"];
 		int texSizeLoc = m_clear_shader.uniforms["texelSize"];
-		glUniform1f(valueLoc, 0.8f);
+		glUniform1f(valueLoc, m_pressure);
 		glUniform1i(textureLoc, m_pressure_buffer->readBuffer()->setTexture(0));
 		glUniform2f(texSizeLoc, m_pressure_buffer->readBuffer()->texelSizeX, m_pressure_buffer->readBuffer()->texelSizeY);
 		blit(m_pressure_buffer->writeBuffer(), &m_clear_shader);
@@ -266,7 +268,7 @@ void FluidField::project(float dt) {
 		glUniform1f(rBetaLoc, rBeta);
 		glUniform2f(xTexelLoc, m_pressure_buffer->readBuffer()->texelSizeX, m_pressure_buffer->readBuffer()->texelSizeY);
 		glUniform1i(bLoc, m_divergence_buffer->setTexture(0));	//b = gradient of w (divergent velocity)
-		for (unsigned int k = 0; k < 40; k++)
+		for (unsigned int k = 0; k < m_pressureIterations; k++)
 		{
 			glUniform1i(xLoc, m_pressure_buffer->readBuffer()->setTexture(1)); //x = p (pressure)
 			blit(m_pressure_buffer->writeBuffer(), &m_jacobi_iteration_shader);
@@ -306,7 +308,16 @@ void FluidField::Draw(glm::vec3 origin) {
 
 	//blit(nullptr, &m_gradient_subtraction_shader);
 	//glBindTexture(GL_TEXTURE_2D, m_divergence_buffer->texture);
-	glBindTexture(GL_TEXTURE_2D, *m_current_read_buffer);
+	glUniform1i(m_primary_shader->uniforms["u_image"], m_dye_buffer->readBuffer()->setTexture(0));
+	if (m_current_buffer != nullptr)
+	{
+		glUniform1i(m_primary_shader->uniforms["u_image_overlay"], m_current_buffer->setTexture(1));
+		glUniform2f(m_primary_shader->uniforms["texelSize"], m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
+	}
+	else
+	{
+		glUniform1i(m_primary_shader->uniforms["u_image_overlay"], 0);
+	}
 	blit(nullptr, m_primary_shader);
 
 }
@@ -363,10 +374,9 @@ void FluidField::splat(glm::vec2 pos, float r) {
 	//int uColorLoc = glGetUniformLocation(m_splat_shader.getID(), "color");
 	//glBindTexture(GL_TEXTURE_2D, m_dye_buffer->readBuffer()->texture);
 
-	float force = 6000.0f;
 	glUniform1i(uTargetLoc, m_velocity_buffer->readBuffer()->setTexture(0));
 	glUniform2f(uPointLoc, pos.x, pos.y);
-	glUniform3f(uColorLoc, m_mouse.texcoord_delta.x * force, m_mouse.texcoord_delta.y * force, 0.0f);
+	glUniform3f(uColorLoc, m_mouse.texcoord_delta.x * m_dye_force, m_mouse.texcoord_delta.y * m_dye_force, 0.0f);
 	glUniform1f(uRadiusLoc, r);
 	glUniform2f(uTexLoc, m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
 	blit(m_velocity_buffer->writeBuffer(), &m_splat_shader);
@@ -374,7 +384,7 @@ void FluidField::splat(glm::vec2 pos, float r) {
 
 	glUniform1i(m_splat_shader.uniforms["uTarget"], m_dye_buffer->readBuffer()->setTexture(0));
 	glUniform2f(uTexLoc, m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
-	glm::vec3 color = glm::vec3(m_mouse.texcoord_delta.x * force/100.f, m_mouse.texcoord_delta.y * force / 100.f, 0.3f);
+	glm::vec3 color = glm::vec3(m_mouse.texcoord_delta.x * m_dye_force /100.f, m_mouse.texcoord_delta.y * m_dye_force / 100.f, 0.3f);
 
 	glUniform3f(uColorLoc, abs(color.r), abs(color.g), abs(color.b + (color.r+color.g)/8.f));
 	blit(m_dye_buffer->writeBuffer(), &m_splat_shader);
@@ -397,6 +407,6 @@ void FluidField::updateMouse(double* mouseX, double* mouseY, bool* mouse_down)
 	if (m_mouse.down && (abs(m_mouse.window_delta.x) > 0 || abs(m_mouse.window_delta.y) > 0))
 	{
 		std::cout << "X: " << m_mouse.texcoord_pos.x << " Y: " << m_mouse.texcoord_pos.y << " down:" << m_mouse.down << std::endl;
-		splat(m_mouse.texcoord_pos, 0.15f);
+		splat(m_mouse.texcoord_pos, m_dye_radius);
 	}
 }

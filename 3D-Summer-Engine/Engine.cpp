@@ -224,15 +224,30 @@ void Engine::IO_EVENTS(GLFWwindow* window) {
 
 	const float cameraSensitivity = m_camera->sensitivity * g_deltaTime;
 
-	//O
-	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
-	{
-		m_fluid->swapBuffer(0);
-	}
-	//P
-	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+	//Dye
+	if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
 	{
 		m_fluid->swapBuffer(1);
+	}
+	//Velocity
+	if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS)
+	{
+		m_fluid->swapBuffer(2);
+	}
+	//Divergence
+	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
+	{
+		m_fluid->swapBuffer(3);
+	}
+	//Pressure
+	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+	{
+		m_fluid->swapBuffer(4);
+	}
+	//Curl
+	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+	{
+		m_fluid->swapBuffer(5);
 	}
 	//Forward
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
