@@ -21,7 +21,7 @@ vec2 gradient(vec2 coords){
 
 	//Finite Difference Form of Gradient
 	u.xy = u.xy + texelSize * 0.5f - vec2(pR - pL, pT - pB);
-	return u;	//Velocity without divergence
+	return u.xy;	//Velocity without divergence
 }
 
 void main(){
