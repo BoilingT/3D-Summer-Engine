@@ -10,7 +10,7 @@ uniform vec2 texelSize;
 uniform bool linearFiltering;
 
 //Get the velocity vector from a texture at the given coordinates
-vec2 f2texRect(sampler2D v, vec2 coords){
+vec4 f2texRect(sampler2D v, vec2 coords){
 	//vec2 pixelSize = vec2(1.0f, 1.0f) / rdx;
 	vec2 pos = coords / texelSize - OFFSET;
 	//Texture coordinates are set from 0 to 1 in both width and height.
