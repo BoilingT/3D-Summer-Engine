@@ -230,23 +230,9 @@ void FluidField::project(float dt) {
 
 void FluidField::Draw(glm::vec3 origin) {
 	
-	float time = glfwGetTime();
-	
-	m_compute_shader->use();
-	//glBindTexture(GL_TEXTURE_2D, *m_compute_shader->getTexture());
-	m_compute_shader->dispatch();
-	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
-	int uTimeLocation = glGetUniformLocation(m_compute_shader->getID(), "t");
-	glUniform1f(uTimeLocation, time);
-	//m_compute_shader->setFloat("textureWidth", m_fieldWidth);
-	//m_fieldQuad->setTexture(m_compute_shader->getTexture());
-	
 	m_primary_shader->use();
-	uTimeLocation = glGetUniformLocation(m_primary_shader->getID(), "u_time");
-	glUniform1f(uTimeLocation, time);
+	glUniform1f(m_primary_shader->uniforms["u_time"], glfwGetTime());
 
-	//blit(nullptr, &m_gradient_subtraction_shader);
-	//glBindTexture(GL_TEXTURE_2D, m_divergence_buffer->texture);
 	glUniform1i(m_primary_shader->uniforms["u_image"], m_dye_buffer->readBuffer()->setTexture(0));
 	if (m_current_buffer != nullptr)
 	{
@@ -258,7 +244,6 @@ void FluidField::Draw(glm::vec3 origin) {
 		glUniform1i(m_primary_shader->uniforms["u_image_overlay"], 0);
 	}
 	blit(nullptr, m_primary_shader);
-
 }
 
 //Draw a visual representation of the dimensions of a grid containing data
