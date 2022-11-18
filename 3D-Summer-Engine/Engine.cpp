@@ -9,7 +9,7 @@ double Engine::g_lastX				 = 0;
 double Engine::g_lastY				 = 0;
 bool Engine::g_mouseDown			 = 0;
 bool Engine::g_firstMouseEnter		 = 0;
-bool Engine::g_mouse_constrain		 = false;
+bool Engine::g_mouse_constrain		 = true;
 
 void Engine::Init()
 {
@@ -46,6 +46,7 @@ void Engine::Run() {
 
 	int frames = 0;
 	int fps = 0;
+	double TPF = 0;
 	int maxFps = 0;
 	float sleepTime = 0;
 	
@@ -58,23 +59,25 @@ void Engine::Run() {
 	glfwSetWindowTitle(m_window->getWindow(), "Started rendering loop...");
 	
 	g_lastTime = glfwGetTime();
+	g_lastTime2 = glfwGetTime();
 	while (!glfwWindowShouldClose(m_window->getWindow()))
 	{
 		float currentTime = glfwGetTime();
 		g_deltaTime = currentTime - g_lastTime;
+		g_lastTime = glfwGetTime();
 		frames++;
 
-		if (g_deltaTime >= 1.f)
+		std::string title = "FPS: " + std::to_string(fps) + " dT: " + std::to_string(g_deltaTime) + " TPF: " + std::to_string(TPF) + "ms";
+		if (currentTime - g_lastTime2 >= 1.f)
 		{
 			//double TPF = 1000.0 / (double)frames;
 			//std::cout << TPF << "ms/frame" << std::endl;
-			double TPF = 1000.0 / (double)frames;
-			fps = frames/g_deltaTime;
+			TPF = 1000.0 / (double)frames;
+			fps = frames/(currentTime - g_lastTime2);
 			maxFps = fps > maxFps ? fps : maxFps;
 			frames = 0;
-			g_lastTime += 1.f;
-			//sleepTime = 1000.f / 60.f - TPF;
-			std::string title = "FPS: " + std::to_string(fps) + " Max FPS: " + std::to_string(maxFps) + " TPF: " + std::to_string(TPF) + "ms";
+			g_lastTime2 += 1.f;
+			sleepTime = 1000.f / 144.f - TPF/4.f;
 			glfwSetWindowTitle(m_window->getWindow(), title.c_str());
 		}
 
@@ -221,6 +224,16 @@ void Engine::IO_EVENTS(GLFWwindow* window) {
 
 	const float cameraSensitivity = m_camera->sensitivity * g_deltaTime;
 
+	//O
+	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+	{
+		m_fluid->swapBuffer(0);
+	}
+	//P
+	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+	{
+		m_fluid->swapBuffer(1);
+	}
 	//Forward
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
@@ -276,7 +289,6 @@ void Engine::MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos) {
 	{
 		if (xPos <= 10.0)
 		{
-			std::cout << "HELLO";
 			glfwSetCursorPos(window, 11.0, yPos);
 		}
 		else if (xPos >= c_WIDTH - 10.0)

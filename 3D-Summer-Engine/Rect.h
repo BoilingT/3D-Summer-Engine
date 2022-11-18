@@ -8,10 +8,10 @@ class Rect :
 private:
     float planeVertices[4 * 5] = {
         //Positions              //TexCoords
-        -0.5f, 0.5f, 0.0f,       0.0f, 1.0f,     //Top left corner
-        -0.5f, -0.5f, 0.0f,      0.0f, 0.0f,     //Lower left corner
-        0.5f, 0.5f, 0.0f,        1.0f, 1.0f,     //Top right corner
-        0.5f, -0.5f, 0.0f,       1.0f, 0.0f      //Lower right corner
+        -1.0f, 1.0f, 0.0f,       0.0f, 1.0f,     //Top left corner
+        -1.0f, -1.0f, 0.0f,      0.0f, 0.0f,     //Lower left corner
+        1.0f, 1.0f, 0.0f,        1.0f, 1.0f,     //Top right corner
+        1.0f, -1.0f, 0.0f,       1.0f, 0.0f      //Lower right corner
     };
 
     unsigned int indices[6] = {

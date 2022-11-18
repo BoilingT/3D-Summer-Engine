@@ -47,9 +47,6 @@
     <ClCompile Include="Object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rect.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -176,6 +173,12 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="Shaders\compute_bounds_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\compute_splat_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\compute_clear_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

@@ -59,6 +59,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
 
 	glDeleteShader(vShader);
 	glDeleteShader(fShader);
+	getUniforms();
 }
 
 Shader::Shader(const char* shaderPath, GLenum type) {
@@ -104,6 +105,7 @@ Shader::Shader(const char* shaderPath, GLenum type) {
 	}
 
 	glDeleteShader(shader);
+	getUniforms();
 }
 
 Shader::~Shader()
@@ -111,6 +113,7 @@ Shader::~Shader()
 	//glDeleteProgram(ID);
 	//glDeleteTextures(1, &m_compute_texture);
 	std::cout << "DESTROYED::SHADER" << std::endl;
+	uniforms.clear();
 }
 
 void Shader::generateTexture(unsigned int TEXTURE_WIDTH, unsigned int TEXTURE_HEIGHT)
@@ -135,6 +138,26 @@ unsigned int* Shader::getTexture()
 	return &m_compute_texture;
 }
 
+void Shader::getUniforms()
+{
+	GLint size; // size of the variable
+	GLenum type; // type of the variable (float, vec3 or mat4, etc)
+
+	const GLsizei bufSize = 16; // maximum name length
+	char name[bufSize]; // variable name in GLSL
+	GLsizei length; // name length
+
+	int count = 0;
+	glGetProgramiv(ID, GL_ACTIVE_UNIFORMS, &count);
+	//uniforms.resize(count);
+ 	for (unsigned int i = 0; i < count; i++)
+	{
+		glGetActiveUniform(ID, (GLuint)i, bufSize, &length, &size, &type, name);
+		int location = glGetUniformLocation(ID, name);
+		uniforms[name] = location;
+	}
+}
+
 void Shader::use() {
 	glUseProgram(ID);
 }
@@ -153,6 +176,11 @@ void Shader::setFloat(const std::string name, float value) const {
 
 void Shader::setMat4f(const std::string name, glm::mat4 values) const {
 	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(values));
+}
+
+int Shader::getUniformLocation(const std::string name)
+{
+	return glGetUniformLocation(ID, name.c_str());
 }
 
 unsigned int Shader::getID() {

@@ -29,7 +29,6 @@
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="Rect.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Texture2D.cpp" />
@@ -83,10 +82,12 @@
     </Text>
     <None Include="Shaders\compute_advection_shader.frag" />
     <None Include="Shaders\compute_bounds_shader.frag" />
+    <None Include="Shaders\compute_clear_shader.frag" />
     <None Include="Shaders\compute_divergence_shader.frag" />
     <None Include="Shaders\compute_force_shader.frag" />
     <None Include="Shaders\compute_gradient_subtraction_shader.frag" />
     <None Include="Shaders\compute_jacobi_shader.frag" />
+    <None Include="Shaders\compute_splat_shader.frag" />
     <None Include="Shaders\visualise_grid_fragment_shader.frag" />
     <None Include="Shaders\visualise_grid_vertex_shader.vert" />
   </ItemGroup>
