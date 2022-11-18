@@ -121,11 +121,9 @@ private:
 	Framebuffer* m_divergence_buffer;
 	Framebuffer* m_curl_buffer;
 	DoubleFramebuffer* m_pressure_buffer;
-	unsigned int* m_current_read_buffer;
 	Framebuffer* m_current_buffer;
+	unsigned int* m_current_read_buffer;
 
-	Compute* m_compute_shader;
-	Shader* m_compute_temp;
 	Shader m_advection_shader;
 	Shader m_jacobi_iteration_shader; //Diffusion
 	Shader m_force_shader;
@@ -138,10 +136,6 @@ private:
 	Shader* m_primary_shader;
 	Shader* m_visualise_grid_shader;
 
-	//Field
-	//unsigned const int m_COMPUTE_TEXTURE_WIDTH;
-	//unsigned const int m_COMPUTE_TEXTURE_HEIGHT;
-
 	Texture2D*	 m_texture;
 	unsigned int texture;
 	Texture2D*	 m_texture_buffer;
@@ -150,15 +144,15 @@ private:
 	const int	 m_resolution;
 	const int	 m_fieldWidth;
 
-	const float	 m_dye_dissipation						 = 0.5f;
-	const float	 m_dye_radius							 = 0.25f;
-	const float	 m_dye_force							 = 6000.0f;
-	const float	 m_velocity_dissipation					 = 0.5f;
-	const float	 m_timestep								 = 1;
+	const float	 m_dye_force							 = 5000.0f;
+	const float	 m_dye_radius							 = 0.15f;
+	const float	 m_dye_dissipation						 = 0.3f;
+	const float	 m_velocity_dissipation					 = 0.4f;
 	const int	 m_diffuseIterations					 = 40;
 	const float	 m_viscosity							 = 0.0f;
 	const int	 m_pressureIterations					 = 40;
-	const float	 m_pressure								 = 0.0f;
+	const float	 m_pressure								 = 0.8f;
+	const float	 m_timestep								 = 1.f;
 
 	//Visualisation
 	bool					m_showDataVectors;
@@ -230,7 +224,6 @@ public:
 
 		delete(m_primary_shader);
 		delete(m_visualise_grid_shader);
-		delete(m_compute_shader);
 		delete(m_fieldQuad);
 		delete(m_quad);
 		delete(m_line);

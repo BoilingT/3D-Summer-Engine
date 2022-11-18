@@ -2,66 +2,7 @@
 
 //Fill the cellgrid with the corresponding x- and y-values
 void FluidField::Init() {
-	/*glm::mat4 modelM = glm::mat4(1.0f);
-	glm::mat4 viewM = glm::mat4(1.0f);
-	glm::mat4 projectionM = glm::mat4(1.0f);
 
-	projectionM = glm::ortho(0.0f, (float)m_WIDTH, 0.0f, (float)m_HEIGHT, -1000.0f, 1000.0f);
-	
-	m_visualise_grid_shader->use();
-	m_visualise_grid_shader->setMat4f("view", viewM);
-	m_visualise_grid_shader->setMat4f("projection", projectionM);
-
-	m_primary_shader->use();
-	m_primary_shader->setMat4f("view", viewM);
-	m_primary_shader->setMat4f("projection", projectionM);
-	*/
-
-	m_compute_shader = new Compute(p_COMPUTE_SHADER, glm::vec2(m_fieldWidth, m_fieldWidth));
-	m_compute_shader->use();
-	//glDeleteTextures(1, &compute_texture);
-
-	std::vector<unsigned char> quantityImage((m_fieldWidth * m_fieldWidth) * 3 /* bytes per pixel */);
-	unsigned int coordinate = (m_fieldWidth/2 + (m_fieldWidth/2 * m_fieldWidth)) * 3;
-	quantityImage[coordinate + 0] = 255 * 0.5f;;
-	quantityImage[coordinate + 1] = 0;
-	quantityImage[coordinate + 2] = 255 * 0.5f;
-
-	std::vector<unsigned char> pressureImage((m_fieldWidth * m_fieldWidth) * 3 /* bytes per pixel */);
-	std::vector<unsigned char> velocityImage((m_fieldWidth * m_fieldWidth) * 3 /* bytes per pixel */);
-
-	for (unsigned int row = 0; row < m_fieldWidth; row++)
-	{
-		for (unsigned int col = 0; col < m_fieldWidth; col++)
-		{
-			unsigned int location = (col + (row * m_fieldWidth)) * 3;
-			if (row <= m_fieldWidth / 2)
-			{
-				glm::vec3 v = glm::vec3(0.0f, 1.0f, 0.0f);
-				v *= 255;
-				velocityImage[location + 0] = v.x;	 // X
-				velocityImage[location + 1] = v.y;	 // Y
-				velocityImage[location + 2] = v.z;	 // Z
-			}
-			else {
-				glm::vec3 v = glm::vec3(0.0f, 0.0f, 0.0f);
-				
-				velocityImage[location + 0] = v.x;	 // X
-				velocityImage[location + 1] = v.y;	 // Y
-				velocityImage[location + 2] = v.z;	 // Z
-			}
-			//velocityImage[location + 0] = (float) col/m_fieldWidth * 255;	 // R
-			//velocityImage[location + 1] = 0;								 // G
-			//velocityImage[location + 2] = (float) row / m_fieldWidth * 255;	 // B
-		}
- 	}
-	/*int c = 0;
-	int r = 0;
-	unsigned int location = (c + (r * m_fieldWidth))*3;
-	image[location + 0] = 1; // R
-	image[location + 1] = 1; // G
-	image[location + 2] = 0; // B*/
-	m_compute_shader->setValues(quantityImage.data());
 }
 
 void FluidField::blit(Framebuffer* target, Shader* shader) {
@@ -179,8 +120,6 @@ void FluidField::advect(float dt) {
 
 //Diffusion, by using jacobi iterations
 void FluidField::diffuse(float dt) {
-	
-
 	if (m_viscosity > 0) {
 		m_jacobi_iteration_shader.use();
 		int xLoc = m_jacobi_iteration_shader.uniforms["x"];
@@ -221,15 +160,15 @@ void FluidField::diffuse(float dt) {
 	}
 }
 
+//Force Application
 void FluidField::addForces(float dt) {
-	//Force Application
 	//blit(m_velocity_buffer->writeBuffer(), &m_force_shader);
 	//m_velocity_buffer->swap();
 }
 
+//Projection, by removing any divergence
 void FluidField::project(float dt) {
-	//Projection, by removing any divergence
-	////Solve divergence
+	//Solve divergence
 	{
 		m_divergence_shader.use();
 		int wLoc = m_divergence_shader.uniforms["w"];
@@ -252,7 +191,7 @@ void FluidField::project(float dt) {
 		m_pressure_buffer->swap();
 	}
 
-	////Solve Pressure
+	//Solve Pressure
 	{
 		m_jacobi_iteration_shader.use();
 		int xLoc = m_jacobi_iteration_shader.uniforms["x"];
@@ -262,7 +201,7 @@ void FluidField::project(float dt) {
 		int rBetaLoc = m_jacobi_iteration_shader.uniforms["rBeta"];
 
 
-		float alpha = -pow(1, 2); //Alpha = -pow(x,2)
+		float alpha = -pow(1.0f, 2.0f); //Alpha = -pow(x,2)
 		float rBeta = 1.0f / 4.0f; //rBeta = 1/4
 		glUniform1f(alphaLoc, alpha);
 		glUniform1f(rBetaLoc, rBeta);
@@ -275,8 +214,8 @@ void FluidField::project(float dt) {
 			m_pressure_buffer->swap();
 		}
 	}
+	//Subtract Gradient of pressure field from velocity field to achieve divergence free velocity
 	{
-		////Subtract Gradient of pressure field from velocity field to achieve divergence free velocity
 		m_gradient_subtraction_shader.use();
 		int xTexelLoc = m_gradient_subtraction_shader.uniforms["texelSize"];
 		int pLoc = m_gradient_subtraction_shader.uniforms["p"];
@@ -384,7 +323,7 @@ void FluidField::splat(glm::vec2 pos, float r) {
 
 	glUniform1i(m_splat_shader.uniforms["uTarget"], m_dye_buffer->readBuffer()->setTexture(0));
 	glUniform2f(uTexLoc, m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
-	glm::vec3 color = glm::vec3(m_mouse.texcoord_delta.x * m_dye_force /100.f, m_mouse.texcoord_delta.y * m_dye_force / 100.f, 0.3f);
+	glm::vec3 color = glm::vec3(m_mouse.texcoord_delta.x * m_dye_force /100.f, m_mouse.texcoord_delta.y * m_dye_force / 100.f, 0.2f);
 
 	glUniform3f(uColorLoc, abs(color.r), abs(color.g), abs(color.b + (color.r+color.g)/8.f));
 	blit(m_dye_buffer->writeBuffer(), &m_splat_shader);
