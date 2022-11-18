@@ -77,7 +77,7 @@ void Engine::Run() {
 			maxFps = fps > maxFps ? fps : maxFps;
 			frames = 0;
 			g_lastTime2 += 1.f;
-			sleepTime = 1000.f / 144.f - TPF/4.f;
+			sleepTime = 1000.f / 144.f - TPF/3.f;
 			glfwSetWindowTitle(m_window->getWindow(), title.c_str());
 		}
 

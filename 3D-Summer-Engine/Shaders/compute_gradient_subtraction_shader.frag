@@ -1,4 +1,5 @@
 #version 430 core
+out vec4 fragColor;
 uniform vec2 texelSize;		//0.5 / Gridscale
 uniform sampler2D p;	//Pressure
 uniform sampler2D w;	//Velocity
@@ -26,6 +27,6 @@ vec2 gradient(vec2 coords){
 void main(){
 	vec2 coords = gl_FragCoord.xy;
 	vec2 result = gradient(coords);
-	gl_FragColor = vec4(result, 0.0f, 1.0f);
+	fragColor = vec4(result, 0.0f, 1.0f);
 	//gl_FragColor = vec4(coords/16.0f, 0.0f, 1.0f);
 }

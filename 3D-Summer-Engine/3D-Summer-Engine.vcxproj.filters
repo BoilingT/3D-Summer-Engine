@@ -134,56 +134,52 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="Shaders\compute_shader_backup.glsl">
-      <Filter>Resource Files\Shaders</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Shaders\default_fragment_shader.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Shaders\default_vertex_shader.vert">
-      <Filter>Resource Files\Shaders</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Shaders\fragment_shader.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Shaders\vertex_shader.vert">
-      <Filter>Resource Files\Shaders</Filter>
-    </CopyFileToFolders>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Shaders\visualise_grid_fragment_shader.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\visualise_grid_vertex_shader.vert">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\compute_advection_shader.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\compute_jacobi_shader.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\compute_force_shader.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\compute_divergence_shader.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\compute_gradient_subtraction_shader.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\compute_bounds_shader.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\compute_splat_shader.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\compute_clear_shader.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="Shaders\compute_shader.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\compute_advection_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\compute_bounds_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\compute_clear_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\compute_divergence_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\compute_force_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\compute_gradient_subtraction_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\compute_jacobi_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\compute_shader_backup.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\compute_splat_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\default_fragment_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\default_vertex_shader.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\fragment_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\vertex_shader.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\visualise_grid_fragment_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\visualise_grid_vertex_shader.vert">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
   </ItemGroup>

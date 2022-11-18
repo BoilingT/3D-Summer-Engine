@@ -1,5 +1,6 @@
 #version 430 core
 
+out vec4 fragColor;
 vec4 xNew;	//out
 uniform float alpha;	//x^2/t
 uniform float rBeta;	//Reciprocal beta	1/(4+x^2/t)
@@ -23,6 +24,6 @@ vec4 jacobi(vec2 coords){
 void main(){
 	vec2 coords = gl_FragCoord.xy;
 	vec4 xNew = jacobi(coords);
-	gl_FragColor = xNew;
+	fragColor = xNew;
 	//gl_FragColor = vec4(1.0f);
 }

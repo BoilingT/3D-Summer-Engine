@@ -55,21 +55,36 @@
     <ClInclude Include="WindowHandler.h" />
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="Shaders\compute_shader_backup.glsl">
+    <Text Include="Shaders\compute_shader_backup.glsl">
       <FileType>Text</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Shaders\default_fragment_shader.frag">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="Shaders\default_fragment_shader.frag">
       <FileType>Text</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Shaders\default_vertex_shader.vert">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="Shaders\default_vertex_shader.vert">
       <FileType>Text</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Shaders\fragment_shader.frag">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="Shaders\fragment_shader.frag">
       <FileType>Text</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Shaders\vertex_shader.vert">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="Shaders\vertex_shader.vert">
       <FileType>Text</FileType>
-    </CopyFileToFolders>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Images\LearnOpenGL\awesomeface.png" />
@@ -79,17 +94,70 @@
   <ItemGroup>
     <Text Include="Shaders\compute_shader.glsl">
       <FileType>Text</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <DeploymentContent>true</DeploymentContent>
     </Text>
-    <None Include="Shaders\compute_advection_shader.frag" />
-    <None Include="Shaders\compute_bounds_shader.frag" />
-    <None Include="Shaders\compute_clear_shader.frag" />
-    <None Include="Shaders\compute_divergence_shader.frag" />
-    <None Include="Shaders\compute_force_shader.frag" />
-    <None Include="Shaders\compute_gradient_subtraction_shader.frag" />
-    <None Include="Shaders\compute_jacobi_shader.frag" />
-    <None Include="Shaders\compute_splat_shader.frag" />
-    <None Include="Shaders\visualise_grid_fragment_shader.frag" />
-    <None Include="Shaders\visualise_grid_vertex_shader.vert" />
+    <Text Include="Shaders\compute_advection_shader.frag">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <FileType>Text</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="Shaders\compute_bounds_shader.frag">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <FileType>Text</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="Shaders\compute_clear_shader.frag">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <FileType>Text</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="Shaders\compute_divergence_shader.frag">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <FileType>Text</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="Shaders\compute_force_shader.frag">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <FileType>Text</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="Shaders\compute_gradient_subtraction_shader.frag">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <FileType>Text</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="Shaders\compute_jacobi_shader.frag">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <FileType>Text</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="Shaders\compute_splat_shader.frag">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <FileType>Text</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="Shaders\visualise_grid_fragment_shader.frag">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <FileType>Text</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="Shaders\visualise_grid_vertex_shader.vert">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <FileType>Text</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -156,6 +224,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\OpenGL\glfw\glfw-3.3.8\res\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\OpenGL\glfw\glfw-3.3.8\res\Libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -212,6 +282,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

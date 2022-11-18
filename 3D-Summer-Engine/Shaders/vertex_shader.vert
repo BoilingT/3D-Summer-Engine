@@ -5,7 +5,7 @@ layout (location = 2) in vec2 aTexCoord;
 layout (location = 1) in vec2 aOffset;
 
 out vec2 texCoord;
-varying vec2 vUv;
+out vec2 vUv;
 
 out vec2 vL;
 out vec2 vR;

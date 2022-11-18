@@ -197,7 +197,7 @@ public:
 		TexFormat r(GL_R32F, GL_RED);
 		glDisable(GL_BLEND);
 		// Dye
-		m_dye_buffer = new DoubleFramebuffer(m_resolution, m_resolution, m_resolution, rgba.internal, rgba.format, textureType, GL_LINEAR);
+		m_dye_buffer = new DoubleFramebuffer(m_resolution*2, m_resolution, m_resolution, rgba.internal, rgba.format, textureType, GL_LINEAR);
 		// Velocity
 		m_velocity_buffer = new DoubleFramebuffer(m_resolution, m_resolution, m_resolution, rg.internal, rg.format, textureType, GL_LINEAR);
 		// Divergence

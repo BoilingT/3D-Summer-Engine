@@ -2,7 +2,7 @@
 #define OFFSET 0.5f
 
 in vec2 vUv;
-
+out vec4 fragColor;
 uniform float timestep;
 uniform sampler2D u;	//Input velocity
 uniform sampler2D x;	//Quantity to advect
@@ -63,7 +63,7 @@ void main(){
 	//Advect the current quantities at the current coordinates
 	vec4 result = advect(coords);
 	float decay = 1.0 + 0.5f * timestep;
-	gl_FragColor = result /decay;
+	fragColor = result / decay;
 	//gl_FragColor = vec4(f2texRect(x, coords * rdx * rdx), 0.0f, 1.0f);
 	//gl_FragColor = texture2D(x, vec2(1.0f, 1.0f)/rdx * rdx * rdx * coords);
 }

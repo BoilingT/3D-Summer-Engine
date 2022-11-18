@@ -1,5 +1,5 @@
 #version 430 core
-
+out vec4 fragColor;
 uniform sampler2D u; //Velocity field
 uniform float x;	//Mouse pos x
 uniform float y;	//Mouse pos y
@@ -12,5 +12,5 @@ void main(){
 	float pT = 0;
 	float r = 1;
 	float c = F*pT*exp((pow(x-pos.x,2) + pow(y-pos.y,2))/r);
-	gl_FragColor = vec4(x, y, 0.0f, 1.0f);
+	fragColor = vec4(x, y, 0.0f, 1.0f);
 }

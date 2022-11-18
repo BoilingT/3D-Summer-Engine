@@ -1,8 +1,9 @@
 #version 430
+out vec4 fragColor;
 uniform vec2 texelSize;
 uniform sampler2D uTexture;
 uniform float value;
 
 void main () {
-    gl_FragColor = value * texture2D(uTexture, gl_FragCoord.xy * texelSize);
+    fragColor = value * texture2D(uTexture, gl_FragCoord.xy * texelSize);
 }

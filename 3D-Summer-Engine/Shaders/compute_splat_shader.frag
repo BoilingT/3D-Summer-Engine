@@ -1,6 +1,6 @@
 #version 430
-varying vec2 vUv;
-
+in vec2 vUv;
+out vec4 fragColor;
 uniform sampler2D uTarget;
 uniform vec3 color;
 uniform vec2 point;
@@ -19,5 +19,5 @@ void main(){
 	//}else{
 	//	gl_FragColor = vec4(0.0f, 1.0f, 0.0f, 1.0f);
 	//}
-	gl_FragColor = vec4(base + splat, 1.0f);
+	fragColor = vec4(base + splat, 1.0f);
 }

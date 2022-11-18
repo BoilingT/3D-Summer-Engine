@@ -52,7 +52,7 @@ private:
 	float g_lastTime2										 = 0.0f;
 
 	//Fluid Simulation
-	const int c_RESOLUTION									 = 528; // aka Gridarea
+	const int c_RESOLUTION									 = 256; // aka Gridarea
 
 public:
 

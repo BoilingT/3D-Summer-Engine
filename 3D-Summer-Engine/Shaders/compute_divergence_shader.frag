@@ -1,5 +1,6 @@
 #version 430 core
 #define OFFSET 0.5
+out vec4 fragColor;
 float div;	//Out
 uniform vec2 texelSize;		//0.5 / Gridscale
 uniform sampler2D w;	//Vector field
@@ -35,5 +36,5 @@ void main(){
 	vec2 coords = gl_FragCoord.xy;
 	//coord => 0 - 16
 	div = divergence(coords);
-	gl_FragColor = vec4(div, 0.0f, 0.0f, 1.0f);
+	fragColor = vec4(div, 0.0f, 0.0f, 1.0f);
 }
