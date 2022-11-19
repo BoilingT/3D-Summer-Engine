@@ -36,11 +36,11 @@ private:
 	FileHandler			fileSystem;
 
 	//Window Properties
-	static const int	c_WIDTH								 = 1920;
-	static const int	c_HEIGHT							 = 1080;
-	const char*			c_WINDOW_NAME						 = "Summer Engine";
-	const float			c_DEFAULT_CLEAR_COLOR[4]			 = { 0.0f, 0.0f, 0.0f, 1.0f };
-	const float			c_CLEAR_COLOR[4]					 = { 0.28f, 0.41f, 0.61f, 1.0f };
+	static const int c_WIDTH								 = 1920;
+	static const int c_HEIGHT								 = 1080;
+	const char*	c_WINDOW_NAME								 = "Summer Engine";
+	const float	c_DEFAULT_CLEAR_COLOR[4]					 = { 0.0f, 0.0f, 0.0f, 1.0f };
+	const float	c_CLEAR_COLOR[4]							 = { 0.28f, 0.41f, 0.61f, 1.0f };
 
 	//Filepaths
 	const char* p_CONTAINER_IMAGE							 = "Images/LearnOpenGL/container.jpg";
