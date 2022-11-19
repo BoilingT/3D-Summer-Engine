@@ -9,7 +9,7 @@ double Engine::g_lastX				 = 0;
 double Engine::g_lastY				 = 0;
 bool Engine::g_mouseDown			 = 0;
 bool Engine::g_firstMouseEnter		 = 0;
-bool Engine::g_mouse_constrain		 = true;
+bool Engine::g_mouse_constrain		 = false;
 
 void Engine::Init()
 {

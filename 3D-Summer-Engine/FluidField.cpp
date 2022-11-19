@@ -168,30 +168,49 @@ void FluidField::addForces(float dt) {
 
 //Projection, by removing any divergence
 void FluidField::project(float dt) {
-	//Solve divergence
-	{
-		m_divergence_shader.use();
-		int wLoc = m_divergence_shader.uniforms["w"];
-		int texelSizeLoc = m_divergence_shader.uniforms["texelSize"];
-		glUniform1i(wLoc, m_velocity_buffer->readBuffer()->setTexture(0));
-		glUniform2f(texelSizeLoc, m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
-		blit(m_divergence_buffer, &m_divergence_shader);
-	}
+	divergence(dt);
+	clearBuffer(m_pressure_buffer, m_pressure);
+	pressure(dt);
+	gradientSubtract(dt);
+}
 
-	//Clear
-	{
-		m_clear_shader.use();
-		int valueLoc = m_clear_shader.uniforms["value"];
-		int textureLoc = m_clear_shader.uniforms["uTexture"];
-		int texSizeLoc = m_clear_shader.uniforms["texelSize"];
-		glUniform1f(valueLoc, m_pressure);
-		glUniform1i(textureLoc, m_pressure_buffer->readBuffer()->setTexture(0));
-		glUniform2f(texSizeLoc, m_pressure_buffer->readBuffer()->texelSizeX, m_pressure_buffer->readBuffer()->texelSizeY);
-		blit(m_pressure_buffer->writeBuffer(), &m_clear_shader);
-		m_pressure_buffer->swap();
-	}
+//Solve divergence
+void FluidField::divergence(float dt) {
+	m_divergence_shader.use();
+	int wLoc = m_divergence_shader.uniforms["w"];
+	int texelSizeLoc = m_divergence_shader.uniforms["texelSize"];
+	glUniform1i(wLoc, m_velocity_buffer->readBuffer()->setTexture(0));
+	glUniform2f(texelSizeLoc, m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
+	blit(m_divergence_buffer, &m_divergence_shader);
+}
 
-	//Solve Pressure
+void FluidField::clearBuffer(DoubleFramebuffer* target, float value)
+{
+	m_clear_shader.use();
+	int valueLoc = m_clear_shader.uniforms["value"];
+	int textureLoc = m_clear_shader.uniforms["uTexture"];
+	int texSizeLoc = m_clear_shader.uniforms["texelSize"];
+	glUniform1f(valueLoc, value);
+	glUniform1i(textureLoc, target->readBuffer()->setTexture(0));
+	glUniform2f(texSizeLoc, target->readBuffer()->texelSizeX, target->readBuffer()->texelSizeY);
+	blit(target->writeBuffer(), &m_clear_shader);
+	target->swap();
+}
+
+void FluidField::clearBuffer(Framebuffer* target, float value)
+{
+	m_clear_shader.use();
+	int valueLoc = m_clear_shader.uniforms["value"];
+	int textureLoc = m_clear_shader.uniforms["uTexture"];
+	int texSizeLoc = m_clear_shader.uniforms["texelSize"];
+	glUniform1f(valueLoc, value);
+	glUniform1i(textureLoc, target->setTexture(0));
+	glUniform2f(texSizeLoc, target->texelSizeX, target->texelSizeY);
+	blit(target, &m_clear_shader);
+}
+
+void FluidField::pressure(float dt)
+{	//Solve Pressure
 	{
 		m_jacobi_iteration_shader.use();
 		int xLoc = m_jacobi_iteration_shader.uniforms["x"];
@@ -214,19 +233,22 @@ void FluidField::project(float dt) {
 			m_pressure_buffer->swap();
 		}
 	}
-	//Subtract Gradient of pressure field from velocity field to achieve divergence free velocity
-	{
-		m_gradient_subtraction_shader.use();
-		int xTexelLoc = m_gradient_subtraction_shader.uniforms["texelSize"];
-		int pLoc = m_gradient_subtraction_shader.uniforms["p"];
-		int wLoc = m_gradient_subtraction_shader.uniforms["w"];
-		glUniform1i(pLoc, m_pressure_buffer->readBuffer()->setTexture(0)); //p = pressure
-		glUniform1i(wLoc, m_velocity_buffer->readBuffer()->setTexture(1)); //w = divergent velocity
-		glUniform2f(xTexelLoc, m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
-		blit(m_velocity_buffer->writeBuffer(), &m_gradient_subtraction_shader);
-		m_velocity_buffer->swap();
-	}
 }
+
+//Subtract Gradient of pressure field from velocity field to achieve divergence free velocity
+void FluidField::gradientSubtract(float dt)
+{
+	m_gradient_subtraction_shader.use();
+	int xTexelLoc = m_gradient_subtraction_shader.uniforms["texelSize"];
+	int pLoc = m_gradient_subtraction_shader.uniforms["p"];
+	int wLoc = m_gradient_subtraction_shader.uniforms["w"];
+	glUniform1i(pLoc, m_pressure_buffer->readBuffer()->setTexture(0)); //p = pressure
+	glUniform1i(wLoc, m_velocity_buffer->readBuffer()->setTexture(1)); //w = divergent velocity
+	glUniform2f(xTexelLoc, m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
+	blit(m_velocity_buffer->writeBuffer(), &m_gradient_subtraction_shader);
+	m_velocity_buffer->swap();
+}
+
 
 void FluidField::Draw(glm::vec3 origin) {
 	
@@ -246,48 +268,7 @@ void FluidField::Draw(glm::vec3 origin) {
 	blit(nullptr, m_primary_shader);
 }
 
-//Draw a visual representation of the dimensions of a grid containing data
-void FluidField::DrawCellField(glm::vec3 o) {
-	m_visualise_grid_shader->use();
-	
-	int uniformLocation = glGetUniformLocation(m_visualise_grid_shader->getID(), "resolution");
-	glUniform1i(uniformLocation, m_resolution);
-	
-	m_quad->transform.dim = glm::vec3(m_WIDTH / (float)m_fieldWidth, m_HEIGHT / (float)m_fieldWidth, 0.0f);
-	m_quad->transform.pos.x = o.x + m_quad->transform.dim.x / 2.f + m_quad->transform.dim.x * 0;
-	m_quad->transform.pos.y = o.y + m_quad->transform.dim.y / 2.f + m_quad->transform.dim.y * 0;
-	for (unsigned int r = 0; r < m_fieldWidth; r++)
-	{
-		for (unsigned int c = 0; c < m_fieldWidth; c++)
-		{
-			//glUniform4f(cLocation, (c + 1.f) / m_fieldWidth, 0.0f, (r + 1.f) / m_fieldWidth, 1.0f);
-			//Rect m_quad = Quads[r * gridWidth + c];
-			//m_quad->transform.pos.x = o.x + m_quad->transform.dim.x / 2.f + m_quad->transform.dim.x * c;
-			//m_quad->transform.pos.y = o.y + m_quad->transform.dim.y / 2.f + m_quad->transform.dim.y * r;
-			//glm::vec3 pos = glm::vec3(o.x + m_quad->transform.dim.x / 2.f + m_quad->transform.dim.x * c, o.y + m_quad->transform.dim.y / 2.f + m_quad->transform.dim.y * r, 0.0f);
-			//m_translations[r * m_fieldWidth + c] = pos;
-			m_translations[(double) r * m_fieldWidth + (double) c] = glm::vec2(c, r);
-			
-			/*glUniform4f(vLocation, 0.0f, 1.0f, 0.0f, 1.0f);
-			glm::vec3 offset = glm::vec3(0.0f, 0.0f, 0.0f);
- 			m_line->set(m_quad->transform.pos + offset, m_quad->transform.pos + offset + glm::vec3(20.0f, 20.0f, 0.0f));
-			m_line->Draw(*m_visualise_grid_shader);
-			m_line->set(m_quad->transform.pos + offset, m_quad->transform.pos + offset + glm::vec3(20.0f, -20.0f, 0.0f));
-			m_line->Draw(*m_visualise_grid_shader);*/
-			
-		}
-	}
-	/*for (unsigned int i = 0; i < m_resolution; i++)
-	{
-		int tLocation = glGetUniformLocation(m_visualise_grid_shader->getID(), ("offsets[" + std::to_string(i) + "]").c_str());
-		glUniform2f(tLocation, m_translations[i].x, m_translations[i].y);
-	}*/
-	//m_line->DrawInstanced(*m_visualise_grid_shader, m_translations, m_resolution);
- 	m_quad->DrawInstanced(*m_visualise_grid_shader, m_translations.data(), m_resolution);
-}
-
 void FluidField::splat(glm::vec2 pos, float r) {
-	std::cout << "SPLAT!" << std::endl;
 	m_splat_shader.use();
 	//Uniforms
 	int uTargetLoc = m_splat_shader.uniforms["uTarget"];
@@ -295,8 +276,6 @@ void FluidField::splat(glm::vec2 pos, float r) {
 	int uColorLoc = m_splat_shader.uniforms["color"];
 	int uRadiusLoc = m_splat_shader.uniforms["radius"];
 	int uTexLoc = m_splat_shader.uniforms["texelSize"];
-	//int uColorLoc = glGetUniformLocation(m_splat_shader.getID(), "color");
-	//glBindTexture(GL_TEXTURE_2D, m_dye_buffer->readBuffer()->texture);
 
 	glUniform1i(uTargetLoc, m_velocity_buffer->readBuffer()->setTexture(0));
 	glUniform2f(uPointLoc, pos.x, pos.y);
@@ -313,6 +292,26 @@ void FluidField::splat(glm::vec2 pos, float r) {
 	glUniform3f(uColorLoc, abs(color.r), abs(color.g), abs(color.b + (color.r+color.g)/8.f));
 	blit(m_dye_buffer->writeBuffer(), &m_splat_shader);
 	m_dye_buffer->swap();
+}
+
+//Draw a visual representation of the dimensions of a grid containing data
+void FluidField::DrawCellField(glm::vec3 o) {
+	m_visualise_grid_shader->use();
+
+	int uniformLocation = glGetUniformLocation(m_visualise_grid_shader->getID(), "resolution");
+	glUniform1i(uniformLocation, m_resolution);
+
+	m_quad->transform.dim = glm::vec3(m_WIDTH / (float)m_fieldWidth, m_HEIGHT / (float)m_fieldWidth, 0.0f);
+	m_quad->transform.pos.x = o.x + m_quad->transform.dim.x / 2.f + m_quad->transform.dim.x * 0;
+	m_quad->transform.pos.y = o.y + m_quad->transform.dim.y / 2.f + m_quad->transform.dim.y * 0;
+	for (unsigned int r = 0; r < m_fieldWidth; r++)
+	{
+		for (unsigned int c = 0; c < m_fieldWidth; c++)
+		{
+			m_translations[(double)r * m_fieldWidth + (double)c] = glm::vec2(c, r);
+		}
+	}
+	m_quad->DrawInstanced(*m_visualise_grid_shader, m_translations.data(), m_resolution);
 }
 
 void FluidField::updateMouse(double* mouseX, double* mouseY, bool* mouse_down)
@@ -333,4 +332,8 @@ void FluidField::updateMouse(double* mouseX, double* mouseY, bool* mouse_down)
 		//std::cout << "X: " << m_mouse.texcoord_pos.x << " Y: " << m_mouse.texcoord_pos.y << " down:" << m_mouse.down << std::endl;
 		splat(m_mouse.texcoord_pos, m_dye_radius);
 	}
+}
+
+void FluidField::reset()
+{
 }

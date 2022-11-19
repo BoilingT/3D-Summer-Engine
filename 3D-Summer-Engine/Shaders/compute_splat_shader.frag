@@ -10,8 +10,10 @@ uniform vec2 texelSize;
 void main(){
 	//0 - 256 Dye
 	//0 - 16  Velocity
+	float ratio = 1.0f / (texelSize.x / texelSize.y);
 	vec2 coord = gl_FragCoord.xy;
 	vec2 p = coord * texelSize - point;
+	p*=ratio;
 	vec3 splat = exp(-dot(p, p) / (radius/100.0f)) * color;
 	vec3 base = texture2D(uTarget, coord * texelSize).xyz;
 	//if(point.x > 0.5f){

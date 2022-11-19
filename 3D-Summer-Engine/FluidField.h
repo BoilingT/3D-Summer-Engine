@@ -144,12 +144,12 @@ private:
 	const int	 m_resolution;
 	const int	 m_fieldWidth;
 
-	const float	 m_dye_force							 = 5000.0f;
+	const float	 m_dye_force							 = 6000.0f;
 	const float	 m_dye_radius							 = 0.15f;
-	const float	 m_dye_dissipation						 = 0.3f;
-	const float	 m_velocity_dissipation					 = 0.4f;
-	const int	 m_diffuseIterations					 = 40;
-	const float	 m_viscosity							 = 0.0f;
+	const float	 m_dye_dissipation						 = 1.0f;
+	const float	 m_velocity_dissipation					 = 0.2f;
+	const int	 m_diffuseIterations					 = 10;
+	const float	 m_viscosity							 = 10.3f;
 	const int	 m_pressureIterations					 = 40;
 	const float	 m_pressure								 = 0.8f;
 	const float	 m_timestep								 = 1.f;
@@ -201,15 +201,15 @@ public:
 		TexFormat r(GL_R32F, GL_RED);
 		glDisable(GL_BLEND);
 		// Dye
-		m_dye_buffer = new DoubleFramebuffer(m_resolution*2, m_resolution, m_resolution, rgba.internal, rgba.format, textureType, GL_LINEAR);
+		m_dye_buffer = new DoubleFramebuffer(m_resolution, m_WIDTH, m_HEIGHT, rgba.internal, rgba.format, textureType, GL_LINEAR);
 		// Velocity
-		m_velocity_buffer = new DoubleFramebuffer(m_resolution, m_resolution, m_resolution, rg.internal, rg.format, textureType, GL_LINEAR);
+		m_velocity_buffer = new DoubleFramebuffer(m_resolution, m_WIDTH, m_HEIGHT, rg.internal, rg.format, textureType, GL_LINEAR);
 		// Divergence
-		m_divergence_buffer = new Framebuffer(m_resolution, m_resolution, m_resolution, r.internal, r.format, textureType, GL_NEAREST);
+		m_divergence_buffer = new Framebuffer(m_resolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 		// Curl
-		m_curl_buffer = new Framebuffer(m_resolution, m_resolution, m_resolution, r.internal, r.format, textureType, GL_NEAREST);
+		m_curl_buffer = new Framebuffer(m_resolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 		// Pressure
-		m_pressure_buffer = new DoubleFramebuffer(m_resolution, m_resolution, m_resolution, r.internal, r.format, textureType, GL_NEAREST);
+		m_pressure_buffer = new DoubleFramebuffer(m_resolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 
 		m_current_read_buffer = &m_dye_buffer->readBuffer()->texture;
 		std::cout << "SUCCESS::INITIALIZATION::FLUIDFIELD" << std::endl;
@@ -276,8 +276,12 @@ private:
 	void diffuse(float dt);
 	void addForces(float dt);
 	void project(float dt);
-	void gradientSubtract(float dt);
+
 	void divergence(float dt);
+	void clearBuffer(DoubleFramebuffer* target, float value);
+	void clearBuffer(Framebuffer* target, float value);
+	void pressure(float dt);
+	void gradientSubtract(float dt);
 	//Add a splat of velocity in the specified position
 	void splat(glm::vec2 pos, float r);
 	//Clear everything and start from the beginning
