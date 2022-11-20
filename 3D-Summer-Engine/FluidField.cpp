@@ -64,46 +64,13 @@ void FluidField::blit(Framebuffer* target, Shader* shader) {
 	}
 }
 
+//Advection -> Diffusion -> Force Application -> Projection
 void FluidField::timeStep(float dt) {
-	//Order of operations:
-	//Advection -> Diffusion -> Force Application -> Projection
 	float time = dt * m_timestep;
 	advect(time);
 	diffuse(time);
-	project(time);
 	//addForces(time);
-	//blit(m_velocity_buffer->writeBuffer(), &m_gradient_subtraction_shader);
-	//m_velocity_buffer->swap();
-	////Boundary conditions
-	
-	////////////////////////////////////////////////////////////////////////////////////
-
-	/*
-	// Curl <- Curl
-	//blit(m_curl_buffer, m_curl_shader);
-	// Vorticity <- Veloctiy
-	//blit(m_velocity_buffer->writeBuffer(), m_vorticity_shader);
-	//m_velocity_buffer->swap();
-	// Divergence <- Divergence
-	blit(m_divergence_buffer, m_divergence_shader);
-	// Clear <- Pressure
-	
-	// Pressure <- Pressure
-	for (unsigned int i = 0; i < 1; i++)
-	{
-		blit(m_pressure_buffer->writeBuffer(), m_jacobi_iteration_shader);
-		m_pressure_buffer->swap();
-	}
-	// Gradient Subtract <- Velocity
-	blit(m_velocity_buffer->writeBuffer(), m_gradient_subtraction_shader);
-	m_velocity_buffer->swap();
-	// Advection <- Velocity
-	blit(m_velocity_buffer->writeBuffer(), m_advection_shader);
-	m_velocity_buffer->swap();
-	// Dye
-	blit(m_dye_buffer->writeBuffer(), m_advection_shader);
-	m_dye_buffer->swap();
-	*/
+	project(time);
 }
 
 void FluidField::advect(float dt) {
