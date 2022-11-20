@@ -70,6 +70,7 @@ class FluidField
 			return fb1;
 		}
 
+		//Set the currently bound buffer for reading to another specified buffer
 		void readBuffer(Framebuffer* buffer) {
 			fb1 = buffer;
 		}
@@ -79,6 +80,7 @@ class FluidField
 			return fb2;
 		}
 
+		//Set the currently bound writing for reading to another specified buffer
 		void writeBuffer(Framebuffer* buffer) {
 			fb2 = buffer;
 		}
@@ -119,21 +121,15 @@ private:
 
 	//Framebuffers
 	
-	//Contains velocities to be advected
-	DoubleFramebuffer* m_velocity_buffer;
-	//Contains divergent velocities
-	Framebuffer* m_divergence_buffer;
-	//Contains a pressure field
-	DoubleFramebuffer* m_pressure_buffer;
+	DoubleFramebuffer* m_velocity_buffer; //Contains velocities to be advected
+	Framebuffer* m_divergence_buffer; //Contains divergent velocities
+	DoubleFramebuffer* m_pressure_buffer; 	//Contains a pressure field
 
 	//Application buffers
 	
-	//Contains dye quantities to be advected
-	DoubleFramebuffer* m_dye_buffer;
-	//Boyancy and Convection
-	DoubleFramebuffer* m_temperature_buffer;
-	//Contains curling velocities
-	Framebuffer* m_curl_buffer;
+	DoubleFramebuffer* m_dye_buffer; //Contains dye quantities to be advected
+	DoubleFramebuffer* m_temperature_buffer; //Boyancy and Convection
+	Framebuffer* m_curl_buffer; //Contains curling velocities
 
 	//Display buffers
 	//Contains the buffer that will be used when rendering
