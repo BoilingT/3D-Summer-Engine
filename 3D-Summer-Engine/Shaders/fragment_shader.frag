@@ -18,6 +18,6 @@ void main(){
 			color.b = abs(color.r);
 		}
 	}
-	fragColor = mix(texture(u_image, vUv), color, 0.3f);
+	fragColor = mix(texture(u_image, vUv), color, 0.6f);
 	//fragColor = texture(u_image_overlay, vUv) * vec4(vec3(1.0f), 0.5f);
 }

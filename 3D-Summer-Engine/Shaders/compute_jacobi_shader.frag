@@ -33,6 +33,7 @@ vec4 jacobi(vec2 coords){
 void main(){
 	vec2 coords = gl_FragCoord.xy;
 	vec4 xNew = jacobi(coords);
-	fragColor = vec4(xNew.x, 0, 0, 1.0f);
+	fragColor = vec4(xNew.xyz, 1.0f);
+	//fragColor = vec4(xNew.x, 0, 0, 1.0f);
 	//gl_FragColor = vec4(1.0f);
 }
