@@ -14,7 +14,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Mesh.h"
-#include "object_includes.h";
+#include "object_includes.h"
 #include "FluidField.h"
 #include "Compute.h"
 

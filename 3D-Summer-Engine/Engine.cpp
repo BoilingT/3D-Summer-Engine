@@ -93,7 +93,7 @@ void Engine::Run() {
 	g_lastTime2 = glfwGetTime();
 	while (!glfwWindowShouldClose(m_window->getWindow()))
 	{
-		float currentTime = glfwGetTime();
+		double currentTime = glfwGetTime();
 		g_deltaTime = currentTime - g_lastTime;
 		g_lastTime = glfwGetTime();
 		frames++;
@@ -137,8 +137,8 @@ void Engine::Run() {
 		//projectionM = glm::ortho(-(float)c_WIDTH / 2, (float)c_WIDTH / 2, -(float)c_HEIGHT / 2, (float)c_HEIGHT / 2, -1000.0f, 1000.0f);
 		////projectionM = glm::ortho(0.0f, (float)c_WIDTH, 0.0f, (float)c_HEIGHT, -1000.0f, 1000.0f);
 
-		float timeValue = glfwGetTime();
-		float val = sin(timeValue / 2);
+		double timeValue = glfwGetTime();
+		double val = sin(timeValue / 2);
 		
 		m_fluid->updateMouse(&g_lastX, &g_lastY, &g_mouseDown);
 		m_fluid->timeStep(g_deltaTime);

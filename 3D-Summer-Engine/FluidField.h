@@ -176,7 +176,7 @@ private:
 public:
 	FluidField(const float WIDTH, const float HEIGHT, const int resolution) :
 		m_resolution(resolution),
-		m_fieldWidth(sqrt(resolution)),
+		m_fieldWidth((int) sqrt(resolution)),
 		m_WIDTH(WIDTH),
 		m_HEIGHT(HEIGHT),
 		m_mouse(WIDTH, HEIGHT),

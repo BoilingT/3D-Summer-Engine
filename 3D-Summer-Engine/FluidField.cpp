@@ -8,7 +8,7 @@ void FluidField::Init() {
 void FluidField::Draw(glm::vec3 origin) {
 
 	m_primary_shader->use();
-	glUniform1f(m_primary_shader->uniforms["u_time"], glfwGetTime());
+	glUniform1f(m_primary_shader->uniforms["u_time"], (GLfloat) glfwGetTime());
 
 	glUniform1i(m_primary_shader->uniforms["u_image"], m_dye_buffer->readBuffer()->setTexture(0));
 	if (m_current_buffer != nullptr)
@@ -113,7 +113,7 @@ void FluidField::diffuse(float dt) {
 		int alphaLoc = m_jacobi_iteration_shader.uniforms["alpha"];
 		int rBetaLoc = m_jacobi_iteration_shader.uniforms["rBeta"];
 		// Velocity
-		float alpha = pow(1, 2) / (dt * m_viscosity);
+		float alpha = ((float) pow(1, 2)) / (dt * m_viscosity);
 		float rBeta = 1.0f / (4.0f + alpha);
 		glUniform1f(alphaLoc, alpha);  //Alpha = pow(dx, 2)/t
 		glUniform1f(rBetaLoc, rBeta); //rBeta = 1/(4+Alpha)

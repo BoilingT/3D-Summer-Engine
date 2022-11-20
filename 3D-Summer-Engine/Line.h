@@ -96,7 +96,7 @@ public:
 		m_end = glm::vec3(x, y, m_end.z);
 	}
 
-	float length() {
+	double length() {
 		glm::vec3 v = m_end - m_start;
 		return v.length();
 	}
