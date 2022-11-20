@@ -117,7 +117,7 @@ private:
 	const char* p_VISUALISE_GRID_FRAGMENT_SHADER		 = "Shaders/visualise_grid_fragment_shader.frag";
 	const char* p_VERTEX_SHADER							 = "Shaders/vertex_shader.vert";
 	const char* p_FRAGMENT_SHADER						 = "Shaders/fragment_shader.frag";
-	const char* p_TEXTURE								 = "C:/Users/to9751/Pictures/Generated Images/notGenerated.jpg";
+	const char* p_TEXTURE								 = "Images/Generated Images/notGenerated.jpg";
 
 	//Framebuffers
 	DoubleFramebuffer* m_velocity_buffer;				//Contains velocities to be advected
