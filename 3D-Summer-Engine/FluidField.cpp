@@ -5,6 +5,24 @@ void FluidField::Init() {
 
 }
 
+void FluidField::Draw(glm::vec3 origin) {
+
+	m_primary_shader->use();
+	glUniform1f(m_primary_shader->uniforms["u_time"], glfwGetTime());
+
+	glUniform1i(m_primary_shader->uniforms["u_image"], m_dye_buffer->readBuffer()->setTexture(0));
+	if (m_current_buffer != nullptr)
+	{
+		glUniform1i(m_primary_shader->uniforms["u_image_overlay"], m_current_buffer->setTexture(1));
+		glUniform2f(m_primary_shader->uniforms["texelSize"], m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
+	}
+	else
+	{
+		glUniform1i(m_primary_shader->uniforms["u_image_overlay"], 0);
+	}
+	blit(nullptr, m_primary_shader);
+}
+
 void FluidField::blit(Framebuffer* target, Shader* shader) {
 	glm::mat4 modelM = glm::mat4(1.0f);
 	glm::mat4 viewM = glm::mat4(1.0f);
@@ -249,25 +267,6 @@ void FluidField::gradientSubtract(float dt)
 	m_velocity_buffer->swap();
 }
 
-
-void FluidField::Draw(glm::vec3 origin) {
-	
-	m_primary_shader->use();
-	glUniform1f(m_primary_shader->uniforms["u_time"], glfwGetTime());
-
-	glUniform1i(m_primary_shader->uniforms["u_image"], m_dye_buffer->readBuffer()->setTexture(0));
-	if (m_current_buffer != nullptr)
-	{
-		glUniform1i(m_primary_shader->uniforms["u_image_overlay"], m_current_buffer->setTexture(1));
-		glUniform2f(m_primary_shader->uniforms["texelSize"], m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
-	}
-	else
-	{
-		glUniform1i(m_primary_shader->uniforms["u_image_overlay"], 0);
-	}
-	blit(nullptr, m_primary_shader);
-}
-
 void FluidField::splat(glm::vec2 pos, float r) {
 	m_splat_shader.use();
 	//Uniforms
@@ -294,7 +293,6 @@ void FluidField::splat(glm::vec2 pos, float r) {
 	m_dye_buffer->swap();
 }
 
-//Draw a visual representation of the dimensions of a grid containing data
 void FluidField::DrawCellField(glm::vec3 o) {
 	m_visualise_grid_shader->use();
 
@@ -321,6 +319,38 @@ void FluidField::updateMouse(double* mouseX, double* mouseY, bool* mouse_down)
 	{
 		//std::cout << "X: " << m_mouse.texcoord_pos.x << " Y: " << m_mouse.texcoord_pos.y << " down:" << m_mouse.down << std::endl;
 		splat(m_mouse.texcoord_pos, m_dye_radius);
+	}
+}
+
+void FluidField::swapBuffer(int i) {
+	if (i == 1)
+	{
+		if (m_current_buffer == 0) return;
+		std::cout << "BUFFER::DYE" << std::endl;
+		m_current_buffer = 0;
+	}
+	else if (i == 2)
+	{
+		if (m_current_buffer == m_velocity_buffer->readBuffer()) return;
+		std::cout << "BUFFER::VELOCITY" << std::endl;
+		m_current_buffer = m_velocity_buffer->readBuffer();
+	}
+	else if (i == 3) {
+		if (m_current_buffer == m_divergence_buffer) return;
+		std::cout << "BUFFER::DIVERGENCE" << std::endl;
+		m_current_buffer = m_divergence_buffer;
+
+	}
+	else if (i == 4) {
+		if (m_current_buffer == m_pressure_buffer->readBuffer() || m_current_buffer == m_pressure_buffer->writeBuffer()) return;
+		std::cout << "BUFFER::PRESSURE" << std::endl;
+		m_current_buffer = m_pressure_buffer->readBuffer();
+
+	}
+	else if (i == 5) {
+		if (m_current_buffer == m_curl_buffer) return;
+		std::cout << "BUFFER::CURL" << std::endl;
+		m_current_buffer = m_curl_buffer;
 	}
 }
 

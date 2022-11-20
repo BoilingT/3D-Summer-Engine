@@ -120,32 +120,29 @@ private:
 	const char* p_TEXTURE								 = "C:/Users/to9751/Pictures/Generated Images/notGenerated.jpg";
 
 	//Framebuffers
-	
-	DoubleFramebuffer* m_velocity_buffer; //Contains velocities to be advected
-	Framebuffer* m_divergence_buffer; //Contains divergent velocities
-	DoubleFramebuffer* m_pressure_buffer; 	//Contains a pressure field
+	DoubleFramebuffer* m_velocity_buffer;				//Contains velocities to be advected
+	Framebuffer* m_divergence_buffer;					//Contains divergent velocities
+	DoubleFramebuffer* m_pressure_buffer;				//Contains a pressure field
 
 	//Application buffers
-	
-	DoubleFramebuffer* m_dye_buffer; //Contains dye quantities to be advected
-	DoubleFramebuffer* m_temperature_buffer; //Boyancy and Convection
-	Framebuffer* m_curl_buffer; //Contains curling velocities
+	DoubleFramebuffer* m_dye_buffer;					//Contains dye quantities to be advected
+	DoubleFramebuffer* m_temperature_buffer;			//Boyancy and Convection
+	Framebuffer* m_curl_buffer;							//Contains curling velocities
+	//Screen rendering buffers
+	Framebuffer* m_current_buffer;						//Contains the buffer that will be used when rendering
 
-	//Display buffers
-	//Contains the buffer that will be used when rendering
-	Framebuffer* m_current_buffer;
-
-	Shader m_advection_shader; //Used for advecting quantities in the fluid dependent on the given velocity buffer
-	Shader m_jacobi_iteration_shader; //Used for Pressure and Diffusion
-	Shader m_force_shader; //TODO: Used for application of force (Velocities)
-	Shader m_divergence_shader; //Calculates change in density (Density velocities)
-	Shader m_clear_shader; //Used for clearing a buffer of its values
-	Shader m_gradient_subtraction_shader; //Subtract a gradient from given buffer
-	Shader m_bounds_shader; //TODO: Control of Fluid boundaries
-	Shader m_splat_shader; //Used for application of Dye and Velocity manipulation
-
-	Shader* m_primary_shader; //Used to render to the screen
-	Shader* m_visualise_grid_shader; //TODO: Used to render a visual representation of the resolution used to the screen
+	//Shaders
+	Shader m_advection_shader;							//Used for advecting quantities in the fluid dependent on the given velocity buffer
+	Shader m_jacobi_iteration_shader;					//Used for Pressure and Diffusion
+	Shader m_force_shader;								//TODO: Used for application of force (Velocities)
+	Shader m_divergence_shader;							//Calculates change in density (Density velocities)
+	Shader m_clear_shader;								//Used for clearing a buffer of its values
+	Shader m_gradient_subtraction_shader;				//Subtract a gradient from given buffer
+	Shader m_bounds_shader;								//TODO: Control of Fluid boundaries
+	Shader m_splat_shader;								//Used for application of Dye and Velocity manipulation
+	//Screen rendering shaders
+	Shader* m_primary_shader;							//Used to render to the screen
+	Shader* m_visualise_grid_shader;					//TODO: Used to render a visual representation of the resolution used to the screen
 
 	Texture2D*	 m_texture;
 	unsigned int texture;
@@ -182,6 +179,8 @@ public:
 		m_fieldWidth(sqrt(resolution)),
 		m_WIDTH(WIDTH),
 		m_HEIGHT(HEIGHT),
+		m_mouse(WIDTH, HEIGHT),
+
 		m_advection_shader(p_VERTEX_SHADER, p_advection_shader),
 		m_jacobi_iteration_shader(p_VERTEX_SHADER, p_jacobi_shader),
 		m_force_shader(p_VERTEX_SHADER, p_force_shader),
@@ -189,20 +188,20 @@ public:
 		m_clear_shader(p_VERTEX_SHADER, p_clear_shader),
 		m_gradient_subtraction_shader(p_VERTEX_SHADER, p_gradient_subtraction_shader),
 		m_bounds_shader(p_VERTEX_SHADER, p_bounds_shader),
-		m_splat_shader(p_VERTEX_SHADER, p_splat_shader),
-		m_mouse(WIDTH, HEIGHT)
+		m_splat_shader(p_VERTEX_SHADER, p_splat_shader)
 	{
 		std::cout << "INITIALIZING::FLUIDFIELD" << std::endl;
-		m_primary_shader					 = new Shader(p_VERTEX_SHADER, p_FRAGMENT_SHADER);
-		m_visualise_grid_shader				 = new Shader(p_VISUALISE_GRID_VERTEX_SHADER, p_VISUALISE_GRID_FRAGMENT_SHADER);
-		m_texture							 = new Texture2D(p_TEXTURE);
-		m_texture_buffer					 = new Texture2D();
-		m_quad								 = new Rect();
-		m_fieldQuad							 = new Rect(
-												glm::vec3(0.0f), 
-												glm::vec3(0.0f), 
-												glm::vec3(0.0f), 
-												m_texture->get());
+
+		m_primary_shader		 = new Shader(p_VERTEX_SHADER, p_FRAGMENT_SHADER);
+		m_visualise_grid_shader	 = new Shader(p_VISUALISE_GRID_VERTEX_SHADER, p_VISUALISE_GRID_FRAGMENT_SHADER);
+		m_texture				 = new Texture2D(p_TEXTURE);
+		m_texture_buffer		 = new Texture2D();
+		m_quad					 = new Rect();
+		m_fieldQuad				 = new Rect(
+									glm::vec3(0.0f), 
+									glm::vec3(0.0f), 
+									glm::vec3(0.0f), 
+									m_texture->get());
 		//&m_translations.resize(resolution);		//reserve memory
 		Init();
 
@@ -245,46 +244,16 @@ public:
 
 	//Draw the fluid
 	void Draw(glm::vec3 origin); //Should be used with a template?
-	//Visualize the Cell Field
+	//Draw a visual representation of the dimensions of a grid containing data
 	void DrawCellField(glm::vec3 origin);
 	//Set mouse position and button properties
 	void updateMouse(double* mouseX, double* mouseY, bool* mouse_down);
 	//Move forward in time, update values
 	void timeStep(float dt); 
-	void swapBuffer(int i) {
-		if (i == 1)
-		{
-			if (m_current_buffer == 0) return;
-			std::cout << "BUFFER::DYE" << std::endl;
-			m_current_buffer = 0;
-		}
-		else if (i == 2)
-		{
-			if (m_current_buffer == m_velocity_buffer->readBuffer()) return;
-			std::cout << "BUFFER::VELOCITY" << std::endl;
-			m_current_buffer = m_velocity_buffer->readBuffer();
-		}
-		else if(i == 3){
-			if (m_current_buffer == m_divergence_buffer) return;
-			std::cout << "BUFFER::DIVERGENCE" << std::endl;
-			m_current_buffer = m_divergence_buffer;
-
-		}
-		else if (i == 4) {
-			if (m_current_buffer == m_pressure_buffer->readBuffer() || m_current_buffer == m_pressure_buffer->writeBuffer()) return;
-			std::cout << "BUFFER::PRESSURE" << std::endl;
-			m_current_buffer = m_pressure_buffer->readBuffer();
-
-		}
-		else if (i == 5) {
-			if (m_current_buffer == m_curl_buffer) return;
-			std::cout << "BUFFER::CURL" << std::endl;
-			m_current_buffer = m_curl_buffer;
-		}
-	}
+	void swapBuffer(int i);
 
 private:
-	//Draw the fluid to the targeted framebuffer
+	//Draw using specified shader together with a specified framebuffer (NULL if the purpose is to render to the screen with specified shader)
 	void blit(Framebuffer* target, Shader* shader);
 	void advect(float dt);
 	void diffuse(float dt);
