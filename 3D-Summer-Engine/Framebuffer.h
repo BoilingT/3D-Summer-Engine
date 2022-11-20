@@ -22,5 +22,6 @@ public:
 
 	void bind();
 	int setTexture(unsigned int id);
+	void setTextureSource(const char* path, int width, int height, GLint internalFormat, GLenum format, GLenum type, GLint param);
 	int status();
 };

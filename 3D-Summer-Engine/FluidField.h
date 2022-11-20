@@ -113,7 +113,7 @@ private:
 	const char* p_VISUALISE_GRID_FRAGMENT_SHADER		 = "Shaders/visualise_grid_fragment_shader.frag";
 	const char* p_VERTEX_SHADER							 = "Shaders/vertex_shader.vert";
 	const char* p_FRAGMENT_SHADER						 = "Shaders/fragment_shader.frag";
-	const char* p_TEXTURE								 = "C:/Users/to9751/Pictures/Generated Images/Multicolored_pattern.png";
+	const char* p_TEXTURE								 = "C:/Users/to9751/Pictures/Generated Images/notGenerated.jpg";
 
 	//Framebuffers
 	DoubleFramebuffer* m_dye_buffer;
@@ -202,6 +202,8 @@ public:
 		glDisable(GL_BLEND);
 		// Dye
 		m_dye_buffer = new DoubleFramebuffer(m_resolution, m_WIDTH, m_HEIGHT, rgba.internal, rgba.format, textureType, GL_LINEAR);
+		//m_dye_buffer->readBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
+		//m_dye_buffer->writeBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
 		// Velocity
 		m_velocity_buffer = new DoubleFramebuffer(m_resolution, m_WIDTH, m_HEIGHT, rg.internal, rg.format, textureType, GL_LINEAR);
 		// Divergence
