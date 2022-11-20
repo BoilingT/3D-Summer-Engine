@@ -205,10 +205,10 @@ public:
 		//&m_translations.resize(resolution);		//reserve memory
 		Init();
 
-		GLenum textureType = GL_UNSIGNED_BYTE;
-		TexFormat rgba(GL_RGBA32F, GL_RGBA);
-		TexFormat rg(GL_RG32F, GL_RG);
-		TexFormat r(GL_R32F, GL_RED);
+		GLenum textureType = GL_UNSIGNED_BYTE;	//Field type
+		TexFormat rgba(GL_RGBA32F, GL_RGBA);	//Quantity field
+		TexFormat rg(GL_RG32F, GL_RG);			//Vector field
+		TexFormat r(GL_R32F, GL_RED);			//Scalar field
 		glDisable(GL_BLEND);
 		// Dye
 		m_dye_buffer = new DoubleFramebuffer(m_resolution, m_WIDTH, m_HEIGHT, rgba.internal, rgba.format, textureType, GL_LINEAR);
@@ -224,6 +224,7 @@ public:
 		m_pressure_buffer = new DoubleFramebuffer(m_resolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 
 		m_current_buffer = m_dye_buffer->readBuffer();
+
 		std::cout << "SUCCESS::INITIALIZATION::FLUIDFIELD" << std::endl;
 	}
 
@@ -245,6 +246,8 @@ public:
 	//Draw the fluid
 	void Draw(glm::vec3 origin); //Should be used with a template?
 	//Draw a visual representation of the dimensions of a grid containing data
+	//NOTE: Not sure if its working. 
+	//TODO: Create shader that draws when this function is called 
 	void DrawCellField(glm::vec3 origin);
 	//Set mouse position and button properties
 	void updateMouse(double* mouseX, double* mouseY, bool* mouse_down);
@@ -257,7 +260,7 @@ private:
 	void blit(Framebuffer* target, Shader* shader);
 	void advect(float dt);
 	void diffuse(float dt);
-	void addForces(float dt);
+	void addForces(float dt); //TODO
 	void project(float dt);
 
 	void divergence(float dt);
@@ -265,9 +268,13 @@ private:
 	void clearBuffer(Framebuffer* target, float value);
 	void pressure(float dt);
 	void gradientSubtract(float dt);
-	//Add a splat of velocity in the specified position
+	/// <summary>
+	///Add velocity in the specified position
+	/// </summary>
+	/// <param name="pos">Origin</param>
+	/// <param name="r">Radius of the splat</param>
 	void splat(glm::vec2 pos, float r);
 	//Clear everything and start from the beginning
-	void reset();
+	void reset(); //TODO
 };
 
