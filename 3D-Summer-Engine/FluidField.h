@@ -93,7 +93,9 @@ class FluidField
 
 	struct TexFormat
 	{
+		//Type of data to be stored
 		const GLint internal;
+		//Source data type
 		const GLenum format;
 		TexFormat(GLint internalFormat, GLenum format) : internal(internalFormat), format(format){}
 	};
@@ -116,25 +118,38 @@ private:
 	const char* p_TEXTURE								 = "C:/Users/to9751/Pictures/Generated Images/notGenerated.jpg";
 
 	//Framebuffers
-	DoubleFramebuffer* m_dye_buffer;
+	
+	//Contains velocities to be advected
 	DoubleFramebuffer* m_velocity_buffer;
+	//Contains divergent velocities
 	Framebuffer* m_divergence_buffer;
-	Framebuffer* m_curl_buffer;
+	//Contains a pressure field
 	DoubleFramebuffer* m_pressure_buffer;
+
+	//Application buffers
+	
+	//Contains dye quantities to be advected
+	DoubleFramebuffer* m_dye_buffer;
+	//Boyancy and Convection
+	DoubleFramebuffer* m_temperature_buffer;
+	//Contains curling velocities
+	Framebuffer* m_curl_buffer;
+
+	//Display buffers
+	//Contains the buffer that will be used when rendering
 	Framebuffer* m_current_buffer;
-	unsigned int* m_current_read_buffer;
 
-	Shader m_advection_shader;
-	Shader m_jacobi_iteration_shader; //Diffusion
-	Shader m_force_shader;
-	Shader m_divergence_shader;
-	Shader m_clear_shader;
-	Shader m_gradient_subtraction_shader;
-	Shader m_bounds_shader;
-	Shader m_splat_shader;
+	Shader m_advection_shader; //Used for advecting quantities in the fluid dependent on the given velocity buffer
+	Shader m_jacobi_iteration_shader; //Used for Pressure and Diffusion
+	Shader m_force_shader; //TODO: Used for application of force (Velocities)
+	Shader m_divergence_shader; //Calculates change in density (Density velocities)
+	Shader m_clear_shader; //Used for clearing a buffer of its values
+	Shader m_gradient_subtraction_shader; //Subtract a gradient from given buffer
+	Shader m_bounds_shader; //TODO: Control of Fluid boundaries
+	Shader m_splat_shader; //Used for application of Dye and Velocity manipulation
 
-	Shader* m_primary_shader;
-	Shader* m_visualise_grid_shader;
+	Shader* m_primary_shader; //Used to render to the screen
+	Shader* m_visualise_grid_shader; //TODO: Used to render a visual representation of the resolution used to the screen
 
 	Texture2D*	 m_texture;
 	unsigned int texture;
@@ -155,14 +170,14 @@ private:
 	const float	 m_timestep								 = 1.f;
 
 	//Visualisation
-	bool					m_showDataVectors;
-	std::vector<glm::vec2>	m_translations;
-	Rect*					m_quad;
-	Line*					m_line;
+	bool					m_showDataVectors;  //TODO
+	std::vector<glm::vec2>	m_translations;		//TODO
+	Rect*					m_quad;				//TODO
+	Line*					m_line;				//TODO
 
 	Mouse  m_mouse;
 
-	//Initialize the grid
+	//Initialize the grid (Not nessecary!)
 	void Init();
 
 public:
@@ -192,7 +207,7 @@ public:
 												glm::vec3(0.0f), 
 												glm::vec3(0.0f), 
 												m_texture->get());
-		m_translations.resize(resolution);		//reserve memory
+		//&m_translations.resize(resolution);		//reserve memory
 		Init();
 
 		GLenum textureType = GL_UNSIGNED_BYTE;
@@ -213,7 +228,7 @@ public:
 		// Pressure
 		m_pressure_buffer = new DoubleFramebuffer(m_resolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 
-		m_current_read_buffer = &m_dye_buffer->readBuffer()->texture;
+		m_current_buffer = m_dye_buffer->readBuffer();
 		std::cout << "SUCCESS::INITIALIZATION::FLUIDFIELD" << std::endl;
 	}
 
@@ -243,30 +258,31 @@ public:
 	void swapBuffer(int i) {
 		if (i == 1)
 		{
+			if (m_current_buffer == 0) return;
 			std::cout << "BUFFER::DYE" << std::endl;
 			m_current_buffer = 0;
 		}
 		else if (i == 2)
 		{
+			if (m_current_buffer == m_velocity_buffer->readBuffer()) return;
 			std::cout << "BUFFER::VELOCITY" << std::endl;
-			//m_current_read_buffer = &m_velocity_buffer->readBuffer()->texture;
 			m_current_buffer = m_velocity_buffer->readBuffer();
 		}
 		else if(i == 3){
+			if (m_current_buffer == m_divergence_buffer) return;
 			std::cout << "BUFFER::DIVERGENCE" << std::endl;
-			//m_current_read_buffer = &m_divergence_buffer->texture;
 			m_current_buffer = m_divergence_buffer;
 
 		}
 		else if (i == 4) {
+			if (m_current_buffer == m_pressure_buffer->readBuffer() || m_current_buffer == m_pressure_buffer->writeBuffer()) return;
 			std::cout << "BUFFER::PRESSURE" << std::endl;
-			//m_current_read_buffer = &m_pressure_buffer->readBuffer()->texture;
 			m_current_buffer = m_pressure_buffer->readBuffer();
 
 		}
 		else if (i == 5) {
+			if (m_current_buffer == m_curl_buffer) return;
 			std::cout << "BUFFER::CURL" << std::endl;
-			//m_current_read_buffer = &m_curl_buffer->texture;
 			m_current_buffer = m_curl_buffer;
 		}
 	}
