@@ -316,16 +316,6 @@ void FluidField::DrawCellField(glm::vec3 o) {
 
 void FluidField::updateMouse(double* mouseX, double* mouseY, bool* mouse_down)
 {
-	/*
-	m_mouse_down = false;
-	m_mouseTravelX = *mouseX - m_prevMouseX;
-	m_mouse_down = *mouse_down;
-	m_prevMouseX = *mouseX;
-	m_prevMouseY = *mouseY;
-	if (m_mouse_down && (abs(m_mouseTravelX) > 0 || abs(m_mouseTravelY) > 0))
-	{
-	}
-	*/
 	m_mouse.update(*mouseX, *mouseY, *mouse_down);
 	if (m_mouse.down && (abs(m_mouse.window_delta.x) > 0 || abs(m_mouse.window_delta.y) > 0))
 	{
