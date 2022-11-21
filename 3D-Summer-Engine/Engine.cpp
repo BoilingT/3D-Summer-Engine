@@ -91,6 +91,7 @@ void Engine::Run() {
 	
 	g_lastTime = glfwGetTime();
 	g_lastTime2 = glfwGetTime();
+	sleepTime = 1000.0f / 60.0f;
 	while (!glfwWindowShouldClose(m_window->getWindow()))
 	{
 		double currentTime = glfwGetTime();
@@ -98,7 +99,8 @@ void Engine::Run() {
 		g_lastTime = glfwGetTime();
 		frames++;
 
-		std::string title = "FPS: " + std::to_string(fps) + " dT: " + std::to_string(g_deltaTime) + " TPF: " + std::to_string(TPF) + "ms";
+		sleepTime = 1000.0f / 144.0f - g_deltaTime * 1000.0f;
+		std::string title = "FPS: " + std::to_string(fps) + " dT: " + std::to_string(g_deltaTime*1000.0f) + "ms TPF: " + std::to_string(TPF) + "ms";
 		if (currentTime - g_lastTime2 >= 1.f)
 		{
 			//double TPF = 1000.0 / (double)frames;
@@ -107,8 +109,8 @@ void Engine::Run() {
 			fps = frames/(currentTime - g_lastTime2);
 			maxFps = fps > maxFps ? fps : maxFps;
 			frames = 0;
+			//sleepTime = 1000.f / 60.f;// -(currentTime - g_lastTime2) * 1000.0f;
 			g_lastTime2 += 1.f;
-			sleepTime = 1000.f / 144.f - TPF/3.f;
 			glfwSetWindowTitle(m_window->getWindow(), title.c_str());
 		}
 
