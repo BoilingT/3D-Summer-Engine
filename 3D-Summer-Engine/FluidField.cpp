@@ -66,7 +66,7 @@ void FluidField::blit(Framebuffer* target, Shader* shader) {
 
 //Advection -> Diffusion -> Force Application -> Projection
 void FluidField::timeStep(float dt) {
-	float time = dt * m_timestep;
+	float time = dt * m_timestep_scalar;
 	advect(time);
 	diffuse(time);
 	//addForces(time);

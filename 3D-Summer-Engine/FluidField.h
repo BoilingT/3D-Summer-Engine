@@ -160,7 +160,7 @@ private:
 	const float	 m_viscosity							 = 0.0f;
 	const int	 m_pressureIterations					 = 50;
 	const float	 m_pressure_dissipation					 = 0.8f;
-	const float	 m_timestep								 = 1.f;
+	const float	 m_timestep_scalar						 = 1.f;
 
 	//Visualisation
 	bool					m_showDataVectors;  //TODO
