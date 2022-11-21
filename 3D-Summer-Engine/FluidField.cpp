@@ -154,7 +154,7 @@ void FluidField::addForces(float dt) {
 //Projection, by removing any divergence
 void FluidField::project(float dt) {
 	divergence(dt);
-	clearBuffer(m_pressure_buffer, m_pressure);
+	clearBuffer(m_pressure_buffer, m_pressure_dissipation);
 	pressure(dt);
 	gradientSubtract(dt);
 }

@@ -155,11 +155,11 @@ private:
 	const float	 m_dye_force							 = 6000.0f;
 	const float	 m_dye_radius							 = 0.5f;
 	const float	 m_dye_dissipation						 = 0.3f;
-	const float	 m_velocity_dissipation					 = 0.5f;
+	const float	 m_velocity_dissipation					 = 0.3f;
 	const int	 m_diffuseIterations					 = 30;
 	const float	 m_viscosity							 = 0.0f;
 	const int	 m_pressureIterations					 = 50;
-	const float	 m_pressure								 = 0.8f;
+	const float	 m_pressure_dissipation					 = 0.8f;
 	const float	 m_timestep								 = 1.f;
 
 	//Visualisation
