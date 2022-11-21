@@ -204,7 +204,6 @@ void FluidField::pressure(float dt)
 		int alphaLoc = m_jacobi_iteration_shader.uniforms["alpha"];
 		int rBetaLoc = m_jacobi_iteration_shader.uniforms["rBeta"];
 
-
 		float alpha = -pow(1.0f, 2.0f); //Alpha = -pow(x,2)
 		float rBeta = 1.0f / 4.0f; //rBeta = 1/4
 		glUniform1f(alphaLoc, alpha);
