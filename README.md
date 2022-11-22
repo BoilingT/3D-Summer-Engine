@@ -2,7 +2,7 @@
 ## Created by *Tobias Andersson*
 ### Note: 
 Currently this project focuses mainly towards 2D graphics at the moment. It has 3D-features implemented already but a lot
-has been changed during a large time of the project at the 3D-features have not been tested.
+has been changed during a large time of the project and the 3D-features have not been tested.
 
 # 2D Fluid Simulation
 The purpose of this project is to get a somewhat large pool of knowledge about computer graphics such as computing optimizations by using shaders.
