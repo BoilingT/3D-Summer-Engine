@@ -14,37 +14,40 @@
 class FluidField
 {
 	struct Mouse {
+		bool down = false;
 		double height, width;
+
+		glm::vec2 texcoord_travel	 = glm::vec2(0.0f);
+		glm::vec2 texcoord_pos		 = glm::vec2(0.0f);
+		glm::vec2 prev_texcoord_pos	 = glm::vec2(0.0f);
+		glm::vec2 texcoord_delta	 = glm::vec2(0.0f);
+
+		glm::vec2 window_travel		 = glm::vec2(0.0f);
+		glm::vec2 window_pos		 = glm::vec2(0.0f);
+		glm::vec2 prev_window_pos	 = glm::vec2(0.0f);
+		glm::vec2 window_delta		 = glm::vec2(0.0f);
+
 		Mouse(double _width, double _height) {
 			width = _width;
 			height = _height;
 		}
-		bool down = false;
-		glm::vec2 texcoord_travel = glm::vec2(0.0f);
-		glm::vec2 texcoord_pos = glm::vec2(0.0f);
-		glm::vec2 prev_texcoord_pos = glm::vec2(0.0f);
-		glm::vec2 texcoord_delta = glm::vec2(0.0f);
-
-		glm::vec2 window_travel = glm::vec2(0.0f);
-		glm::vec2 window_pos = glm::vec2(0.0f);
-		glm::vec2 prev_window_pos = glm::vec2(0.0f);
-		glm::vec2 window_delta = glm::vec2(0.0f);
 
 		void update(double mouseX, double mouseY, bool mouse_is_down) {
-			window_delta = glm::vec2(mouseX, mouseY) - prev_window_pos;
-			prev_window_pos = window_pos;
-			window_pos = glm::vec2(mouseX, mouseY);
-			window_travel += window_travel;
+			window_delta			 = glm::vec2(mouseX, mouseY) - prev_window_pos;
+			prev_window_pos			 = window_pos;
+			window_pos				 = glm::vec2(mouseX, mouseY);
+			window_travel			 += window_travel;
 
-			texcoord_delta = texcoord_pos - prev_texcoord_pos;
-			prev_texcoord_pos = texcoord_pos;
-			texcoord_pos = glm::vec2(mouseX / width, 1.f - mouseY / height);
-			texcoord_travel += texcoord_travel;
-			down = mouse_is_down;
+			texcoord_delta			 = texcoord_pos - prev_texcoord_pos;
+			prev_texcoord_pos		 = texcoord_pos;
+			texcoord_pos			 = glm::vec2(mouseX / width, 1.f - mouseY / height);
+			texcoord_travel			 += texcoord_travel;
+			down					 = mouse_is_down;
+
 			if (!mouse_is_down)
 			{
-				texcoord_travel = glm::vec2(0.0f);
-				window_travel = glm::vec2(0.0f);
+				texcoord_travel		 = glm::vec2(0.0f);
+				window_travel		 = glm::vec2(0.0f);
 			}
 		}
 	};
@@ -95,10 +98,8 @@ class FluidField
 
 	struct TexFormat
 	{
-		//Type of data to be stored
-		const GLint internal;
-		//Source data type
-		const GLenum format;
+		const GLint internal; //Type of data to be stored
+		const GLenum format; //Source data type
 		TexFormat(GLint internalFormat, GLenum format) : internal(internalFormat), format(format){}
 	};
 
@@ -152,15 +153,15 @@ private:
 	const int	 m_resolution;
 	const int	 m_fieldWidth;
 
-	const float	 m_dye_force							 = 6000.0f;
-	const float	 m_dye_radius							 = 0.5f;
-	const float	 m_dye_dissipation						 = 0.3f;
-	const float	 m_velocity_dissipation					 = 0.3f;
-	const int	 m_diffuseIterations					 = 30;
-	const float	 m_viscosity							 = 0.3f;
-	const int	 m_pressureIterations					 = 50;
-	const float	 m_pressure_dissipation					 = 0.8f;
-	const float	 m_timestep_scalar						 = 1.f;
+	const float	 m_dye_force							 = 6000.0f;		// Force used to create velocities
+	const float	 m_dye_radius							 = 0.5f;		// Radius of the applicable dye and velocites
+	const float	 m_dye_dissipation						 = 0.3f;		// The rate at which the dye clears from the screen
+	const float	 m_velocity_dissipation					 = 0.3f;		// The rate at which the velocities reduces to zero
+	const int	 m_diffuseIterations					 = 30;			// Number of iterations used to calculate proper diffusion of the applied dye or velocities
+	const float	 m_viscosity							 = 0.3f;		// Drag factor of the fluid
+	const int	 m_pressureIterations					 = 50;			// Number of iterations used to calculate more precise pressure fields
+	const float	 m_pressure_dissipation					 = 0.8f;		// The rate at which the pressure field is cleared
+	const float	 m_timestep_scalar						 = 1.f;			// Factor deciding the magnitude of timesteps for each frame.
 
 	//Visualisation
 	bool					m_showDataVectors;  //TODO
