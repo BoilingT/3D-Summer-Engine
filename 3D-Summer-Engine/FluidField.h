@@ -159,7 +159,7 @@ private:
 	const float	 m_velocity_dissipation					 = 0.3f;		// The rate at which the velocities reduces to zero
 	const int	 m_diffuseIterations					 = 30;			// Number of iterations used to calculate proper diffusion of the applied dye or velocities
 	const float	 m_viscosity							 = 0.3f;		// Drag factor of the fluid
-	const int	 m_pressureIterations					 = 50;			// Number of iterations used to calculate more precise pressure fields
+	const int	 m_pressureIterations					 = 80;			// Number of iterations used to calculate more precise pressure fields
 	const float	 m_pressure_dissipation					 = 0.8f;		// The rate at which the pressure field is cleared
 	const float	 m_timestep_scalar						 = 1.f;			// Factor deciding the magnitude of timesteps for each frame.
 
