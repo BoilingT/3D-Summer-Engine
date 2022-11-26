@@ -153,10 +153,23 @@ void FluidField::addForces(float dt) {
 
 //Projection, by removing any divergence
 void FluidField::project(float dt) {
+	//vorticity(dt);
 	divergence(dt);
 	clearBuffer(m_pressure_buffer, m_pressure_dissipation);
 	pressure(dt);
 	gradientSubtract(dt);
+}
+
+void FluidField::vorticity(float dt) {
+	m_vorticity_shader.use();
+	int uLoc = m_vorticity_shader.uniforms["u"];
+	int texelSizeLoc = m_vorticity_shader.uniforms["texelSize"];
+	int dtLoc = m_vorticity_shader.uniforms["dt"];
+	glUniform1i(uLoc, m_velocity_buffer->readBuffer()->setTexture(0));
+	glUniform2f(texelSizeLoc, m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
+	glUniform1f(uLoc, dt);
+	blit(m_velocity_buffer->writeBuffer(), &m_vorticity_shader);
+	m_velocity_buffer->swap();
 }
 
 //Solve divergence
@@ -253,8 +266,8 @@ void FluidField::splat(glm::vec2 pos, float r) {
 	glUniform1i(m_splat_shader.uniforms["uTarget"], m_dye_buffer->readBuffer()->setTexture(0));
 	glUniform2f(uTexLoc, m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
 	glm::vec3 color = glm::vec3(m_mouse.texcoord_delta.x * m_dye_force /100.f, m_mouse.texcoord_delta.y * m_dye_force / 100.f, 0.2f);
-
-	glUniform3f(uColorLoc, abs(color.r), abs(color.g), abs(color.b + (color.r+color.g)/8.f));
+	color *= 0.5f;
+	glUniform3f(uColorLoc, abs(color.r), abs(color.g), abs(color.b + (color.r+color.g)/5.0f));
 	blit(m_dye_buffer->writeBuffer(), &m_splat_shader);
 	m_dye_buffer->swap();
 }

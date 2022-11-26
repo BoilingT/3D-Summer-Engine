@@ -166,6 +166,9 @@
       <DeploymentContent>true</DeploymentContent>
     </Text>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\compute_vorticity_shader.frag" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

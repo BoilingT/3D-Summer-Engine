@@ -111,6 +111,7 @@ private:
 	const char* p_divergence_shader						 = "Shaders/compute_divergence_shader.frag";
 	const char* p_clear_shader							 = "Shaders/compute_clear_shader.frag";
 	const char* p_gradient_subtraction_shader			 = "Shaders/compute_gradient_subtraction_shader.frag";
+	const char* p_vorticity_shader						 = "Shaders/compute_vorticity_shader.frag";
 	const char* p_bounds_shader							 = "Shaders/compute_bounds_shader.frag";
 	const char* p_splat_shader							 = "Shaders/compute_splat_shader.frag";
 
@@ -128,6 +129,7 @@ private:
 	//Application buffers
 	DoubleFramebuffer* m_dye_buffer;					//Contains dye quantities to be advected
 	DoubleFramebuffer* m_temperature_buffer;			//Boyancy and Convection
+	DoubleFramebuffer* m_vorticity_buffer;
 	Framebuffer* m_curl_buffer;							//Contains curling velocities
 	//Screen rendering buffers
 	Framebuffer* m_current_buffer;						//Contains the buffer that will be used when rendering
@@ -139,6 +141,7 @@ private:
 	Shader m_divergence_shader;							//Calculates change in density (Density velocities)
 	Shader m_clear_shader;								//Used for clearing a buffer of its values
 	Shader m_gradient_subtraction_shader;				//Subtract a gradient from given buffer
+	Shader m_vorticity_shader;							//TODO
 	Shader m_bounds_shader;								//TODO: Control of Fluid boundaries
 	Shader m_splat_shader;								//Used for application of Dye and Velocity manipulation
 	//Screen rendering shaders
@@ -153,15 +156,15 @@ private:
 	const int	 m_resolution;
 	const int	 m_fieldWidth;
 
-	const float	 m_dye_force							 = 6000.0f;		// Force used to create velocities
+	const float	 m_dye_force							 = 1000.0f;		// Force used to create velocities
 	const float	 m_dye_radius							 = 0.5f;		// Radius of the applicable dye and velocites
 	const float	 m_dye_dissipation						 = 0.3f;		// The rate at which the dye clears from the screen
 	const float	 m_velocity_dissipation					 = 0.3f;		// The rate at which the velocities reduces to zero
 	const int	 m_diffuseIterations					 = 30;			// Number of iterations used to calculate proper diffusion of the applied dye or velocities
 	const float	 m_viscosity							 = 0.3f;		// Drag factor of the fluid
 	const int	 m_pressureIterations					 = 50;			// Number of iterations used to calculate more precise pressure fields
-	const float	 m_pressure_dissipation					 = 0.8f;		// The rate at which the pressure field is cleared
-	const float	 m_timestep_scalar						 = 1.f;			// Factor deciding the magnitude of timesteps for each frame.
+	const float	 m_pressure_dissipation					 = 0.9f;	 	// The rate at which the pressure field is cleared
+	const float	 m_timestep_scalar						 = 1.0f;			// Factor deciding the magnitude of timesteps for each frame.
 
 	//Visualisation
 	bool					m_showDataVectors;  //TODO
@@ -177,7 +180,7 @@ private:
 public:
 	FluidField(const float WIDTH, const float HEIGHT, const int resolution) :
 		m_resolution(resolution),
-		m_fieldWidth((int) sqrt(resolution)),
+		m_fieldWidth((int)sqrt(resolution)),
 		m_WIDTH(WIDTH),
 		m_HEIGHT(HEIGHT),
 		m_mouse(WIDTH, HEIGHT),
@@ -188,6 +191,7 @@ public:
 		m_divergence_shader(p_VERTEX_SHADER, p_divergence_shader),
 		m_clear_shader(p_VERTEX_SHADER, p_clear_shader),
 		m_gradient_subtraction_shader(p_VERTEX_SHADER, p_gradient_subtraction_shader),
+		m_vorticity_shader(p_VERTEX_SHADER, p_vorticity_shader),
 		m_bounds_shader(p_VERTEX_SHADER, p_bounds_shader),
 		m_splat_shader(p_VERTEX_SHADER, p_splat_shader)
 	{
@@ -217,6 +221,8 @@ public:
 		//m_dye_buffer->writeBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
 		// Velocity
 		m_velocity_buffer = new DoubleFramebuffer(m_resolution, m_WIDTH, m_HEIGHT, rg.internal, rg.format, textureType, GL_LINEAR);
+		//Vorticity
+		m_vorticity_buffer = new DoubleFramebuffer(m_resolution, m_WIDTH, m_HEIGHT, rg.internal, rg.format, textureType, GL_LINEAR);
 		// Divergence
 		m_divergence_buffer = new Framebuffer(m_resolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 		// Curl
@@ -232,6 +238,7 @@ public:
 	~FluidField() {
 		delete(m_dye_buffer);
 		delete(m_velocity_buffer);
+		delete(m_vorticity_buffer);
 		delete(m_divergence_buffer);
 		delete(m_curl_buffer);
 		delete(m_pressure_buffer);
@@ -264,6 +271,7 @@ private:
 	void addForces(float dt); //TODO
 	void project(float dt);
 
+	void vorticity(float dt);
 	void divergence(float dt);
 	void clearBuffer(DoubleFramebuffer* target, float value);
 	void clearBuffer(Framebuffer* target, float value);
