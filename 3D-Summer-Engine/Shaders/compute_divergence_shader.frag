@@ -8,13 +8,11 @@ uniform sampler2D w;	//Vector field
 //Calculate change in density of a fluid
 float divergence(vec2 coords){
 	float offset = OFFSET;
-	//0 - 16
 	vec2 vL = (coords - vec2(1, 0));
 	vec2 vR = (coords + vec2(1, 0));
 	vec2 vB = (coords - vec2(0, 1));
 	vec2 vT = (coords + vec2(0, 1));
 
-	//0 - 1
 	float wL = texture2D(w, vL * texelSize).x;
 	float wR = texture2D(w, vR * texelSize).x;
 	float wB = texture2D(w, vB * texelSize).y;

@@ -153,21 +153,39 @@ void FluidField::addForces(float dt) {
 
 //Projection, by removing any divergence
 void FluidField::project(float dt) {
-	//vorticity(dt);
+	//Compute a normalized vorticity vector field
+	curl(dt);
+	//Restore, approximate, computated and dissipated vorticity
+	vorticity(dt);
 	divergence(dt);
 	clearBuffer(m_pressure_buffer, m_pressure_dissipation);
 	pressure(dt);
 	gradientSubtract(dt);
 }
 
+//Compute a normalized vorticity vector field
+void FluidField::curl(float dt) {
+	m_curl_shader.use();
+	int uLoc = m_curl_shader.uniforms["u"];
+	int texelSizeLoc = m_curl_shader.uniforms["texelSize"];
+	int dtLoc = m_curl_shader.uniforms["dt"];
+	glUniform1i(uLoc, m_velocity_buffer->readBuffer()->setTexture(0));
+	glUniform2f(texelSizeLoc, m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
+	glUniform1f(dtLoc, dt);
+	blit(m_curl_buffer, &m_curl_shader);
+}
+
+//Restore, approximate, computated and dissipated vorticity
 void FluidField::vorticity(float dt) {
 	m_vorticity_shader.use();
-	int uLoc = m_vorticity_shader.uniforms["u"];
+	int uLoc = m_vorticity_shader.uniforms["u"]; //Velocity
+	int vLoc = m_vorticity_shader.uniforms["v"]; //Curl
 	int texelSizeLoc = m_vorticity_shader.uniforms["texelSize"];
 	int dtLoc = m_vorticity_shader.uniforms["dt"];
 	glUniform1i(uLoc, m_velocity_buffer->readBuffer()->setTexture(0));
+	glUniform1i(vLoc, m_curl_buffer->setTexture(1));
 	glUniform2f(texelSizeLoc, m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
-	glUniform1f(uLoc, dt);
+	glUniform1f(dtLoc, dt);
 	blit(m_velocity_buffer->writeBuffer(), &m_vorticity_shader);
 	m_velocity_buffer->swap();
 }

@@ -162,7 +162,7 @@ void Engine::Run() {
 		
 		if (sleepTime > 0)
 		{
-			std::this_thread::sleep_for(std::chrono::milliseconds((long)(sleepTime)));
+			//std::this_thread::sleep_for(std::chrono::milliseconds((long)(sleepTime)));
 		}
 
 	}

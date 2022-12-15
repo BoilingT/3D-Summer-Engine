@@ -167,6 +167,7 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shaders\compute_curl_shader.frag" />
     <None Include="Shaders\compute_vorticity_shader.frag" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
