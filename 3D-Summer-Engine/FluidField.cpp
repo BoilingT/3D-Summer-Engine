@@ -35,7 +35,8 @@ void FluidField::blit(Framebuffer* target, Shader* shader) {
 	shader->setMat4f("projection", projectionM);
 
 	glClearColor(0, 0, 0, 0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//Bind framebuffer
 	if (target == nullptr || target->fbo == NULL)
