@@ -10,8 +10,9 @@ vec4 curl(vec2 coord, sampler2D v){
 	vec4 R = texture2D(v, (coord + vec2(1, 0)) * texelSize);
 	vec4 T = texture2D(v, (coord + vec2(0, 1)) * texelSize);
 	vec4 B = texture2D(v, (coord - vec2(0, 1)) * texelSize);
-
+	vec4 c = texture2D(v, coord * texelSize);
 	//return T - B + R - L; //Curl
+	
 	return R - L - T + B; //Curl
 }
 

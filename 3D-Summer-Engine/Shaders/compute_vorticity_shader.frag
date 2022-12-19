@@ -17,7 +17,7 @@ vec4 vorticityConfinement(vec2 coord, sampler2D curl){
 	float cB = texture2D(curl, (coord - vec2(0, 1)) * texelSize).x;
 	float c = texture2D(curl, coord * texelSize).x;
 
-	vec2 v = texture2D(u, coord * texelSize).xy; //Velocity
+	//vec2 v = texture2D(u, coord * texelSize).xy; //Velocity
 	//vec4 normalizedVorticity = normalize(curl);
 	//vec3 f = cross(normalizedVorticity.xyz, curl.xyz);
 
@@ -33,16 +33,16 @@ vec4 vorticityConfinement(vec2 coord, sampler2D curl){
 	//Compute force
 	//force = epsilon(phi x vorticity)
 	//float force = epsilon(cross(phi, omega)) * dt;
-
-	vec2 force = 0.5 * vec2(abs(cT) - abs(cB), abs(cR) - abs(cL));
-    force /= length(force) + 0.0001f;
+	vec2 curling = vec2(abs(cT) - abs(cB), abs(cR) - abs(cL)); //Curl
+	vec2 force = 0.5f * curling;
+    force /= length(force) + 0.001f; //Normalize force
     force *= 30.0f * c;
-    force.y *= -1.0;
+    force.y *= -1.0f;
     vec2 velocity = texture2D(u, coord * texelSize).xy;
     velocity += force * dt;
-    velocity = min(max(velocity, -1000.0), 1000.0);
+    //velocity = min(max(velocity, -1000.0f), 1000.0f);
 
-	return vec4(velocity, 0.0, 1.0);
+	return vec4(velocity, 0.0f, 1.0f);
 }
 
 void main(){
