@@ -54,6 +54,7 @@ void FluidField::blit(Framebuffer* target, Shader* shader) {
 	if (!target->status())
 	{
 		std::cout << "ERROR::BLIT::FRAMEBUFFER::STATUS::INCOMPLETE" << std::endl;
+		return;
 	}
 
 	m_fieldQuad->Draw(*shader);
@@ -155,9 +156,9 @@ void FluidField::addForces(float dt) {
 //Projection, by removing any divergence
 void FluidField::project(float dt) {
 	//Compute a normalized vorticity vector field
-	curl(dt);
+	//curl(dt);
 	//Restore, approximate, computated and dissipated vorticity
-	vorticity(dt);
+	//vorticity(dt);
 	divergence(dt);
 	clearBuffer(m_pressure_buffer, m_pressure_dissipation);
 	pressure(dt);

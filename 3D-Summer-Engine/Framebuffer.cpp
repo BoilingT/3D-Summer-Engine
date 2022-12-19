@@ -6,10 +6,11 @@ Framebuffer::Framebuffer(float res, unsigned int w, unsigned int h, GLint intern
 	resolution = res;
 	width = w;
 	height = h;
-	float ratio = (float)w / (float)h;
-	if (ratio < 1)
+
+	float ratio = (float)width / (float)height;
+	if (ratio < 1.0f)
 	{
-		ratio = 1 / ratio;
+		ratio = 1.0f / ratio;
 	}
 	float min = round(resolution);
 	float max = round(resolution * ratio);
