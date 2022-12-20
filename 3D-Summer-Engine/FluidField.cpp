@@ -154,6 +154,7 @@ void FluidField::addForces(float dt) {
 
 //Projection, by removing any divergence
 void FluidField::project(float dt) {
+	//boundary(dt);
 	//Compute a normalized vorticity vector field
 	curl(dt);
 	//Restore, approximate, computated and dissipated vorticity
@@ -162,6 +163,24 @@ void FluidField::project(float dt) {
 	clearBuffer(m_pressure_buffer, m_pressure_dissipation);
 	pressure(dt);
 	gradientSubtract(dt);
+}
+
+void FluidField::boundary(float dt) {
+	m_bounds_shader.use();
+	float scale = 1.0f;
+	float offset = 1.0f;
+	int uLoc = m_curl_shader.uniforms["u"];
+	int texelSizeLoc = m_bounds_shader.uniforms["texelSize"];
+	int dtLoc = m_bounds_shader.uniforms["dt"];
+	int offsetLoc = m_bounds_shader.uniforms["off"];
+	int scaleLoc = m_bounds_shader.uniforms["scale"];
+	glUniform1i(uLoc, m_velocity_buffer->readBuffer()->setTexture(0));
+	glUniform2f(texelSizeLoc, m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
+	glUniform1f(dtLoc, dt);
+	glUniform1f(offsetLoc, offset);
+	glUniform1f(scaleLoc, scale);
+	blit(m_velocity_buffer->writeBuffer(), &m_bounds_shader);
+	m_velocity_buffer->swap();
 }
 
 //Compute a normalized vorticity vector field

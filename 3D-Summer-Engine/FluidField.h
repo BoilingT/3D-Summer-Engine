@@ -270,6 +270,7 @@ private:
 	void addForces(float dt); //TODO
 	void project(float dt);
 
+	void boundary(float dt);
 	void vorticity(float dt);
 	void curl(float dt);
 	void divergence(float dt);
