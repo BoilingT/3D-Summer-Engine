@@ -3,7 +3,7 @@
 //Fill the cellgrid with the corresponding x- and y-values
 void FluidField::Init() {
 
-}
+} 
 
 void FluidField::Draw(glm::vec3 origin) {
 
@@ -21,6 +21,19 @@ void FluidField::Draw(glm::vec3 origin) {
 		glUniform1i(m_primary_shader->uniforms["u_image_overlay"], 0);
 	}
 	blit(nullptr, m_primary_shader);
+
+	glm::mat4 viewM = glm::mat4(1.0f);
+	glm::mat4 projectionM = glm::mat4(1.0f);
+
+	projectionM = glm::ortho(0.0f, (float)m_WIDTH, 0.0f, (float)m_HEIGHT, -1000.0f, 1000.0f);
+
+	m_object_shader.use();
+	m_object_shader.setMat4f("view", viewM);
+	m_object_shader.setMat4f("projection", projectionM);
+
+	rectangle.transform.dim = glm::vec3(50.0f);
+	rectangle.transform.pos = glm::vec3(300.0f, 300.0f, 0.0f);
+	//rectangle.Draw(m_object_shader);
 }
 
 void FluidField::blit(Framebuffer* target, Shader* shader) {
@@ -28,11 +41,11 @@ void FluidField::blit(Framebuffer* target, Shader* shader) {
 	glm::mat4 viewM = glm::mat4(1.0f);
 	glm::mat4 projectionM = glm::mat4(1.0f);
 
-	projectionM = glm::ortho(0.0f, (float)m_WIDTH, 0.0f, (float)m_HEIGHT, -1000.0f, 1000.0f);
+	//projectionM = glm::ortho(0.0f, (float)m_WIDTH, 0.0f, (float)m_HEIGHT, -1000.0f, 1000.0f);
 
 	shader->use();
-	shader->setMat4f("view", viewM);
-	shader->setMat4f("projection", projectionM);
+	//shader->setMat4f("view", viewM);
+	//shader->setMat4f("projection", projectionM);
 
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -58,6 +71,7 @@ void FluidField::blit(Framebuffer* target, Shader* shader) {
 	}
 
 	m_fieldQuad->Draw(*shader);
+
 	int boundBuffer = 0;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &boundBuffer);
 	if (target != nullptr && boundBuffer == target->fbo)
@@ -155,6 +169,7 @@ void FluidField::addForces(float dt) {
 
 //Projection, by removing any divergence
 void FluidField::project(float dt) {
+	//boundary(dt);
 	//Compute a normalized vorticity vector field
 	curl(dt);
 	//Restore, approximate, computated and dissipated vorticity
@@ -163,6 +178,24 @@ void FluidField::project(float dt) {
 	clearBuffer(m_pressure_buffer, m_pressure_dissipation);
 	pressure(dt);
 	gradientSubtract(dt);
+}
+
+void FluidField::boundary(float dt) {
+	m_bounds_shader.use();
+	float scale = 1.0f;
+	float offset = 1.0f;
+	int uLoc = m_curl_shader.uniforms["u"];
+	int texelSizeLoc = m_bounds_shader.uniforms["texelSize"];
+	int dtLoc = m_bounds_shader.uniforms["dt"];
+	int offsetLoc = m_bounds_shader.uniforms["off"];
+	int scaleLoc = m_bounds_shader.uniforms["scale"];
+	glUniform1i(uLoc, m_velocity_buffer->readBuffer()->setTexture(0));
+	glUniform2f(texelSizeLoc, m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
+	glUniform1f(dtLoc, dt);
+	glUniform1f(offsetLoc, offset);
+	glUniform1f(scaleLoc, scale);
+	blit(m_velocity_buffer->writeBuffer(), &m_bounds_shader);
+	m_velocity_buffer->swap();
 }
 
 //Compute a normalized vorticity vector field
