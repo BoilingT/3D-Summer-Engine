@@ -21,6 +21,18 @@ void FluidField::Draw(glm::vec3 origin) {
 		glUniform1i(m_primary_shader->uniforms["u_image_overlay"], 0);
 	}
 	blit(nullptr, m_primary_shader);
+
+	glm::mat4 viewM = glm::mat4(1.0f);
+	glm::mat4 projectionM = glm::mat4(1.0f);
+
+	projectionM = glm::ortho(0.0f, (float)m_WIDTH, 0.0f, (float)m_HEIGHT, -1000.0f, 1000.0f);
+
+	m_object_shader.use();
+	m_object_shader.setMat4f("view", viewM);
+	m_object_shader.setMat4f("projection", projectionM);
+
+	rectangle.transform.dim = glm::vec3(50.0f);
+	//rectangle.Draw(m_object_shader);
 }
 
 void FluidField::blit(Framebuffer* target, Shader* shader) {
@@ -28,7 +40,7 @@ void FluidField::blit(Framebuffer* target, Shader* shader) {
 	glm::mat4 viewM = glm::mat4(1.0f);
 	glm::mat4 projectionM = glm::mat4(1.0f);
 
-	projectionM = glm::ortho(0.0f, (float)m_WIDTH, 0.0f, (float)m_HEIGHT, -1000.0f, 1000.0f);
+	//projectionM = glm::ortho(0.0f, (float)m_WIDTH, 0.0f, (float)m_HEIGHT, -1000.0f, 1000.0f);
 
 	shader->use();
 	//shader->setMat4f("view", viewM);

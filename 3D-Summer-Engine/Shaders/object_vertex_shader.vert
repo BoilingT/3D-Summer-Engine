@@ -11,8 +11,6 @@ uniform mat4 view;
 uniform mat4 model;
 uniform vec2 texelSize;
 
-
-
 void main(){
 	mat4 clip_space = projection * view * model;
 	texCoord = aTexCoord;
