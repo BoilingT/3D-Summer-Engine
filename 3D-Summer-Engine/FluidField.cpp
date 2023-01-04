@@ -32,6 +32,7 @@ void FluidField::Draw(glm::vec3 origin) {
 	m_object_shader.setMat4f("projection", projectionM);
 
 	rectangle.transform.dim = glm::vec3(50.0f);
+	rectangle.transform.pos = glm::vec3(300.0f, 300.0f, 0.0f);
 	//rectangle.Draw(m_object_shader);
 }
 
