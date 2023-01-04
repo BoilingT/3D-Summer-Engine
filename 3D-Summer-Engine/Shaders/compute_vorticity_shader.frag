@@ -33,7 +33,7 @@ vec4 vorticityConfinement(vec2 coord, sampler2D curl){
 	//Compute force
 	//force = epsilon(phi x vorticity)
 	//float force = epsilon(cross(phi, omega)) * dt;
-	vec2 curling = vec2(abs(cT) - abs(cB), abs(cR) - abs(cL)); //Curl
+	vec2 curling = vec2(abs(cT) - abs(cB), abs(cR) - abs(cL)); //Curl vectors
 	vec2 force = 0.5f * curling;
     force /= length(force) + 0.001f; //Normalize force
     force *= 30.0f * c;
