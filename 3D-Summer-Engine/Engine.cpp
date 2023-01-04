@@ -84,6 +84,7 @@ void Engine::Run() {
 	//Rect plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
 
 	//glm::vec3 origin = glm::vec3(-c_WIDTH / 2.f, c_HEIGHT / 2.f, 0);
+
 	glm::vec3 origin = glm::vec3(0, 0, 0);
 	
 	std::cout << "STARTING::RENDER::LOOP" << std::endl;

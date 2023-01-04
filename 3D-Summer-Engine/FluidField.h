@@ -120,6 +120,8 @@ private:
 	const char* p_VISUALISE_GRID_FRAGMENT_SHADER		 = "Shaders/visualise_grid_fragment_shader.frag";
 	const char* p_VERTEX_SHADER							 = "Shaders/vertex_shader.vert";
 	const char* p_FRAGMENT_SHADER						 = "Shaders/fragment_shader.frag";
+	const char* p_OBJECT_VERTEX_SHADER					 = "Shaders/object_vertex_shader.vert";
+	const char* p_OBJECT_FRAGMENT_SHADER				 = "Shaders/object_fragment_shader.frag";
 	const char* p_TEXTURE								 = "Images/Generated Images/notGenerated.jpg";
 
 	//Framebuffers
@@ -146,7 +148,8 @@ private:
 	Shader m_bounds_shader;								//TODO: Control of Fluid boundaries
 	Shader m_splat_shader;								//Used for application of Dye and Velocity manipulation
 	//Screen rendering shaders
-	Shader* m_primary_shader;							//Used to render to the screen
+	Shader  m_object_shader;							//Used to render objects to the screen
+	Shader* m_primary_shader;							//Used to render the fluid to the screen
 	Shader* m_visualise_grid_shader;					//TODO: Used to render a visual representation of the resolution used to the screen
 
 	Texture2D*	 m_texture;
@@ -171,6 +174,7 @@ private:
 	bool					m_showDataVectors;  //TODO
 	std::vector<glm::vec2>	m_translations;		//TODO
 	Rect*					m_quad;				//TODO
+	Rect rectangle;
 	Line*					m_line;				//TODO
 
 	Mouse  m_mouse;
@@ -185,7 +189,9 @@ public:
 		m_WIDTH(WIDTH),
 		m_HEIGHT(HEIGHT),
 		m_mouse(WIDTH, HEIGHT),
+		rectangle(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)),
 
+		m_object_shader(p_OBJECT_VERTEX_SHADER, p_OBJECT_FRAGMENT_SHADER),
 		m_advection_shader(p_VERTEX_SHADER, p_advection_shader),
 		m_jacobi_iteration_shader(p_VERTEX_SHADER, p_jacobi_shader),
 		m_force_shader(p_VERTEX_SHADER, p_force_shader),

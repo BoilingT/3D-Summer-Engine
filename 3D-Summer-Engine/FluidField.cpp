@@ -3,7 +3,7 @@
 //Fill the cellgrid with the corresponding x- and y-values
 void FluidField::Init() {
 
-}
+} 
 
 void FluidField::Draw(glm::vec3 origin) {
 
@@ -31,8 +31,8 @@ void FluidField::blit(Framebuffer* target, Shader* shader) {
 	projectionM = glm::ortho(0.0f, (float)m_WIDTH, 0.0f, (float)m_HEIGHT, -1000.0f, 1000.0f);
 
 	shader->use();
-	shader->setMat4f("view", viewM);
-	shader->setMat4f("projection", projectionM);
+	//shader->setMat4f("view", viewM);
+	//shader->setMat4f("projection", projectionM);
 
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -58,6 +58,7 @@ void FluidField::blit(Framebuffer* target, Shader* shader) {
 	}
 
 	m_fieldQuad->Draw(*shader);
+
 	int boundBuffer = 0;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &boundBuffer);
 	if (target != nullptr && boundBuffer == target->fbo)
@@ -157,9 +158,9 @@ void FluidField::addForces(float dt) {
 void FluidField::project(float dt) {
 	//boundary(dt);
 	//Compute a normalized vorticity vector field
-	//curl(dt);
+	curl(dt);
 	//Restore, approximate, computated and dissipated vorticity
-	//vorticity(dt);
+	vorticity(dt);
 	divergence(dt);
 	clearBuffer(m_pressure_buffer, m_pressure_dissipation);
 	pressure(dt);

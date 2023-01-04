@@ -211,5 +211,11 @@
     <None Include="Shaders\compute_curl_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="Shaders\object_vertex_shader.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\object_fragment_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
