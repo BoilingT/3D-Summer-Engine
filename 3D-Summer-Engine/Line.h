@@ -28,23 +28,27 @@ public:
 		Init();
 	}
 
-	Line(glm::vec3 start, glm::vec3 end) {
+	Line(glm::vec3 start, glm::vec3 end, float w) {
 		set(start, end);
+		m_width = w;
 		Init();
 	}
 
-	Line(glm::vec2 start, glm::vec2 end) {
+	Line(glm::vec2 start, glm::vec2 end, float w) {
 		set(start, end);
+		m_width = w;
 		Init();
 	}
 
-	Line(float x1, float y1, float x2, float y2) {
+	Line(float x1, float y1, float x2, float y2, float w) {
 		set(x1, y1, x2, y2);
+		m_width = w;
 		Init();
 	}
 
-	Line(float x1, float y1, float z1, float x2, float y2, float z2) {
+	Line(float x1, float y1, float z1, float x2, float y2, float z2, float w) {
 		set(x1, y1, z1, x2, y2, z2);
+		m_width = w;
 		Init();
 	}
 
@@ -52,7 +56,6 @@ public:
 		m_start = start;
 		m_end = end;
 		Init();
-
 	}
 
 	void set(glm::vec2 start, glm::vec2 end) {

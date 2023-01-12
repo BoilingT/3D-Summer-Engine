@@ -174,7 +174,8 @@ private:
 	bool					m_showDataVectors;  //TODO
 	std::vector<glm::vec2>	m_translations;		//TODO
 	Rect*					m_quad;				//TODO
-	Rect rectangle;
+	Rect					rectangle;
+	Line					line;
 	Line*					m_line;				//TODO
 
 	Mouse  m_mouse;
@@ -190,6 +191,7 @@ public:
 		m_HEIGHT(HEIGHT),
 		m_mouse(WIDTH, HEIGHT),
 		rectangle(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)),
+		line(glm::vec3(0.0f), glm::vec3(1000.0f), 1.0f),
 
 		m_object_shader(p_OBJECT_VERTEX_SHADER, p_OBJECT_FRAGMENT_SHADER),
 		m_advection_shader(p_VERTEX_SHADER, p_advection_shader),
@@ -271,6 +273,7 @@ public:
 private:
 	//Draw using specified shader together with a specified framebuffer (NULL if the purpose is to render to the screen with specified shader)
 	void blit(Framebuffer* target, Shader* shader);
+	void border(Framebuffer* target);
 	void advect(float dt);
 	void diffuse(float dt);
 	void addForces(float dt); //TODO
