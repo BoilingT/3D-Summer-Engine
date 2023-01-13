@@ -15,5 +15,6 @@ vec4 bounds(vec2 coords, vec2 offset){
 void main(){
 	vec2 coords = gl_FragCoord.xy;
 	vec4 result = bounds(coords, off);
-	fragColor = result;
+	//fragColor = result;
+	fragColor = vec4(1.0f);
 }

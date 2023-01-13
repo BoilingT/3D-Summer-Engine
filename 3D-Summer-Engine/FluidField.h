@@ -191,7 +191,7 @@ public:
 		m_HEIGHT(HEIGHT),
 		m_mouse(WIDTH, HEIGHT),
 		rectangle(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)),
-		line(glm::vec3(0.0f), glm::vec3(1000.0f), 1.0f),
+		line(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f),
 
 		m_object_shader(p_OBJECT_VERTEX_SHADER, p_OBJECT_FRAGMENT_SHADER),
 		m_advection_shader(p_VERTEX_SHADER, p_advection_shader),
@@ -279,7 +279,9 @@ private:
 	void addForces(float dt); //TODO
 	void project(float dt);
 
-	void boundary(float dt);
+	void boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer* target, Shader& shader);
+	void boundary(float dt, float scale, float offset, DoubleFramebuffer* target);
+	void boundaries(float dt);
 	void vorticity(float dt);
 	void curl(float dt);
 	void divergence(float dt);
