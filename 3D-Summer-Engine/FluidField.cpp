@@ -81,16 +81,6 @@ void FluidField::blit(Framebuffer* target, Shader* shader) {
 	}
 }
 
-//Advection -> Diffusion -> Force Application -> Projection
-void FluidField::timeStep(float dt) {
-	float time = dt * m_timestep_scalar;
-	boundaries(time);
-	advect(time);
-	diffuse(time);
-	//addForces(time);
-	project(time);
-}
-
 void FluidField::boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer* target, Shader& shader)
 {
 	line.width(10.0f);
@@ -128,6 +118,16 @@ void FluidField::boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer* 
 	//}
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 
+}
+
+//Advection -> Diffusion -> Force Application -> Projection
+void FluidField::timeStep(float dt) {
+	float time = dt * m_timestep_scalar;
+	boundaries(time);
+	advect(time);
+	diffuse(time);
+	//addForces(time);
+	project(time);
 }
 
 void FluidField::boundary(float dt, float scale, float offset, DoubleFramebuffer* target) {
