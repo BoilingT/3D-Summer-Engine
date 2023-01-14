@@ -6,12 +6,20 @@ class Rect :
     public Object
 {
 private:
+    //float planeVertices[4 * 5] = {
+    //    //Positions              //TexCoords
+    //    -1.0f, 1.0f, 0.0f,       0.0f, 1.0f,     //Top left corner
+    //    -1.0f, -1.0f, 0.0f,      0.0f, 0.0f,     //Lower left corner
+    //    1.0f, 1.0f, 0.0f,        1.0f, 1.0f,     //Top right corner
+    //    1.0f, -1.0f, 0.0f,       1.0f, 0.0f      //Lower right corner
+    //};
+
     float planeVertices[4 * 5] = {
         //Positions              //TexCoords
-        -1.0f, 1.0f, 0.0f,       0.0f, 1.0f,     //Top left corner
-        -1.0f, -1.0f, 0.0f,      0.0f, 0.0f,     //Lower left corner
-        1.0f, 1.0f, 0.0f,        1.0f, 1.0f,     //Top right corner
-        1.0f, -1.0f, 0.0f,       1.0f, 0.0f      //Lower right corner
+        -1.0f, 1.0f, 0.0f,       0.0f - 0.3f, 1.0f + 0.3f,     //Top left corner
+        -1.0f, -1.0f, 0.0f,      0.0f - 0.3f, 0.0f - 0.3f,     //Lower left corner
+        1.0f, 1.0f, 0.0f,        1.0f + 0.3f, 1.0f + 0.3f,     //Top right corner
+        1.0f, -1.0f, 0.0f,       1.0f + 0.3f, 0.0f - 0.3f      //Lower right corner
     };
 
     unsigned int indices[6] = {

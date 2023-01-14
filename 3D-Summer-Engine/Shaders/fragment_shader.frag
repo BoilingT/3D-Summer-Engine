@@ -19,6 +19,6 @@ void main(){
 		}
 	}
 	//fragColor = mix(texture(u_image, vUv + vec2(0.5f, 0.0f)), color, 0.7f);
-	fragColor = texture(u_image, vUv + vec2(0.5f, 0.5f));
+	fragColor = texture(u_image, texCoord);
 	//fragColor = texture(u_image_overlay, vUv) * vec4(vec3(1.0f), 0.5f);
 }

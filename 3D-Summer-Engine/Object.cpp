@@ -26,7 +26,7 @@ void Object::SetupMesh(float* vertices, int vSize, unsigned int* indices, int iS
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)0);
 	glEnableVertexAttribArray(0);
 	//Enable texture coordinates data
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 	//glEnableVertexAttribArray(2);
 	/*
@@ -63,6 +63,7 @@ void Object::SetupMesh(float* vertices, int vSize) {
 	//Vertex position
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
 	glEnableVertexAttribArray(0);
+
 	/*
 	//Vertex normals
 	glEnableVertexAttribArray(1);
