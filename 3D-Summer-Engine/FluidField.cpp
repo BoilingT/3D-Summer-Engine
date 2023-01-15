@@ -53,14 +53,14 @@ void FluidField::blit(Framebuffer* target, Shader* shader) {
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//Bind framebuffer
-	glViewport(0, 0, m_WIDTH, m_HEIGHT);
 	if (target == nullptr || target->fbo == NULL)
 	{
+		glViewport(0, 0, m_WIDTH, m_HEIGHT);
 		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 	}
 	else
 	{
-		//glViewport(0, 0, target->width, target->height);
+		glViewport(0, 0, target->width, target->height);
 		glBindFramebuffer(GL_FRAMEBUFFER, target->fbo);
 	}
 
@@ -129,7 +129,7 @@ void FluidField::timeStep(float dt) {
 	{
 		splat(glm::vec2((1.0f) / streams * ((stream + 1.0f)) - ((1.0f) / streams / 2.0f),0.85f), r, true, false);
 	}
-	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -9.81f, 0.0f, 0.0f) * dt);
+	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -90.81f, 0.0f, 0.0f) * dt);
 	advect(time);
 	diffuse(time);
 	//addForces(time);
@@ -421,7 +421,7 @@ void FluidField::updateMouse(double* mouseX, double* mouseY, bool* mouse_down)
 	if (m_mouse.down && (abs(m_mouse.window_delta.x) > 0 || abs(m_mouse.window_delta.y) > 0))
 	{
 		//std::cout << "X: " << m_mouse.texcoord_pos.x << " Y: " << m_mouse.texcoord_pos.y << " down:" << m_mouse.down << std::endl;
-		splat(m_mouse.texcoord_pos, m_dye_radius, true, false);
+		splat(m_mouse.texcoord_pos, m_dye_radius, false, true);
 	}
 }
 
