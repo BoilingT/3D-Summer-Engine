@@ -164,9 +164,9 @@ private:
 
 	const float	 m_dye_force							 = 6000.0f;		// Force used to create velocities
 	const float	 m_dye_radius							 = 0.25f;		// Radius of the applicable dye and velocites
-	const float	 m_dye_dissipation						 = 0.3f;		// The rate at which the dye clears from the screen
-	const float	 m_velocity_dissipation					 = 0.2f;		// The rate at which the velocities reduces to zero
-	const int	 m_diffuseIterations					 = 20;			// Number of iterations used to calculate proper diffusion of the applied dye or velocities
+	const float	 m_dye_dissipation						 = 0.0f;		// The rate at which the dye clears from the screen
+	const float	 m_velocity_dissipation					 = 0.3f;		// The rate at which the velocities reduces to zero
+	const int	 m_diffuseIterations					 = 30;			// Number of iterations used to calculate proper diffusion of the applied dye or velocities
 	const float	 m_viscosity							 = 0.0f;		// Drag factor of the fluid
 	const int	 m_pressureIterations					 = 80;			// Number of iterations used to calculate more precise pressure fields
 	const float	 m_pressure_dissipation					 = 0.0f;		// The rate at which the pressure field is cleared

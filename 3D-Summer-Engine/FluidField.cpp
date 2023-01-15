@@ -123,11 +123,11 @@ void FluidField::boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer* 
 //Advection -> Diffusion -> Force Application -> Projection
 void FluidField::timeStep(float dt) {
 	float time = dt * m_timestep_scalar;
-	float r = 0.008f;
-	float streams = 10;
+	float r = 0.100f;
+	float streams = 4;
 	for (int stream = 0; stream < streams; stream++)
 	{
-		splat(glm::vec2((1.0f) / streams * ((stream + 1.0f)) - ((1.0f) / streams / 2.0f), 1 - ((1.0f)/streams * ((stream + 1.0f)) - ((1.0f) / streams / 2.0f))), r, true, false);
+		splat(glm::vec2((1.0f) / streams * ((stream + 1.0f)) - ((1.0f) / streams / 2.0f),0.85f), r, true, false);
 	}
 	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -90.81f, 0.0f, 0.0f) * dt);
 	advect(time);
@@ -421,7 +421,7 @@ void FluidField::updateMouse(double* mouseX, double* mouseY, bool* mouse_down)
 	if (m_mouse.down && (abs(m_mouse.window_delta.x) > 0 || abs(m_mouse.window_delta.y) > 0))
 	{
 		//std::cout << "X: " << m_mouse.texcoord_pos.x << " Y: " << m_mouse.texcoord_pos.y << " down:" << m_mouse.down << std::endl;
-		splat(m_mouse.texcoord_pos, m_dye_radius, false, true);
+		splat(m_mouse.texcoord_pos, m_dye_radius, true, false);
 	}
 }
 

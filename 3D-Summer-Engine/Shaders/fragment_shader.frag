@@ -51,7 +51,7 @@ void main(){
 		//}
 		//color = getSciColor(color.r, minP, maxP);
 	}
-	fragColor = mix(texture(u_image, texCoord), color, 0.7f);
+	fragColor = mix(texture(u_image, texCoord), color, 1.0f);
 	//fragColor = texture(u_image, texCoord);
 	//fragColor = texture(u_image_overlay, vUv) * vec4(vec3(1.0f), 0.5f);
 }

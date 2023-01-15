@@ -99,7 +99,7 @@ void Engine::Run() {
 		g_lastTime = glfwGetTime();
 		frames++;
 
-		sleepTime = 1000.0f / 144.0f - g_deltaTime * 1000.0f;
+		sleepTime = 1000.0f / 144.0f - g_deltaTime * 0;
 		std::string title = "FPS: " + std::to_string(fps) + " dT: " + std::to_string(g_deltaTime*1000.0f) + "ms TPF: " + std::to_string(TPF) + "ms";
 		if (currentTime - g_lastTime2 >= 1.f)
 		{
@@ -164,7 +164,7 @@ void Engine::Run() {
 		
 		if (sleepTime > 0)
 		{
-			//std::this_thread::sleep_for(std::chrono::milliseconds((long)(sleepTime)));
+			std::this_thread::sleep_for(std::chrono::milliseconds((long)(sleepTime)));
 		}
 
 	}
