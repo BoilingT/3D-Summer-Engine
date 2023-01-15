@@ -6,7 +6,7 @@ uniform vec4 value;
 
 void main () {
 	vec2 coords = gl_FragCoord.xy;
-	vec2 margin = vec2(texelSize);
+	vec2 margin = vec2(texelSize.x*100, texelSize.y);
 	vec4 u = texture2D(uTexture, coords*texelSize);
 	fragColor = u + value;
 

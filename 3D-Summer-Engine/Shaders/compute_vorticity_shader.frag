@@ -46,7 +46,7 @@ vec4 vorticityConfinement(vec2 coord, sampler2D curl){
 	vec2 curling = vec2(abs(cT) - abs(cB), abs(cR) - abs(cL)); //Curl vectors
 	vec2 force = 0.5f * curling;
     force /= length(force) + 0.001f; //Normalize force
-    force *= 30.0f * c;
+    force *= 10.0f * c;
     force.y *= -1.0f;
     vec2 velocity = texture2D(u, coord * texelSize).xy;
     velocity += force * dt;

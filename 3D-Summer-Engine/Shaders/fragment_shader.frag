@@ -39,19 +39,19 @@ void main(){
 		}
 	}
 	if(scene == 3){
-		//vec4 pressureTexel = texture(u_image_overlay, vec2(0.0f, 0.0f));
-		//float maxP = pressureTexel.x;
-		//float minP = pressureTexel.x;
-		//for(float i = 0; i < 1; i+=0.08f){
-		//	for(float j = 0; j < 1; j+=0.08f){
-		//		vec4 texel = texture(u_image_overlay, vec2(i,j));
-		//		maxP = max(maxP, texel.x);
-		//		minP = min(minP, texel.x);
-		//	}
-		//}
-		//color = getSciColor(color.r, minP, maxP);
+		vec4 pressureTexel = texture(u_image_overlay, vec2(0.0f, 0.0f));
+		float maxP = pressureTexel.x;
+		float minP = pressureTexel.x;
+		for(float i = 0; i < 1; i+=0.05f){
+			for(float j = 0; j < 1; j+=0.05f){
+				vec4 texel = texture(u_image_overlay, vec2(i,j));
+				maxP = max(maxP, texel.x);
+				minP = min(minP, texel.x);
+			}
+		}
+		color = getSciColor(color.r, minP, maxP);
 	}
-	fragColor = mix(texture(u_image, texCoord), color, 1.0f);
+	fragColor = mix(texture(u_image, texCoord), color, 0.9f);
 	//fragColor = texture(u_image, texCoord);
 	//fragColor = texture(u_image_overlay, vUv) * vec4(vec3(1.0f), 0.5f);
 }
