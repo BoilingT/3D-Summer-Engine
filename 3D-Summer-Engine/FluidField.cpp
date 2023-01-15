@@ -253,7 +253,7 @@ void FluidField::addForces(float dt) {
 //Projection, by removing any divergence
 void FluidField::project(float dt) {
 	//Compute a normalized vorticity vector field
-	//curl(dt);
+	curl(dt);
 	//Restore, approximate, computated and dissipated vorticity
 	//vorticity(dt);
 	divergence(dt);
