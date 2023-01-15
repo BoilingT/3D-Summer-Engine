@@ -16,5 +16,5 @@ void main(){
 	vec2 coords = gl_FragCoord.xy;
 	vec4 result = bounds(coords, off);
 	//fragColor = result;
-	fragColor = vec4(1.0f);
+	fragColor = vec4(scale);
 }

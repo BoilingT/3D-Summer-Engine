@@ -110,6 +110,7 @@ private:
 	const char* p_force_shader							 = "Shaders/compute_force_shader.frag";
 	const char* p_divergence_shader						 = "Shaders/compute_divergence_shader.frag";
 	const char* p_clear_shader							 = "Shaders/compute_clear_shader.frag";
+	const char* p_integrate_shader						 = "Shaders/compute_integrate_shader.frag";
 	const char* p_gradient_subtraction_shader			 = "Shaders/compute_gradient_subtraction_shader.frag";
 	const char* p_vorticity_shader						 = "Shaders/compute_vorticity_shader.frag";
 	const char* p_curl_shader							 = "Shaders/compute_curl_shader.frag";
@@ -141,6 +142,7 @@ private:
 	Shader m_jacobi_iteration_shader;					//Used for Pressure and Diffusion
 	Shader m_force_shader;								//TODO: Used for application of force (Velocities)
 	Shader m_divergence_shader;							//Calculates change in density (Density velocities)
+	Shader m_integrate_shader;							//Used for adding a value to an entire buffer
 	Shader m_clear_shader;								//Used for clearing a buffer of its values
 	Shader m_gradient_subtraction_shader;				//Subtract a gradient from given buffer
 	Shader m_vorticity_shader;							//TODO
@@ -161,13 +163,13 @@ private:
 	const int	 m_fieldWidth;
 
 	const float	 m_dye_force							 = 6000.0f;		// Force used to create velocities
-	const float	 m_dye_radius							 = 0.5f;		// Radius of the applicable dye and velocites
+	const float	 m_dye_radius							 = 0.25f;		// Radius of the applicable dye and velocites
 	const float	 m_dye_dissipation						 = 0.3f;		// The rate at which the dye clears from the screen
-	const float	 m_velocity_dissipation					 = 0.2f;		// The rate at which the velocities reduces to zero
+	const float	 m_velocity_dissipation					 = 0.0f;		// The rate at which the velocities reduces to zero
 	const int	 m_diffuseIterations					 = 20;			// Number of iterations used to calculate proper diffusion of the applied dye or velocities
 	const float	 m_viscosity							 = 0.0f;		// Drag factor of the fluid
-	const int	 m_pressureIterations					 = 50;			// Number of iterations used to calculate more precise pressure fields
-	const float	 m_pressure_dissipation					 = 0.8f;		// The rate at which the pressure field is cleared
+	const int	 m_pressureIterations					 = 80;			// Number of iterations used to calculate more precise pressure fields
+	const float	 m_pressure_dissipation					 = 0.0f;		// The rate at which the pressure field is cleared
 	const float	 m_timestep_scalar						 = 1.0f;		// Factor deciding the magnitude of timesteps for each frame.
 
 	//Visualisation
@@ -199,6 +201,7 @@ public:
 		m_force_shader(p_VERTEX_SHADER, p_force_shader),
 		m_divergence_shader(p_VERTEX_SHADER, p_divergence_shader),
 		m_clear_shader(p_VERTEX_SHADER, p_clear_shader),
+		m_integrate_shader(p_VERTEX_SHADER, p_integrate_shader),
 		m_gradient_subtraction_shader(p_VERTEX_SHADER, p_gradient_subtraction_shader),
 		m_vorticity_shader(p_VERTEX_SHADER, p_vorticity_shader),
 		m_curl_shader(p_VERTEX_SHADER, p_curl_shader),
@@ -274,6 +277,7 @@ private:
 	//Draw using specified shader together with a specified framebuffer (NULL if the purpose is to render to the screen with specified shader)
 	void blit(Framebuffer* target, Shader* shader);
 	void border(Framebuffer* target);
+	void bufferIntegrate(DoubleFramebuffer* target, glm::vec4 value);
 	void advect(float dt);
 	void diffuse(float dt);
 	void addForces(float dt); //TODO
@@ -294,7 +298,7 @@ private:
 	/// </summary>
 	/// <param name="pos">Origin</param>
 	/// <param name="r">Radius of the splat</param>
-	void splat(glm::vec2 pos, float r);
+	void splat(glm::vec2 pos, float r, bool dye, bool velocity);
 	//Clear everything and start from the beginning
 	void reset(); //TODO
 };

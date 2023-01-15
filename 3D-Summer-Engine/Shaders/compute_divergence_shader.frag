@@ -3,7 +3,7 @@
 out vec4 fragColor;
 float div;	//Out
 uniform vec2 texelSize;		//0.5 / Gridscale
-uniform sampler2D w;	//Vector field
+uniform sampler2D w;	//Velocity field
 
 //Calculate change in density of a fluid
 float divergence(vec2 coords){
@@ -18,16 +18,17 @@ float divergence(vec2 coords){
 	float wB = texture2D(w, vB * texelSize).y;
 	float wT = texture2D(w, vT * texelSize).y;
 
+	//Boundary conditions
 	vec2 u = texture2D(w, coords*texelSize).xy;
-	//if (vL.x * texelSize.x < 0.0f) { wL = -u.x; }
-    //if (vR.x * texelSize.x > 1.0f) { wR = -u.x; }
-    //if (vT.y * texelSize.y > 1.0f) { wT = -u.y; }
-    //if (vB.y * texelSize.y < 0.0f) { wB = -u.y; }
+	if (vL.x * texelSize.x < 0.0f) { wL = -u.x; }
+    if (vR.x * texelSize.x > 1.0f) { wR = -u.x; }
+    if (vT.y * texelSize.y > 1.0f) { wT = -u.y; }
+    if (vB.y * texelSize.y < 0.0f) { wB = -u.y; }
 
 	//Finite Difference Form of Divergence
 	//return u;
 	//Divergence = 0.5f * w
-	return 0.5f * (wR - wL + wT - wB);
+	return 0.5f * (wR - wL + wT - wB) * 1.0f;
 }
 
 void main(){

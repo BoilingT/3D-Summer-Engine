@@ -123,7 +123,13 @@ void FluidField::boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer* 
 //Advection -> Diffusion -> Force Application -> Projection
 void FluidField::timeStep(float dt) {
 	float time = dt * m_timestep_scalar;
-	boundaries(time);
+	float r = 0.005f;
+	float streams = 8;
+	for (int stream = 0; stream < streams; stream++)
+	{
+		splat(glm::vec2((1.0f) / streams * ((stream + 1.0f)) - ((1.0f) / streams / 2.0f), 1 - ((1.0f)/streams * ((stream + 1.0f)) - ((1.0f) / streams / 2.0f))), r, true, false);
+	}
+	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -9.81f, 0.0f, 0.0f) * dt);
 	advect(time);
 	diffuse(time);
 	//addForces(time);
@@ -143,14 +149,27 @@ void FluidField::boundary(float dt, float scale, float offset, DoubleFramebuffer
 	glUniform1f(offsetLoc, offset);
 	glUniform1f(scaleLoc, scale);
 
-	boundaryContainer(1, 1, 0, 0, target->writeBuffer(), m_bounds_shader);
+	boundaryContainer(1, 1, 1, 1, target->writeBuffer(), m_bounds_shader);
 }
 
 void FluidField::boundaries(float dt) {
 	//Velocity
-	//boundary(dt, -1.0f, 1, m_dye_buffer);
+	//boundary(dt, 1.0f, 0, m_dye_buffer);
 	//Pressure
 	//boundary(dt, 0, 0, m_pressure_buffer);
+}
+
+void FluidField::bufferIntegrate(DoubleFramebuffer* target, glm::vec4 values)
+{
+	m_integrate_shader.use();
+	int valueLoc = m_integrate_shader.uniforms["value"];
+	int textureLoc = m_integrate_shader.uniforms["uTexture"];
+	int texSizeLoc = m_integrate_shader.uniforms["texelSize"];
+	glUniform4f(valueLoc, values.x, values.y, values.z, values.w);
+	glUniform1i(textureLoc, target->readBuffer()->setTexture(0));
+	glUniform2f(texSizeLoc, target->readBuffer()->texelSizeX, target->readBuffer()->texelSizeY);
+	blit(target->writeBuffer(), &m_integrate_shader);
+	target->swap();
 }
 
 void FluidField::advect(float dt) {
@@ -234,7 +253,7 @@ void FluidField::addForces(float dt) {
 //Projection, by removing any divergence
 void FluidField::project(float dt) {
 	//Compute a normalized vorticity vector field
-	curl(dt);
+	//curl(dt);
 	//Restore, approximate, computated and dissipated vorticity
 	//vorticity(dt);
 	divergence(dt);
@@ -344,7 +363,7 @@ void FluidField::gradientSubtract(float dt)
 	m_velocity_buffer->swap();
 }
 
-void FluidField::splat(glm::vec2 pos, float r) {
+void FluidField::splat(glm::vec2 pos, float r, bool dye, bool velocity) {
 	m_splat_shader.use();
 	//Uniforms
 	int uTargetLoc = m_splat_shader.uniforms["uTarget"];
@@ -358,16 +377,23 @@ void FluidField::splat(glm::vec2 pos, float r) {
 	glUniform3f(uColorLoc, m_mouse.texcoord_delta.x * m_dye_force, m_mouse.texcoord_delta.y * m_dye_force, 0.0f);
 	glUniform1f(uRadiusLoc, r);
 	glUniform2f(uTexLoc, m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
-	blit(m_velocity_buffer->writeBuffer(), &m_splat_shader);
-	m_velocity_buffer->swap();
+	if (velocity)
+	{
+		blit(m_velocity_buffer->writeBuffer(), &m_splat_shader);
+		m_velocity_buffer->swap();
+	}
 
 	glUniform1i(m_splat_shader.uniforms["uTarget"], m_dye_buffer->readBuffer()->setTexture(0));
 	glUniform2f(uTexLoc, m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
 	glm::vec3 color = glm::vec3(m_mouse.texcoord_delta.x * m_dye_force /100.f, m_mouse.texcoord_delta.y * m_dye_force / 100.f, 0.2f);
 	color *= 0.5f;
+	color = glm::vec3(0.8f, 0.3f, 0.0f) * 0.5f;
 	glUniform3f(uColorLoc, abs(color.r), abs(color.g), abs(color.b + (color.r+color.g)/5.0f));
-	blit(m_dye_buffer->writeBuffer(), &m_splat_shader);
-	m_dye_buffer->swap();
+	if (dye)
+	{
+		blit(m_dye_buffer->writeBuffer(), &m_splat_shader);
+		m_dye_buffer->swap();
+	}
 }
 
 void FluidField::DrawCellField(glm::vec3 o) {
@@ -395,39 +421,43 @@ void FluidField::updateMouse(double* mouseX, double* mouseY, bool* mouse_down)
 	if (m_mouse.down && (abs(m_mouse.window_delta.x) > 0 || abs(m_mouse.window_delta.y) > 0))
 	{
 		//std::cout << "X: " << m_mouse.texcoord_pos.x << " Y: " << m_mouse.texcoord_pos.y << " down:" << m_mouse.down << std::endl;
-		splat(m_mouse.texcoord_pos, m_dye_radius);
+		splat(m_mouse.texcoord_pos, m_dye_radius, false, true);
 	}
 }
 
 void FluidField::swapBuffer(int i) {
+	m_primary_shader->use();
 	if (i == 1)
 	{
 		if (m_current_buffer == 0) return;
 		std::cout << "BUFFER::DYE" << std::endl;
-		m_current_buffer = 0;
+		m_current_buffer = m_dye_buffer->readBuffer();
+		glUniform1i(m_primary_shader->uniforms["scene"], 0);
 	}
 	else if (i == 2)
 	{
 		if (m_current_buffer == m_velocity_buffer->readBuffer()) return;
 		std::cout << "BUFFER::VELOCITY" << std::endl;
 		m_current_buffer = m_velocity_buffer->readBuffer();
+		glUniform1i(m_primary_shader->uniforms["scene"], 1);
 	}
 	else if (i == 3) {
 		if (m_current_buffer == m_divergence_buffer) return;
 		std::cout << "BUFFER::DIVERGENCE" << std::endl;
 		m_current_buffer = m_divergence_buffer;
-
+		glUniform1i(m_primary_shader->uniforms["scene"], 2);
 	}
 	else if (i == 4) {
 		if (m_current_buffer == m_pressure_buffer->readBuffer() || m_current_buffer == m_pressure_buffer->writeBuffer()) return;
 		std::cout << "BUFFER::PRESSURE" << std::endl;
 		m_current_buffer = m_pressure_buffer->readBuffer();
-
+		glUniform1i(m_primary_shader->uniforms["scene"], 3);
 	}
 	else if (i == 5) {
 		if (m_current_buffer == m_curl_buffer) return;
 		std::cout << "BUFFER::CURL" << std::endl;
 		m_current_buffer = m_curl_buffer;
+		glUniform1i(m_primary_shader->uniforms["scene"], 4);
 	}
 }
 
