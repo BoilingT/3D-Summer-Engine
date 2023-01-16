@@ -39,11 +39,12 @@ void main(){
 		}
 	}
 	if(scene == 3){
-		vec4 pressureTexel = texture(u_image_overlay, vec2(0.0f, 0.0f));
+		vec4 pressureTexel = texture(u_image_overlay, vec2(0.5f, 0.5f));
 		float maxP = pressureTexel.x;
 		float minP = pressureTexel.x;
-		for(float i = 0; i < 1; i+=0.05f){
-			for(float j = 0; j < 1; j+=0.05f){
+		float offset = 0.05f;
+		for(float i = -offset; i < 1 + offset; i += offset){
+			for(float j = -offset; j < 1 + offset; j += offset){
 				vec4 texel = texture(u_image_overlay, vec2(i,j));
 				maxP = max(maxP, texel.x);
 				minP = min(minP, texel.x);
