@@ -164,12 +164,12 @@ private:
 
 	const float	 m_dye_force							 = 6000.0f;		// Force used to create velocities
 	const float	 m_dye_radius							 = 0.25f;		// Radius of the applicable dye and velocites
-	const float	 m_dye_dissipation						 = 0.2f;		// The rate at which the dye clears from the screen
-	const float	 m_velocity_dissipation					 = 0.1f;		// The rate at which the velocities reduces to zero
+	const float	 m_dye_dissipation						 = 0.4f;		// The rate at which the dye clears from the screen
+	const float	 m_velocity_dissipation					 = 0.2f;		// The rate at which the velocities reduces to zero
 	const int	 m_diffuseIterations					 = 30;			// Number of iterations used to calculate proper diffusion of the applied dye or velocities
 	const float	 m_viscosity							 = 0.0f;		// Drag factor of the fluid
 	const int	 m_pressureIterations					 = 60;			// Number of iterations used to calculate more precise pressure fields
-	const float	 m_pressure_dissipation					 = 0.9f;		// TODO: Explain it... What I thought it was (but it is supposedly wrong!): The rate at which the pressure field is cleared
+	const float	 m_pressure_dissipation					 = 0.2f;		// TODO: Explain it... What I thought it was (but it is supposedly wrong!): The rate at which the pressure field is cleared
 	const float	 m_timestep_scalar						 = 1.0f;		// Factor deciding the magnitude of timesteps for each frame.
 
 	//Visualisation
@@ -229,17 +229,17 @@ public:
 		TexFormat r(GL_R32F, GL_RED);			//Scalar field
 		glDisable(GL_BLEND);
 		// Dye
-		m_dye_buffer = new DoubleFramebuffer(m_resolution*4, m_WIDTH, m_HEIGHT, rgba.internal, rgba.format, textureType, GL_LINEAR);
+		m_dye_buffer = new DoubleFramebuffer(m_resolution*2, m_WIDTH, m_HEIGHT, rgba.internal, rgba.format, textureType, GL_LINEAR);
 		//m_dye_buffer->readBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
 		//m_dye_buffer->writeBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
 		// Velocity
-		m_velocity_buffer = new DoubleFramebuffer(m_resolution, m_WIDTH, m_HEIGHT, rg.internal, rg.format, textureType, GL_LINEAR);
+		m_velocity_buffer = new DoubleFramebuffer(m_resolution*2, m_WIDTH, m_HEIGHT, rg.internal, rg.format, textureType, GL_LINEAR);
 		// Divergence
-		m_divergence_buffer = new Framebuffer(m_resolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		m_divergence_buffer = new Framebuffer(m_resolution*2, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 		// Curl
-		m_curl_buffer = new Framebuffer(m_resolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		m_curl_buffer = new Framebuffer(m_resolution*2, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 		// Pressure
-		m_pressure_buffer = new DoubleFramebuffer(m_resolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		m_pressure_buffer = new DoubleFramebuffer(m_resolution*2, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 
 		m_current_buffer = m_dye_buffer->readBuffer();
 

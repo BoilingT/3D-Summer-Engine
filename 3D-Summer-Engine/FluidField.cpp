@@ -123,13 +123,13 @@ void FluidField::boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer* 
 //Advection -> Diffusion -> Force Application -> Projection
 void FluidField::timeStep(float dt) {
 	float time = dt * m_timestep_scalar; 
-	float r = 0.003f;
-	float streams = 13;
+	float r = 0.0010f;
+	float streams = 20;
 	for (int stream = 0; stream < streams; stream++)
 	{
 		splat(glm::vec2((1.0f) / streams * ((stream + 1.0f)) - ((1.0f) / streams / 2.0f), 1.0f), r, true, false);
 	}
-	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -300.81f, 0.0f, 0.0f) * dt);
+	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -90.0f, 0.0f, 0.0f) * dt);
 	advect(time);
 	diffuse(time);
 	//addForces(time);

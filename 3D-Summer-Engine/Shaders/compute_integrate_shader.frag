@@ -15,13 +15,25 @@ void main () {
 	vec2 vT = (coords + vec2(0, 1));
 
 	
-	fragColor = u + value;
 	//if((coords.y * texelSize.y < 1.0f && coords.y * texelSize.y > 0.5f) || (coords.y * texelSize.y < 0.5f && coords.y * texelSize.y > 0.0f)){ //Floor
 	//}else{
 	//	fragColor = u;
 	//}
-	
+
+	float size = 1000.0f;
+	vec2 pos = vec2(0.5f, 0.5f) / texelSize;
+
+	fragColor = u + value;
+
+
 	if((coords.x * texelSize.x < 0.0f + margin.x || coords.x * texelSize.x > 1.0f - margin.x) || (coords.y * texelSize.y < 0.0f + margin.y || coords.y * texelSize.y > 1.0f - margin.y)){
 		fragColor = u;
+	}
+	
+	if(pow(coords.x - pos.x,2) + pow(coords.y - pos.y,2) < size){
+		fragColor = vec4(0, 0, 0.0f, 0.0f);
+	}
+	if(pow(coords.x - pos.x,2) + pow(coords.y - pos.y,2) < size + 5 && pow(coords.x - pos.x,2) + pow(coords.y - pos.y,2) > size){
+		fragColor = vec4(-u.x, -u.y, 0.0f, 0.0f);
 	}
 }

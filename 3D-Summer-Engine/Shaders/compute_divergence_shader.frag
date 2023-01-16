@@ -23,7 +23,7 @@ float divergence(vec2 coords){
 	if (vL.x * texelSize.x < 0.0f) { wL = -u.x; }
     if (vR.x * texelSize.x > 1.0f) { wR = -u.x; }
     if (vT.y * texelSize.y > 1.0f) { wT = -u.y; }
-    if (vB.y * texelSize.y < 0.0f) { wB = -u.y; }
+    if (vB.y * texelSize.y < 0.0f) { wB = u.y; }
 
 	//Finite Difference Form of Divergence
 	//return u;
