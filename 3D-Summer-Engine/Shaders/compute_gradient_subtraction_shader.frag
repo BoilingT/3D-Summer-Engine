@@ -20,8 +20,7 @@ vec2 gradient(vec2 coords){
 	vec4 u = texture2D(w, coords * texelSize);	//Velocity with divergence
 
 	//Finite Difference Form of Gradient
-	u.xy = u.xy - (vec2(pR - pL, pT - pB)) + 0.000f;
-	//u.xy = u.xy + texelSize * 0.5f - vec2(pR - pL, pT - pB);
+	u.xy = u.xy - vec2(pR - pL, pT - pB);
 	return u.xy;	//Velocity without divergence
 }
 

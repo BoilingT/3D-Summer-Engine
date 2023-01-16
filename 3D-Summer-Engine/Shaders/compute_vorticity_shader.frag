@@ -43,15 +43,26 @@ vec4 vorticityConfinement(vec2 coord, sampler2D curl){
 	//Compute force
 	//force = epsilon(phi x vorticity)
 	//float force = epsilon(cross(phi, omega)) * dt;
-	vec2 curling = vec2(abs(cT) - abs(cB), abs(cR) - abs(cL)); //Curl vectors
-	vec2 force = 0.5f * curling;
-    force /= length(force) + 0.001f; //Normalize force
-    force *= 10.0f * c;
-    force.y *= -1.0f;
-    vec2 velocity = texture2D(u, coord * texelSize).xy;
-    velocity += force * dt;
-    //velocity = min(max(velocity, -1000.0f), 1000.0f);
+	
+	vec2 force = 0.5f * vec2(abs(cT) - abs(cB), abs(cR) - abs(cL));
+	//Normalize
+	float EPSILON = 2.4414f * pow(10.0f, -4.0f);
+	float magSqr = max(EPSILON, dot(force, force));
+	force = force * sqrt(1.0f / magSqr);
+	force *= 1.0f * c * vec2(1, -1);
+	vec2 velocity = texture(u, coord * texelSize).xy;
+	velocity = velocity + dt * force;
 
+	//------------------------------------------------------------------------------
+	////vec2 curling = vec2(abs(cT) - abs(cB), abs(cR) - abs(cL)); //Curl vectors
+	////vec2 force = 0.5f * curling;
+    ////force /= length(force) + 0.001f; //Normalize force
+    ////force *= 10.0f * c;
+    ////force.y *= -1.0f;
+    ////vec2 velocity = texture2D(u, coord * texelSize).xy;
+    ////velocity += force * dt;
+    //velocity = min(max(velocity, -1000.0f), 1000.0f);
+	//------------------------------------------------------------------------------
 	return vec4(velocity, 0.0f, 1.0f);
 }
 

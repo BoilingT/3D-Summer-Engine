@@ -13,7 +13,8 @@ vec4 curl(vec2 coord, sampler2D v){
 	vec4 c = texture2D(v, coord * texelSize);
 	//return T - B + R - L; //Curl
 	
-	return R - L - T + B; //Curl
+	//return R - L - T + B; //Curl
+	return 0.5f * ((R-L) - (T-B));
 }
 
 void main(){
@@ -21,5 +22,5 @@ void main(){
 	//x * tx.x => 0 - 1
 	vec2 coord = gl_FragCoord.xy;
 	vec4 result = curl(coord, u);
-	outColor = vec4(result.x * 0.5f, 0.0f, 0.0f, 1.0f);
+	outColor = vec4(result.x, 0.0f, 0.0f, 1.0f);
 }
