@@ -3,6 +3,7 @@ out vec4 fragColor;
 uniform vec2 texelSize;
 uniform sampler2D uTexture;
 uniform vec4 value;
+uniform float time;
 
 void main () {
 	vec2 coords = gl_FragCoord.xy;
@@ -21,6 +22,7 @@ void main () {
 	//}
 
 	float size = 1000.0f;
+	
 	vec2 pos = vec2(0.5f, 0.5f) / texelSize;
 
 	fragColor = u + value;
@@ -30,10 +32,17 @@ void main () {
 		fragColor = u;
 	}
 	
-	if(pow(coords.x - pos.x,2) + pow(coords.y - pos.y,2) < size){
+	float shapeCoord = pow(coords.x - pos.x,2) + pow(coords.y - pos.y,2);
+	vec2 dim = vec2(150.0f, 10.0f)/2.0f;
+
+	bool rectCondition = (pos.x + dim.x > coords.x && pos.x - dim.x < coords.x) && (pos.y + dim.y > coords.y && pos.y - dim.y < coords.y);
+	rectCondition = false;
+
+	if((shapeCoord < size) || rectCondition){
 		fragColor = vec4(0, 0, 0.0f, 0.0f);
 	}
-	if(pow(coords.x - pos.x,2) + pow(coords.y - pos.y,2) < size + 5 && pow(coords.x - pos.x,2) + pow(coords.y - pos.y,2) > size){
-		fragColor = vec4(-u.x, -u.y, 0.0f, 0.0f);
+
+	if((shapeCoord < size + 5 && shapeCoord > size) || rectCondition){
+		fragColor = vec4(-u.x, -u.y, 0.0f, 1.0f);
 	}
 }
