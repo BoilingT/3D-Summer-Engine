@@ -28,7 +28,7 @@ float divergence(vec2 coords){
 	//Finite Difference Form of Divergence
 	//return u;
 	//Divergence = 0.5f * w
-	return 0.5f * (wR - wL + wT - wB) * 1.0f;
+	return 0.5f * (wR - wL + wT - wB);
 }
 
 void main(){
