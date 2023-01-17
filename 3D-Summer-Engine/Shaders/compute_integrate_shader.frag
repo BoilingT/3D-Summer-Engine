@@ -42,6 +42,6 @@ void main () {
 	}
 
 	if((shapeCoord < size + 5 && shapeCoord > size)){
-		fragColor = vec4(-u.x, -u.y, 0.0f, 1.0f);
+		//fragColor = vec4(-u.x, -u.y, 0.0f, 1.0f);
 	}
 }
