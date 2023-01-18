@@ -168,7 +168,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\compute_curl_shader.frag" />
+    <None Include="Shaders\compute_density_shader.frag" />
     <None Include="Shaders\compute_integrate_shader.frag" />
+    <None Include="Shaders\compute_temperature_shader.frag" />
     <None Include="Shaders\compute_vorticity_shader.frag" />
     <None Include="Shaders\object_fragment_shader.frag" />
     <None Include="Shaders\object_vertex_shader.vert" />

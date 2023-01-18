@@ -50,8 +50,15 @@ Framebuffer::Framebuffer(float res, unsigned int w, unsigned int h, GLint intern
 	glBindTexture(GL_TEXTURE_2D, 0);
 	
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
-	GLuint clearColor[4] = { 0, 0, 0, 0 };
-	glClearBufferuiv(GL_COLOR, fbo, clearColor);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	if (!status())
+	{
+		std::cout << "ERROR::BLIT::FRAMEBUFFER::STATUS::INCOMPLETE" << std::endl;
+		return;
+	}
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -102,7 +109,10 @@ void Framebuffer::setTextureSource(const char* path, int screen_width, int scree
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
 		GLuint clearColor[4] = { 0, 0, 0, 0 };
 		glClearBufferuiv(GL_COLOR, fbo, clearColor);
+		//glClearColor(0, 0, 0.0f, 0.0f);
+		//glClear(GL_COLOR_BUFFER_BIT);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		
 	}
 	else {
 		std::cout << "ERROR::FAILURE::LOADING::TEXTURE" << std::endl;

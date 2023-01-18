@@ -42,7 +42,7 @@ void main(){
 		vec4 pressureTexel = texture(u_image_overlay, vec2(0.5f, 0.5f));
 		float maxP = pressureTexel.x;
 		float minP = pressureTexel.x;
-		float offset = 0.1f;
+		float offset = 0.02f;
 		for(float i = -offset; i < 1 + offset; i += offset){
 			for(float j = -offset; j < 1 + offset; j += offset){
 				vec4 texel = texture(u_image_overlay, vec2(i,j));

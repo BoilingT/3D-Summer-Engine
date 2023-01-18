@@ -220,5 +220,11 @@
     <None Include="Shaders\compute_integrate_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="Shaders\compute_temperature_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\compute_density_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

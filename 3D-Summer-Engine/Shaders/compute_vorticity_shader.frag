@@ -5,6 +5,7 @@ out vec4 outColor;
 uniform sampler2D u; //Velocities
 uniform sampler2D v; //Curl
 uniform vec2 texelSize;
+uniform float scale;
 uniform float dt;
 
 //Use the velocities to create force
@@ -49,7 +50,7 @@ vec4 vorticityConfinement(vec2 coord, sampler2D curl){
 	float EPSILON = 2.4414f * pow(10.0f, -4.0f);
 	float magSqr = max(EPSILON, dot(force, force));
 	force = force * sqrt(1.0f / magSqr);
-	force *= 30.0f * c * vec2(1, -1);
+	force *= scale * c * vec2(1, -1);
 	vec2 velocity = texture(u, coord * texelSize).xy;
 	velocity = velocity + dt * force;
 

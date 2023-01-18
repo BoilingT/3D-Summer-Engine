@@ -117,8 +117,8 @@ void Engine::Run() {
 		IO_EVENTS(m_window->getWindow());
 
 		//Render
-		glClearColor(c_DEFAULT_CLEAR_COLOR[0], c_DEFAULT_CLEAR_COLOR[1], c_DEFAULT_CLEAR_COLOR[2], c_DEFAULT_CLEAR_COLOR[3]);
 		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClearColor(c_DEFAULT_CLEAR_COLOR[0], c_DEFAULT_CLEAR_COLOR[1], c_DEFAULT_CLEAR_COLOR[2], c_DEFAULT_CLEAR_COLOR[3]);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		//Transform Matrices
@@ -250,6 +250,16 @@ void Engine::IO_EVENTS(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
 	{
 		m_fluid->swapBuffer(5);
+	}
+	//Temperature
+	if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+	{
+		m_fluid->swapBuffer(6);
+	}
+	//Density
+	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+	{
+		m_fluid->swapBuffer(7);
 	}
 	//Forward
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)

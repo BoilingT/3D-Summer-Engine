@@ -114,6 +114,8 @@ private:
 	const char* p_gradient_subtraction_shader			 = "Shaders/compute_gradient_subtraction_shader.frag";
 	const char* p_vorticity_shader						 = "Shaders/compute_vorticity_shader.frag";
 	const char* p_curl_shader							 = "Shaders/compute_curl_shader.frag";
+	const char* p_temperature_shader					 = "Shaders/compute_temperature_shader.frag";
+	const char* p_density_shader						 = "Shaders/compute_density_shader.frag";
 	const char* p_bounds_shader							 = "Shaders/compute_bounds_shader.frag";
 	const char* p_splat_shader							 = "Shaders/compute_splat_shader.frag";
 
@@ -133,6 +135,7 @@ private:
 	//Application buffers
 	DoubleFramebuffer* m_dye_buffer;					//Contains dye quantities to be advected
 	DoubleFramebuffer* m_temperature_buffer;			//Boyancy and Convection
+	DoubleFramebuffer* m_density_buffer;				//Boyancy and Convection
 	Framebuffer* m_curl_buffer;							//Contains curling velocities
 	//Screen rendering buffers
 	Framebuffer* m_current_buffer;						//Contains the buffer that will be used when rendering
@@ -147,6 +150,8 @@ private:
 	Shader m_gradient_subtraction_shader;				//Subtract a gradient from given buffer
 	Shader m_vorticity_shader;							//TODO
 	Shader m_curl_shader;								//TODO
+	Shader m_temperature_shader;						//TODO
+	Shader m_density_shader;							//TODO
 	Shader m_bounds_shader;								//TODO: Control of Fluid boundaries
 	Shader m_splat_shader;								//Used for application of Dye and Velocity manipulation
 	//Screen rendering shaders
@@ -164,13 +169,18 @@ private:
 
 	const float	 m_dye_force							 = 6000.0f;		// Force used to create velocities
 	const float	 m_dye_radius							 = 0.25f;		// Radius of the applicable dye and velocites
-	const float	 m_dye_dissipation						 = 0.5f;		// The rate at which the dye clears from the screen
+	const float	 m_dye_dissipation						 = 0.03f;		// The rate at which the dye clears from the screen
 	const float	 m_velocity_dissipation					 = 0.1f;		// The rate at which the velocities reduces to zero
 	const int	 m_diffuseIterations					 = 30;			// Number of iterations used to calculate proper diffusion of the applied dye or velocities
 	const float	 m_viscosity							 = 0.0f;		// Drag factor of the fluid
 	const int	 m_pressureIterations					 = 60;			// Number of iterations used to calculate more precise pressure fields
 	const float	 m_pressure_dissipation					 = 0.9f;		// TODO: Explain it... What I thought it was (but it is supposedly wrong!): The rate at which the pressure field is cleared
+	const float  m_vortitcity_scalar					 = 15;			// Vorticity scalar
 	const float	 m_timestep_scalar						 = 1.0f;		// Factor deciding the magnitude of timesteps for each frame.
+	//Experimental
+	const float  m_ambient_temperature					 = 30.0f;		// Ambient temperature in degrees celsius
+	const float  m_temperature_scalar					 = 0.0f;		// 
+	const float  m_mass									 = 30.0f;		// Smoke mass
 
 	//Visualisation
 	bool					m_showDataVectors;  //TODO
@@ -205,6 +215,8 @@ public:
 		m_gradient_subtraction_shader(p_VERTEX_SHADER, p_gradient_subtraction_shader),
 		m_vorticity_shader(p_VERTEX_SHADER, p_vorticity_shader),
 		m_curl_shader(p_VERTEX_SHADER, p_curl_shader),
+		m_temperature_shader(p_VERTEX_SHADER, p_temperature_shader),
+		m_density_shader(p_VERTEX_SHADER, p_density_shader),
 		m_bounds_shader(p_VERTEX_SHADER, p_bounds_shader),
 		m_splat_shader(p_VERTEX_SHADER, p_splat_shader)
 	{
@@ -229,15 +241,19 @@ public:
 		TexFormat r(GL_R32F, GL_RED);			//Scalar field
 		glDisable(GL_BLEND);
 		// Dye
-		m_dye_buffer = new DoubleFramebuffer(m_resolution*2, m_WIDTH, m_HEIGHT, rgba.internal, rgba.format, textureType, GL_LINEAR);
+		m_dye_buffer = new DoubleFramebuffer(m_resolution*2.0f, m_WIDTH, m_HEIGHT, rgba.internal, rgba.format, textureType, GL_LINEAR);
 		//m_dye_buffer->readBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
 		//m_dye_buffer->writeBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
 		// Velocity
 		m_velocity_buffer = new DoubleFramebuffer(m_resolution*2, m_WIDTH, m_HEIGHT, rg.internal, rg.format, textureType, GL_LINEAR);
-		// Divergence
-		m_divergence_buffer = new Framebuffer(m_resolution*2, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		// Boyancy and Convection
+		m_temperature_buffer = new DoubleFramebuffer(m_resolution * 2, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		// Smoke and Clouds
+		m_density_buffer = new DoubleFramebuffer(m_resolution * 2, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 		// Curl
 		m_curl_buffer = new Framebuffer(m_resolution*2, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		// Divergence
+		m_divergence_buffer = new Framebuffer(m_resolution*2, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 		// Pressure
 		m_pressure_buffer = new DoubleFramebuffer(m_resolution*2, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 
@@ -249,8 +265,10 @@ public:
 	~FluidField() {
 		delete(m_dye_buffer);
 		delete(m_velocity_buffer);
-		delete(m_divergence_buffer);
+		delete(m_temperature_buffer);
+		delete(m_density_buffer);
 		delete(m_curl_buffer);
+		delete(m_divergence_buffer);
 		delete(m_pressure_buffer);
 
 		delete(m_primary_shader);
@@ -288,6 +306,8 @@ private:
 	void boundaries(float dt);
 	void vorticity(float dt);
 	void curl(float dt);
+	void temperature(float dt);
+	void density(float dt);
 	void divergence(float dt);
 	void clearBuffer(DoubleFramebuffer* target, float value);
 	void clearBuffer(Framebuffer* target, float value);

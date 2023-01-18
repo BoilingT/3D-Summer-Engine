@@ -48,9 +48,9 @@ void FluidField::blit(Framebuffer* target, Shader* shader) {
 	//shader->setMat4f("view", viewM);
 	//shader->setMat4f("projection", projectionM);
 
-	glClearColor(0, 0, 0, 0);
-	glClear(GL_COLOR_BUFFER_BIT);
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	//glClear(GL_COLOR_BUFFER_BIT);
 
 	//Bind framebuffer
 	if (target == nullptr || target->fbo == NULL)
@@ -63,6 +63,7 @@ void FluidField::blit(Framebuffer* target, Shader* shader) {
 		glViewport(0, 0, target->width, target->height);
 		glBindFramebuffer(GL_FRAMEBUFFER, target->fbo);
 	}
+
 
 	//Draw to framebuffer
 	if (!target->status())
@@ -123,19 +124,20 @@ void FluidField::boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer* 
 //Advection -> Diffusion -> Force Application -> Projection
 void FluidField::timeStep(float dt) {
 	float time = dt * m_timestep_scalar; 
-	float r = 0.0008f;
-	float streams = 12;
+	float r = 0.0018f;
+	float streams = 3;
 	
 	for (int stream = 0; stream < streams; stream++)
 	{
-		splat(glm::vec2((1.0f) / streams * ((stream + 1.0f)) - ((1.0f) / streams / 2.0f), 1.0f), r, true, false);
+		splat(glm::vec2((1.0f) / streams * ((stream + 1.0f)) - ((1.0f) / streams / 2.0f), 0.1f), r, true, false);
 		//splat(glm::vec2(0.1f, 1.0f - (1.0f) / streams * ((stream + 1.0f)) + ((1.0f) / streams / 2.0f)), r, true, false);
 	}
 	m_integrate_shader.use();
 	//float o = 0.8f;
 	//float value = (sin(glfwGetTime() * 0.1f) + 1) / 2.0f * o + (1 - o) / 2.0f;
 	//glUniform1f(m_integrate_shader.uniforms["time"], value);
-	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -20.82f, 0.0f, 0.0f) * dt);
+	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -40.82f*0, 0.0f, 0.0f) * dt);
+	temperature(time);
 	advect(time);
 	diffuse(time);
 	//addForces(time);
@@ -178,6 +180,29 @@ void FluidField::bufferIntegrate(DoubleFramebuffer* target, glm::vec4 values)
 	target->swap();
 }
 
+void FluidField::temperature(float dt) {
+	m_temperature_shader.use();
+	int uLoc = m_temperature_shader.uniforms["u"];
+	int dLoc = m_temperature_shader.uniforms["d"];
+	int tLoc = m_temperature_shader.uniforms["t"];
+	int tempLoc = m_temperature_shader.uniforms["T0"];
+	int massLoc = m_temperature_shader.uniforms["k"];
+	int dtLoc = m_temperature_shader.uniforms["dt"];
+	int texelLoc = m_temperature_shader.uniforms["texelSize"];
+
+	glUniform1i(uLoc, m_velocity_buffer->readBuffer()->setTexture(0));			//Velocity
+	glUniform1i(tLoc, m_pressure_buffer->readBuffer()->setTexture(1));			//Temp
+	glUniform1i(dLoc, m_dye_buffer->readBuffer()->setTexture(2));				//Density
+
+	glUniform1f(tempLoc, m_ambient_temperature);
+	glUniform1f(massLoc, m_mass);
+	glUniform1f(dtLoc, dt);
+	glUniform2f(texelLoc, m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
+
+	blit(m_velocity_buffer->writeBuffer(), &m_temperature_shader);
+	m_velocity_buffer->swap();
+}
+
 void FluidField::advect(float dt) {
 	//Advection
 	m_advection_shader.use();
@@ -198,7 +223,7 @@ void FluidField::advect(float dt) {
 	glUniform1i(linearFilteringLoc, linearFiltering);
 	blit(m_velocity_buffer->writeBuffer(), &m_advection_shader);
 	m_velocity_buffer->swap();
-	
+
 	//Advect dye
 	glUniform1f(dissipationLoc, m_dye_dissipation);
 	glUniform1i(uLoc, m_velocity_buffer->readBuffer()->setTexture(0)); //u = velocity texture
@@ -287,10 +312,12 @@ void FluidField::vorticity(float dt) {
 	int vLoc = m_vorticity_shader.uniforms["v"]; //Curl
 	int texelSizeLoc = m_vorticity_shader.uniforms["texelSize"];
 	int dtLoc = m_vorticity_shader.uniforms["dt"];
+	int scaleLoc = m_vorticity_shader.uniforms["scale"];
 	glUniform1i(uLoc, m_velocity_buffer->readBuffer()->setTexture(0));
 	glUniform1i(vLoc, m_curl_buffer->setTexture(1));
 	glUniform2f(texelSizeLoc, m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
 	glUniform1f(dtLoc, dt);
+	glUniform1f(scaleLoc, m_vortitcity_scalar);
 	blit(m_velocity_buffer->writeBuffer(), &m_vorticity_shader);
 	m_velocity_buffer->swap();
 }
@@ -464,6 +491,18 @@ void FluidField::swapBuffer(int i) {
 		std::cout << "BUFFER::CURL" << std::endl;
 		m_current_buffer = m_curl_buffer;
 		glUniform1i(m_primary_shader->uniforms["scene"], 4);
+	}
+	else if (i == 6) {
+		if (m_current_buffer == m_temperature_buffer->readBuffer()) return;
+		std::cout << "BUFFER::TEMPERATURE" << std::endl;
+		m_current_buffer = m_temperature_buffer->readBuffer();
+		glUniform1i(m_primary_shader->uniforms["scene"], 5);
+	}
+	else if (i == 7) {
+		if (m_current_buffer == m_density_buffer->readBuffer()) return;
+		std::cout << "BUFFER::DENSITY" << std::endl;
+		m_current_buffer = m_density_buffer->readBuffer();
+		glUniform1i(m_primary_shader->uniforms["scene"], 6);
 	}
 }
 
