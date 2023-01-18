@@ -124,7 +124,7 @@ void FluidField::boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer* 
 //Advection -> Diffusion -> Force Application -> Projection
 void FluidField::timeStep(float dt) {
 	float time = dt * m_timestep_scalar; 
-	float r = 0.0018f;
+	float r = 0.0058f;
 	float streams = 3;
 	
 	for (int stream = 0; stream < streams; stream++)
@@ -136,7 +136,7 @@ void FluidField::timeStep(float dt) {
 	//float o = 0.8f;
 	//float value = (sin(glfwGetTime() * 0.1f) + 1) / 2.0f * o + (1 - o) / 2.0f;
 	//glUniform1f(m_integrate_shader.uniforms["time"], value);
-	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -40.82f*0, 0.0f, 0.0f) * dt);
+	//bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -40.82f*0, 0.0f, 0.0f) * dt);
 	temperature(time);
 	advect(time);
 	diffuse(time);
@@ -186,16 +186,18 @@ void FluidField::temperature(float dt) {
 	int dLoc = m_temperature_shader.uniforms["d"];
 	int tLoc = m_temperature_shader.uniforms["t"];
 	int tempLoc = m_temperature_shader.uniforms["T0"];
+	int scalarLoc = m_temperature_shader.uniforms["s"];
 	int massLoc = m_temperature_shader.uniforms["k"];
 	int dtLoc = m_temperature_shader.uniforms["dt"];
 	int texelLoc = m_temperature_shader.uniforms["texelSize"];
 
 	glUniform1i(uLoc, m_velocity_buffer->readBuffer()->setTexture(0));			//Velocity
 	glUniform1i(tLoc, m_pressure_buffer->readBuffer()->setTexture(1));			//Temp
-	glUniform1i(dLoc, m_dye_buffer->readBuffer()->setTexture(2));				//Density
+	glUniform1i(dLoc, m_density_buffer->readBuffer()->setTexture(2));			//Density
 
 	glUniform1f(tempLoc, m_ambient_temperature);
 	glUniform1f(massLoc, m_mass);
+	glUniform1f(scalarLoc, m_temperature_scalar);
 	glUniform1f(dtLoc, dt);
 	glUniform2f(texelLoc, m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
 
@@ -231,6 +233,13 @@ void FluidField::advect(float dt) {
 	glUniform2f(texelLoc, m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
 	blit(m_dye_buffer->writeBuffer(), &m_advection_shader);
 	m_dye_buffer->swap();
+
+	//Advect density
+	glUniform1f(dissipationLoc, m_dye_dissipation);
+	glUniform1i(xLoc, m_density_buffer->readBuffer()->setTexture(1)); //x = quantity scalar texture
+	glUniform2f(texelLoc, m_density_buffer->readBuffer()->texelSizeX, m_density_buffer->readBuffer()->texelSizeY);
+	blit(m_density_buffer->writeBuffer(), &m_advection_shader);
+	m_density_buffer->swap();
 }
 
 //Diffusion, by using jacobi iterations
@@ -420,12 +429,19 @@ void FluidField::splat(glm::vec2 pos, float r, bool dye, bool velocity) {
 	glUniform2f(uTexLoc, m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
 	glm::vec3 color = glm::vec3(m_mouse.texcoord_delta.x * m_dye_force /100.f, m_mouse.texcoord_delta.y * m_dye_force / 100.f, 0.2f);
 	color *= 0.5f;
-	color = glm::vec3(0.8f, 0.3f, 0.0f) * 0.5f;
-	glUniform3f(uColorLoc, abs(color.r), abs(color.g), abs(color.b + (color.r+color.g)/5.0f));
+	color = glm::vec3(1.0f, 0.1f, 0.0f);
+	glUniform3f(uColorLoc, abs(color.r), abs(color.g), abs(color.b + (color.r+color.g)/5.0f) * 0.3f);
 	if (dye)
 	{
 		blit(m_dye_buffer->writeBuffer(), &m_splat_shader);
 		m_dye_buffer->swap();
+		//Add density
+		color = glm::vec3(m_density, 0.0f, 0.0f);
+		glUniform3f(uColorLoc, color.r, 0.0f, 0.0f);
+		glUniform1i(m_splat_shader.uniforms["uTarget"], m_density_buffer->readBuffer()->setTexture(0));
+		glUniform2f(uTexLoc, m_density_buffer->readBuffer()->texelSizeX, m_density_buffer->readBuffer()->texelSizeY);
+		blit(m_density_buffer->writeBuffer(), &m_splat_shader);
+		m_density_buffer->swap();
 	}
 }
 
@@ -462,7 +478,7 @@ void FluidField::swapBuffer(int i) {
 	m_primary_shader->use();
 	if (i == 1)
 	{
-		if (m_current_buffer == 0) return;
+		if (m_current_buffer == m_dye_buffer->readBuffer()) return;
 		std::cout << "BUFFER::DYE" << std::endl;
 		m_current_buffer = m_dye_buffer->readBuffer();
 		glUniform1i(m_primary_shader->uniforms["scene"], 0);

@@ -42,7 +42,7 @@ void main(){
 		vec4 pressureTexel = texture(u_image_overlay, vec2(0.5f, 0.5f));
 		float maxP = pressureTexel.x;
 		float minP = pressureTexel.x;
-		float offset = 0.02f;
+		float offset = 0.04f;
 		for(float i = -offset; i < 1 + offset; i += offset){
 			for(float j = -offset; j < 1 + offset; j += offset){
 				vec4 texel = texture(u_image_overlay, vec2(i,j));
@@ -51,6 +51,8 @@ void main(){
 			}
 		}
 		color = getSciColor(color.r, minP, maxP);
+	}else if(scene == 6){
+		color = vec4(color.r, color.r, color.r, color.a);
 	}
 	fragColor = mix(texture(u_image, texCoord), color, 0.9f);
 	//fragColor = texture(u_image, texCoord);
