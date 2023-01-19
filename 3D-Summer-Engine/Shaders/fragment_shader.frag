@@ -34,7 +34,7 @@ void main(){
 	vec2 coord = gl_FragCoord.xy * texelSize;
 	vec4 color = texture(u_image_overlay, texCoord);
 	if((color.g + color.b)/2.f <= 0.0f){ //if g and b are not in use
-		if(color.r < 0){ //show negative red as positive green
+		if(color.r < 0){ //show negative red as positive blue
 			color.b = abs(color.r);
 		}
 	}
@@ -42,7 +42,7 @@ void main(){
 		vec4 pressureTexel = texture(u_image_overlay, vec2(0.5f, 0.5f));
 		float maxP = pressureTexel.x;
 		float minP = pressureTexel.x;
-		float offset = 0.04f;
+		float offset = 0.08f;
 		for(float i = -offset; i < 1 + offset; i += offset){
 			for(float j = -offset; j < 1 + offset; j += offset){
 				vec4 texel = texture(u_image_overlay, vec2(i,j));
@@ -54,7 +54,7 @@ void main(){
 	}else if(scene == 6){
 		color = vec4(color.r, color.r, color.r, color.a);
 	}
-	fragColor = mix(texture(u_image, texCoord), color, 0.9f);
+	fragColor = mix(texture(u_image, texCoord), color, 0.6f);
 	//fragColor = texture(u_image, texCoord);
 	//fragColor = texture(u_image_overlay, vUv) * vec4(vec3(1.0f), 0.5f);
 }

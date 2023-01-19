@@ -124,8 +124,8 @@ void FluidField::boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer* 
 //Advection -> Diffusion -> Force Application -> Projection
 void FluidField::timeStep(float dt) {
 	float time = dt * m_timestep_scalar; 
-	float r = 0.0058f;
-	float streams = 3;
+	float r = 0.0258f;
+	float streams = 1;
 	
 	for (int stream = 0; stream < streams; stream++)
 	{
@@ -192,7 +192,7 @@ void FluidField::temperature(float dt) {
 	int texelLoc = m_temperature_shader.uniforms["texelSize"];
 
 	glUniform1i(uLoc, m_velocity_buffer->readBuffer()->setTexture(0));			//Velocity
-	glUniform1i(tLoc, m_pressure_buffer->readBuffer()->setTexture(1));			//Temp
+	glUniform1i(tLoc, m_pressure_buffer->readBuffer()->setTexture(1));		//Temp
 	glUniform1i(dLoc, m_density_buffer->readBuffer()->setTexture(2));			//Density
 
 	glUniform1f(tempLoc, m_ambient_temperature);
@@ -235,7 +235,7 @@ void FluidField::advect(float dt) {
 	m_dye_buffer->swap();
 
 	//Advect density
-	glUniform1f(dissipationLoc, m_dye_dissipation);
+	glUniform1f(dissipationLoc, m_dye_dissipation*0.7f);
 	glUniform1i(xLoc, m_density_buffer->readBuffer()->setTexture(1)); //x = quantity scalar texture
 	glUniform2f(texelLoc, m_density_buffer->readBuffer()->texelSizeX, m_density_buffer->readBuffer()->texelSizeY);
 	blit(m_density_buffer->writeBuffer(), &m_advection_shader);

@@ -126,6 +126,7 @@ private:
 	const char* p_OBJECT_VERTEX_SHADER					 = "Shaders/object_vertex_shader.vert";
 	const char* p_OBJECT_FRAGMENT_SHADER				 = "Shaders/object_fragment_shader.frag";
 	const char* p_TEXTURE								 = "Images/Generated Images/notGenerated.jpg";
+	const char* p_TEMPERATURE_TEXTURE					 = "Images/Generated Images/temp.png";
 
 	//Framebuffers
 	DoubleFramebuffer* m_velocity_buffer;				//Contains velocities to be advected
@@ -169,19 +170,23 @@ private:
 
 	const float	 m_dye_force							 = 6000.0f;		// Force used to create velocities
 	const float	 m_dye_radius							 = 0.25f;		// Radius of the applicable dye and velocites
-	const float	 m_dye_dissipation						 = 0.1f;		// The rate at which the dye clears from the screen
+	const float	 m_dye_dissipation						 = 0.6f;		// The rate at which the dye clears from the screen
 	const float	 m_velocity_dissipation					 = 0.1f;		// The rate at which the velocities reduces to zero
 	const int	 m_diffuseIterations					 = 30;			// Number of iterations used to calculate proper diffusion of the applied dye or velocities
 	const float	 m_viscosity							 = 0.0f;		// Drag factor of the fluid
 	const int	 m_pressureIterations					 = 60;			// Number of iterations used to calculate more precise pressure fields
-	const float	 m_pressure_dissipation					 = 0.9f;		// TODO: Explain it... What I thought it was (but it is supposedly wrong!): The rate at which the pressure field is cleared
-	const float  m_vortitcity_scalar					 = 15;			// Vorticity scalar
+	const float	 m_pressure_dissipation					 = 0.4f;		// TODO: Explain it... What I thought it was (but it is supposedly wrong!): The rate at which the pressure field is cleared
+	const float  m_vortitcity_scalar					 = 30;			// Vorticity scalar
 	const float	 m_timestep_scalar						 = 1.0f;		// Factor deciding the magnitude of timesteps for each frame.
 	//Experimental
-	const float  m_ambient_temperature					 = 30.0f;		// Ambient temperature in degrees celsius
-	const float  m_temperature_scalar					 = 3.0f;		// Scales the effect that the difference in temperature has on the boyant force
-	const float  m_mass									 = 5.0f;		// Smoke mass (Dye mass)
-	const float  m_density								 = 0.8f;		// Smoke density (Dye density)
+	//const float  m_ambient_temperature					 = 18.0f;		// Ambient temperature in degrees celsius
+	//const float  m_temperature_scalar					 = 10.0f;		// Scales the effect that the difference in temperature has on the boyant force
+	//const float  m_mass									 = 3.0f;		// Smoke mass (Dye mass)
+	//const float  m_density								 = 1.8f;		// Smoke density (Dye density)
+	const float  m_ambient_temperature					 = -10.0f;		// Ambient temperature in degrees celsius
+	const float  m_temperature_scalar					 = 20.0f;		// Scales the effect that the difference in temperature has on the boyant force
+	const float  m_mass									 = 8.0f;		// Smoke mass (Dye mass) //Downforce
+	const float  m_density								 = 0.4f;		// Smoke density (Dye density) //Downforce
 
 	//Visualisation
 	bool					m_showDataVectors;  //TODO
@@ -246,17 +251,19 @@ public:
 		//m_dye_buffer->readBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
 		//m_dye_buffer->writeBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
 		// Velocity
-		m_velocity_buffer = new DoubleFramebuffer(m_resolution, m_WIDTH, m_HEIGHT, rg.internal, rg.format, textureType, GL_LINEAR);
+		m_velocity_buffer = new DoubleFramebuffer(m_resolution*1.5f, m_WIDTH, m_HEIGHT, rg.internal, rg.format, textureType, GL_LINEAR);
 		// Curl
-		m_curl_buffer = new Framebuffer(m_resolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		m_curl_buffer = new Framebuffer(m_resolution*1.5f, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 		// Divergence
-		m_divergence_buffer = new Framebuffer(m_resolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		m_divergence_buffer = new Framebuffer(m_resolution*1.5f, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 		// Pressure
-		m_pressure_buffer = new DoubleFramebuffer(m_resolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		m_pressure_buffer = new DoubleFramebuffer(m_resolution*1.5f, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 		
 		//Experimental
 		// Boyancy and Convection
 		m_temperature_buffer = new DoubleFramebuffer(m_resolution * 2, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		m_temperature_buffer->readBuffer()->setTextureSource(p_TEMPERATURE_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_NEAREST);
+		m_temperature_buffer->writeBuffer()->setTextureSource(p_TEMPERATURE_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_NEAREST);
 		// Smoke and Clouds
 		m_density_buffer = new DoubleFramebuffer(m_resolution * 2, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 

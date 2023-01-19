@@ -13,9 +13,19 @@ uniform float dt;
 void main () {
     
     vec2 coords = gl_FragCoord.xy;
-    float temp = texture(t, coords * texelSize).x; 
+    vec3 tempScalar = texture(t, coords * texelSize).xyz;
+
+    float temp = -tempScalar.x;
+    //if(tempScalar.b > 0){ //Blue values are negative temperatures
+    //    temp = tempScalar.b * -1.0f;
+    //}else if(tempScalar.r > 0){ //Red values are positive temperatures
+    //    temp = tempScalar.r * 1.0f;
+    //}else if (tempScalar.r + tempScalar.b == 0){
+    //    temp = 0;
+    //}
+
     float density = texture(d, coords * texelSize).x; 
-    vec2 j_hat = vec2(0.0f, -1.0f); //Vertical direction
+    vec2 j_hat = vec2(0.0f, 1.0f); //Vertical direction
     vec2 bouyancy_force = (-k * density + s * (temp - T0)) * j_hat;
     
     vec2 velocity = texture(u, coords * texelSize).xy;

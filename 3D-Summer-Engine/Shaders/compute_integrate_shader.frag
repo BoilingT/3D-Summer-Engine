@@ -21,9 +21,9 @@ void main () {
 	//	fragColor = u;
 	//}
 
-	float size = 2000.0f;
+	float size = 700.0f;
 	
-	vec2 pos = vec2(0.5f, 0.6f) / texelSize;
+	vec2 pos = vec2(0.5f, 0.4f) / texelSize;
 
 	fragColor = u + value;
 
