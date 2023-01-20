@@ -310,7 +310,7 @@ private:
 	void bufferIntegrate(DoubleFramebuffer* target, glm::vec4 value);
 	void advect(float dt);
 	void diffuse(float dt);
-	void addForces(float dt); //TODO
+	void addForces(float dt);
 	void project(float dt);
 
 	void boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer* target, Shader& shader);

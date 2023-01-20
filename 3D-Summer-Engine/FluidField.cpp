@@ -124,23 +124,9 @@ void FluidField::boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer* 
 //Advection -> Diffusion -> Force Application -> Projection
 void FluidField::timeStep(float dt) {
 	float time = dt * m_timestep_scalar; 
-	float r = 0.0258f;
-	float streams = 11;
-	
-	for (int stream = 0; stream < streams; stream++)
-	{
-		splat(glm::vec2((1.0f) / streams * ((stream + 1.0f)) - ((1.0f) / streams / 2.0f), 0.1f), r, true, false);
-		//splat(glm::vec2(0.1f, 1.0f - (1.0f) / streams * ((stream + 1.0f)) + ((1.0f) / streams / 2.0f)), r, true, false);
-	}
-	m_integrate_shader.use();
-	//float o = 0.8f;
-	//float value = (sin(glfwGetTime() * 0.1f) + 1) / 2.0f * o + (1 - o) / 2.0f;
-	//glUniform1f(m_integrate_shader.uniforms["time"], value);
-	//bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -40.82f, 0.0f, 0.0f) * dt);
-	temperature(time);
 	advect(time);
 	diffuse(time);
-	//addForces(time);
+	addForces(time);
 	project(time);
 }
 
@@ -286,8 +272,20 @@ void FluidField::diffuse(float dt) {
 
 //Force Application
 void FluidField::addForces(float dt) {
-	//blit(m_velocity_buffer->writeBuffer(), &m_force_shader);
-	//m_velocity_buffer->swap();
+	float r = 0.0258f;
+	float streams = 11;
+
+	for (int stream = 0; stream < streams; stream++)
+	{
+		splat(glm::vec2((1.0f) / streams * ((stream + 1.0f)) - ((1.0f) / streams / 2.0f), 0.1f), r, true, false);
+		//splat(glm::vec2(0.1f, 1.0f - (1.0f) / streams * ((stream + 1.0f)) + ((1.0f) / streams / 2.0f)), r, true, false);
+	}
+	m_integrate_shader.use();
+	//float o = 0.8f;
+	//float value = (sin(glfwGetTime() * 0.1f) + 1) / 2.0f * o + (1 - o) / 2.0f;
+	//glUniform1f(m_integrate_shader.uniforms["time"], value);
+	//bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -40.82f, 0.0f, 0.0f) * dt);
+	temperature(dt);
 }
 
 //Projection, by removing any divergence
