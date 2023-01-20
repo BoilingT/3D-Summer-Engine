@@ -125,7 +125,7 @@ void FluidField::boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer* 
 void FluidField::timeStep(float dt) {
 	float time = dt * m_timestep_scalar; 
 	float r = 0.0258f;
-	float streams = 12;
+	float streams = 11;
 	
 	for (int stream = 0; stream < streams; stream++)
 	{

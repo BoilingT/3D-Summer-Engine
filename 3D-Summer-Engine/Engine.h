@@ -48,12 +48,9 @@ private:
 	const char* p_CONTAINER_IMAGE							 = "Images/LearnOpenGL/container.jpg";
 	const char* p_AWESOMEFACE_IMAGE							 = "Images/LearnOpenGL/awesomeface.png";
 
-	//Shader m_shader;										//Used to render to the screen
+	//Shader m_shader;										//Used to render to the screen	
 
-	//dT
-	float g_deltaTime										 = 0.0f;
-	float g_lastTime										 = 0.0f;
-	float g_lastTime2										 = 0.0f;
+	float g_deltaTime = 0.0f;
 
 	//Fluid Simulation
 	const int c_RESOLUTION									 = 256; // aka Gridarea
