@@ -191,9 +191,9 @@ void FluidField::temperature(float dt) {
 	int dtLoc = m_temperature_shader.uniforms["dt"];
 	int texelLoc = m_temperature_shader.uniforms["texelSize"];
 
-	glUniform1i(uLoc, m_velocity_buffer->readBuffer()->setTexture(0));			//Velocity
+	glUniform1i(uLoc, m_velocity_buffer->readBuffer()->setTexture(0));		//Velocity
 	glUniform1i(tLoc, m_pressure_buffer->readBuffer()->setTexture(1));		//Temp
-	glUniform1i(dLoc, m_density_buffer->readBuffer()->setTexture(2));			//Density
+	glUniform1i(dLoc, m_density_buffer->readBuffer()->setTexture(2));		//Density
 
 	glUniform1f(tempLoc, m_ambient_temperature);
 	glUniform1f(massLoc, m_mass);

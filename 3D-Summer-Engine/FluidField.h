@@ -186,7 +186,7 @@ private:
 	const float  m_ambient_temperature					 = -10.0f;		// Ambient temperature in degrees celsius
 	const float  m_temperature_scalar					 = 20.0f;		// Scales the effect that the difference in temperature has on the boyant force
 	const float  m_mass									 = 8.0f;		// Smoke mass (Dye mass) //Downforce
-	const float  m_density								 = 0.4f;		// Smoke density (Dye density) //Downforce
+	const float  m_density								 = 0.6f;		// Smoke density (Dye density) //Downforce
 
 	//Visualisation
 	bool					m_showDataVectors;  //TODO
