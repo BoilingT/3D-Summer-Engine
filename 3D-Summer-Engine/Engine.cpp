@@ -75,41 +75,55 @@ void Engine::Run() {
 	std::cout << "STARTING::ENGINE" << std::endl;
 	glfwSetWindowTitle(m_window->getWindow(), "Starting Engine...");
 
+	float g_lastTime = glfwGetTime();
+	float g_lastTime2 = g_lastTime;
 	int frames = 0;
 	int fps = 0;
 	double TPF = 0;
-	int maxFps = 0;
+	float averageDT = 0;
+	float dtTotal = 0;
 	float sleepTime = 0;
-	
+	double currentTime = glfwGetTime();
+	double precision = 1.0f / 144.0f;
+	double timeStep = TPF * 1.0f / 1000.0f;
+	int steps = 0;
+	glfwSwapInterval(0);
 	//Rect plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
 
 	//glm::vec3 origin = glm::vec3(-c_WIDTH / 2.f, c_HEIGHT / 2.f, 0);
 
 	glm::vec3 origin = glm::vec3(0, 0, 0);
 	
-	std::cout << "STARTING::RENDER::LOOP" << std::endl;
+	std::cout << "ENTERING::RENDER::LOOP" << std::endl;
 	glfwSetWindowTitle(m_window->getWindow(), "Started rendering loop...");
 	
-	g_lastTime = glfwGetTime();
-	g_lastTime2 = glfwGetTime();
 	while (!glfwWindowShouldClose(m_window->getWindow()))
 	{
-		double currentTime = glfwGetTime();
-		g_deltaTime = currentTime - g_lastTime;
+		currentTime = glfwGetTime();
+		g_deltaTime = currentTime - g_lastTime - sleepTime/1000.0f;
 		g_lastTime = glfwGetTime();
 		frames++;
+		dtTotal += g_deltaTime;
 
-		sleepTime = 1000.0f / (144.0f * 6.99f) - 0*g_deltaTime / 1.0f;
-		std::string title = "FPS: " + std::to_string(fps) + " dT: " + std::to_string(g_deltaTime*1000.0f) + "ms TPF: " + std::to_string(TPF) + "ms";
+		sleepTime = (1.0f / 144.0f - g_deltaTime) * 1000; //ms
+		timeStep = TPF / 1000.0f; //s
+
+		if (sleepTime < 0)
+		{
+			sleepTime = 0;
+		}
+
+		std::string title = "FPS: " + std::to_string(fps) + " dT: " + std::to_string(g_deltaTime*1000.0f) + "ms avg dT: " + std::to_string(averageDT*1000.0f) + "ms TPF: " + std::to_string(TPF) + " precision: " + std::to_string(precision * 1000) + "ms";
 		if (currentTime - g_lastTime2 >= 1.f)
 		{
 			//double TPF = 1000.0 / (double)frames;
 			//std::cout << TPF << "ms/frame" << std::endl;
 			TPF = 1000.0 / (double)frames;
-			fps = frames/(currentTime - g_lastTime2);
-			maxFps = fps > maxFps ? fps : maxFps;
+			fps = frames/(currentTime - g_lastTime2-sleepTime/1000.0f + steps * precision);
+			averageDT = (double)dtTotal/(double)frames;
 			frames = 0;
-			//sleepTime = 1000.f / 60.f;// -(currentTime - g_lastTime2) * 1000.0f;
+			dtTotal = 0;
+			//sleepTime = 1000.f / 60.0f -(currentTime - g_lastTime2) * 2.0f;
 			g_lastTime2 += 1.f;
 			glfwSetWindowTitle(m_window->getWindow(), title.c_str());
 		}
@@ -144,7 +158,24 @@ void Engine::Run() {
 		double val = sin(timeValue / 2);
 		
 		m_fluid->updateMouse(&g_lastX, &g_lastY, &g_mouseDown);
-		m_fluid->timeStep(g_deltaTime);
+		double tpf = g_deltaTime + sleepTime / 1000.0f;
+		//Step forward in time until it has accounted for the number of steps lost by lag
+ 		if (tpf > precision)
+		{
+			float ratio = tpf / precision;
+			steps = ratio;
+			for (unsigned int i = 0; i < steps; i++)
+			{
+				m_fluid->timeStep(precision);
+			}
+		}
+		else
+		{	
+			//Travel forward in time only if the frame time is equal or higher than the desired precision framerate
+			float ratio = tpf / precision;
+			m_fluid->timeStep(precision * ratio);
+		}
+
 		m_fluid->Draw(origin);
 		//m_fluid->DrawCellField(origin);
 		
@@ -168,6 +199,7 @@ void Engine::Run() {
 		}
 
 	}
+	std::cout << "EXITED::RENDER::LOOP" << std::endl;
 	return;
 }
 
