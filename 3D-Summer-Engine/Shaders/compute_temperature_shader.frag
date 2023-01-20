@@ -26,7 +26,7 @@ void main () {
 
     float density = texture(d, coords * texelSize).x; 
     vec2 j_hat = vec2(0.0f, 1.0f); //Vertical direction
-    vec2 bouyancy_force = (-k * density + s * (temp - T0)) * j_hat;
+    vec2 bouyancy_force = (-k * density + s * (0.0f - T0)) * j_hat;
     
     vec2 velocity = texture(u, coords * texelSize).xy;
     velocity += bouyancy_force * dt;

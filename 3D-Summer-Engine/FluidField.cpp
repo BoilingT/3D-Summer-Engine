@@ -125,7 +125,7 @@ void FluidField::boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer* 
 void FluidField::timeStep(float dt) {
 	float time = dt * m_timestep_scalar; 
 	float r = 0.0258f;
-	float streams = 1;
+	float streams = 12;
 	
 	for (int stream = 0; stream < streams; stream++)
 	{
@@ -136,7 +136,7 @@ void FluidField::timeStep(float dt) {
 	//float o = 0.8f;
 	//float value = (sin(glfwGetTime() * 0.1f) + 1) / 2.0f * o + (1 - o) / 2.0f;
 	//glUniform1f(m_integrate_shader.uniforms["time"], value);
-	//bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -40.82f*0, 0.0f, 0.0f) * dt);
+	//bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -40.82f, 0.0f, 0.0f) * dt);
 	temperature(time);
 	advect(time);
 	diffuse(time);
@@ -235,7 +235,7 @@ void FluidField::advect(float dt) {
 	m_dye_buffer->swap();
 
 	//Advect density
-	glUniform1f(dissipationLoc, m_dye_dissipation*0.7f);
+	glUniform1f(dissipationLoc, m_dye_dissipation);
 	glUniform1i(xLoc, m_density_buffer->readBuffer()->setTexture(1)); //x = quantity scalar texture
 	glUniform2f(texelLoc, m_density_buffer->readBuffer()->texelSizeX, m_density_buffer->readBuffer()->texelSizeY);
 	blit(m_density_buffer->writeBuffer(), &m_advection_shader);
@@ -427,9 +427,15 @@ void FluidField::splat(glm::vec2 pos, float r, bool dye, bool velocity) {
 
 	glUniform1i(m_splat_shader.uniforms["uTarget"], m_dye_buffer->readBuffer()->setTexture(0));
 	glUniform2f(uTexLoc, m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
-	glm::vec3 color = glm::vec3(m_mouse.texcoord_delta.x * m_dye_force /100.f, m_mouse.texcoord_delta.y * m_dye_force / 100.f, 0.2f);
-	color *= 0.5f;
-	color = glm::vec3(1.0f, 0.1f, 0.0f);
+
+	glm::vec3 color = glm::vec3(0.0f);
+	if (m_dye_color_acc_dependent) {
+		color = glm::vec3(m_mouse.texcoord_delta.x * m_dye_force /100.f, m_mouse.texcoord_delta.y * m_dye_force / 100.f, 0.2f);
+		color *= 0.5f;
+	}
+	else {
+		color = glm::vec3(m_dye_color[0], m_dye_color[1], m_dye_color[2]);
+	}
 	glUniform3f(uColorLoc, abs(color.r), abs(color.g), abs(color.b + (color.r+color.g)/5.0f) * 0.3f);
 	if (dye)
 	{
