@@ -172,14 +172,14 @@ private:
 	const float	 m_dye_color[3]							 = { 1.0f, 0.2f, 0.0f };
 	const float	 m_dye_force							 = 6000.0f;		// Force used to create velocities
 	const float	 m_dye_radius							 = 0.25f;		// Radius of the applicable dye and velocites
-	const float	 m_dye_dissipation						 = 0.8f;		// The rate at which the dye clears from the screen
+	const float	 m_dye_dissipation						 = 0.6f;		// The rate at which the dye clears from the screen
 	const float	 m_velocity_dissipation					 = 0.1f;		// The rate at which the velocities reduces to zero
 	const int	 m_diffuseIterations					 = 30;			// Number of iterations used to calculate proper diffusion of the applied dye or velocities
 	const float	 m_viscosity							 = 0.0f;		// Drag factor of the fluid
 	const int	 m_pressureIterations					 = 60;			// Number of iterations used to calculate more precise pressure fields
 	const float	 m_pressure_dissipation					 = 0.9f;		// TODO: Explain it... What I thought it was (but it is supposedly wrong!): The rate at which the pressure field is cleared
 	const float  m_vortitcity_scalar					 = 30;			// Vorticity scalar
-	const float	 m_timestep_scalar						 = 1.0f;		// Factor deciding the magnitude of timesteps for each frame.
+	const float	 m_timestep_scalar						 = 0.95f;		// Factor deciding the magnitude of timesteps for each frame.
 	//Experimental
 	//const float  m_ambient_temperature					 = 18.0f;		// Ambient temperature in degrees celsius
 	//const float  m_temperature_scalar					 = 10.0f;		// Scales the effect that the difference in temperature has on the boyant force
