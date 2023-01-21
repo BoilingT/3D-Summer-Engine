@@ -11,7 +11,7 @@ void FluidField::Draw(glm::vec3 origin) {
 	glUniform1f(m_primary_shader->uniforms["u_time"], (GLfloat) glfwGetTime());
 
 	glUniform1i(m_primary_shader->uniforms["u_image"], m_dye_buffer->readBuffer()->setTexture(0));
-	if (m_current_buffer != nullptr)
+	if (m_current_buffer != m_dye_buffer->readBuffer())
 	{
 		glUniform1i(m_primary_shader->uniforms["u_image_overlay"], m_current_buffer->setTexture(1));
 		glUniform2f(m_primary_shader->uniforms["texelSize"], m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
