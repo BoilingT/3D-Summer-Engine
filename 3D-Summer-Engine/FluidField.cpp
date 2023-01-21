@@ -433,6 +433,7 @@ void FluidField::splat(glm::vec2 pos, float r, bool dye, bool velocity) {
 	}
 	else {
 		color = glm::vec3(m_dye_color[0], m_dye_color[1], m_dye_color[2]);
+		color *= 0.5f;
 	}
 	glUniform3f(uColorLoc, abs(color.r), abs(color.g), abs(color.b + (color.r+color.g)/5.0f) * 0.3f);
 	if (dye)
