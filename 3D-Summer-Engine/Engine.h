@@ -29,6 +29,9 @@ public:
 	static bool g_firstMouseEnter;
 	static bool g_mouse_constrain;
 
+	//Fluid simulation
+	static unsigned int g_running;
+
 private:
 	WindowHandler*		m_window;
 	Camera*				m_camera;
@@ -49,11 +52,14 @@ private:
 	const char* p_AWESOMEFACE_IMAGE							 = "Images/LearnOpenGL/awesomeface.png";
 
 	//Shader m_shader;										//Used to render to the screen	
+	
+	//Engine Properties
+	float g_deltaTime										 = 0.0f;
+	float g_fps_limit										 = 144.0f;
 
-	float g_deltaTime = 0.0f;
-
-	//Fluid Simulation
+	//Fluid Simulation Properties
 	const int c_RESOLUTION									 = 256; // aka Gridarea
+	const float c_precision									 = 1.0f / 144.0f;
 
 public:
 
@@ -92,6 +98,7 @@ public:
 private:
 	static void FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow* window, int width, int height);
 	static void MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos);
+	static void KEY_CALLBACK(GLFWwindow* window, int key, int scancode, int action, int mods);
 	void IO_EVENTS(GLFWwindow* window);
 };
 

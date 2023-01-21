@@ -10,6 +10,7 @@ double Engine::g_lastY				 = 0;
 bool Engine::g_mouseDown			 = 0;
 bool Engine::g_firstMouseEnter		 = 0;
 bool Engine::g_mouse_constrain		 = true;
+unsigned int Engine::g_running		 = false;
 
 void Engine::Init()
 {
@@ -25,13 +26,13 @@ void Engine::Init()
 		std::cout << "ERROR :: Unable to initialize GLAD";
 		return;
 	}
-	
 	//glEnable(GL_DEPTH_TEST);
 
 	//Set the viewport size
 	glViewport(0, 0, c_WIDTH, c_HEIGHT);
 	//Resize the viewport when the window size is changed
 	glfwSetFramebufferSizeCallback(m_window->getWindow(), FRAME_BUFFER_SIZE_CALLBACK);
+	glfwSetKeyCallback(m_window->getWindow(), KEY_CALLBACK);
 	//Mouse Events
 	glfwSetCursorPosCallback(m_window->getWindow(), MOUSE_CALLBACK);
 	//Key Events
@@ -84,8 +85,6 @@ void Engine::Run() {
 	float dtTotal = 0;
 	float sleepTime = 0;
 	double currentTime = glfwGetTime();
-	double precision = 1.0f / 144.0f;
-	double timeStep = TPF * 1.0f / 1000.0f;
 	int steps = 0;
 	glfwSwapInterval(0);
 	//Rect plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
@@ -96,6 +95,8 @@ void Engine::Run() {
 	
 	std::cout << "ENTERING::RENDER::LOOP" << std::endl;
 	glfwSetWindowTitle(m_window->getWindow(), "Started rendering loop...");
+
+	Engine::g_running = !glfwWindowShouldClose(m_window->getWindow());
 	
 	while (!glfwWindowShouldClose(m_window->getWindow()))
 	{
@@ -105,21 +106,20 @@ void Engine::Run() {
 		frames++;
 		dtTotal += g_deltaTime;
 
-		sleepTime = (1.0f / 144.0f - g_deltaTime) * 1000; //ms
-		timeStep = TPF / 1000.0f; //s
+		sleepTime = (1.0f / g_fps_limit - g_deltaTime) * 1000; //ms
 
 		if (sleepTime < 0)
 		{
 			sleepTime = 0;
 		}
 
-		std::string title = "FPS: " + std::to_string(fps) + " dT: " + std::to_string(g_deltaTime*1000.0f) + "ms avg dT: " + std::to_string(averageDT*1000.0f) + "ms TPF: " + std::to_string(TPF) + " precision: " + std::to_string(precision * 1000) + "ms";
+		std::string title = "FPS: " + std::to_string(fps) + " dT: " + std::to_string(g_deltaTime*1000.0f) + "ms avg dT: " + std::to_string(averageDT*1000.0f) + "ms TPF: " + std::to_string(TPF) + " precision: " + std::to_string(c_precision * 1000) + "ms";
 		if (currentTime - g_lastTime2 >= 1.f)
 		{
 			//double TPF = 1000.0 / (double)frames;
 			//std::cout << TPF << "ms/frame" << std::endl;
 			TPF = 1000.0 / (double)frames;
-			fps = frames/(currentTime - g_lastTime2-sleepTime/1000.0f + steps * precision);
+			fps = frames/(currentTime - g_lastTime2-sleepTime/1000.0f + steps * c_precision);
 			averageDT = (double)dtTotal/(double)frames;
 			frames = 0;
 			dtTotal = 0;
@@ -160,22 +160,24 @@ void Engine::Run() {
 		m_fluid->updateMouse(&g_lastX, &g_lastY, &g_mouseDown);
 		double tpf = g_deltaTime + sleepTime / 1000.0f;
 		//Step forward in time until it has accounted for the number of steps lost by lag
- 		if (tpf > precision)
+		if (Engine::g_running)
 		{
-			float ratio = tpf / precision;
-			steps = ratio;
-			for (unsigned int i = 0; i < steps; i++)
+			if (tpf > c_precision)
 			{
-				m_fluid->timeStep(precision);
+				float ratio = tpf / c_precision;
+				steps = ratio;
+				for (unsigned int i = 0; i < steps; i++)
+				{
+					m_fluid->timeStep(c_precision);
+				}
+			}
+			else
+			{
+				//Travel forward in time only if the frame time is equal or higher than the desired precision framerate
+				float ratio = tpf / c_precision;
+				m_fluid->timeStep(c_precision * ratio);
 			}
 		}
-		else
-		{	
-			//Travel forward in time only if the frame time is equal or higher than the desired precision framerate
-			float ratio = tpf / precision;
-			m_fluid->timeStep(precision * ratio);
-		}
-
 		m_fluid->Draw(origin);
 		//m_fluid->DrawCellField(origin);
 		
@@ -257,6 +259,8 @@ void Engine::IO_EVENTS(GLFWwindow* window) {
 	float cameraSpeed = 2.5f;
 
 	const float cameraSensitivity = m_camera->sensitivity * g_deltaTime;
+	float time = glfwGetTime(); //Seconds
+	float passed_time = 0;
 
 	//Dye
 	if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
@@ -293,6 +297,13 @@ void Engine::IO_EVENTS(GLFWwindow* window) {
 	{
 		m_fluid->swapBuffer(7);
 	}
+	//Step forward a single timestep
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && Engine::g_running == false)
+	{
+		m_fluid->timeStep(c_precision);
+	}
+
+	/*
 	//Forward
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
@@ -341,6 +352,7 @@ void Engine::IO_EVENTS(GLFWwindow* window) {
 	{
 		m_camera->rotate(glm::vec3(1.0f, 0.0f, 0.0f) * -cameraSensitivity);
 	}
+	*/
 }
 
 void Engine::MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos) {
@@ -381,4 +393,12 @@ void Engine::MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos) {
 
 void Engine::FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
+}
+
+void Engine::KEY_CALLBACK(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	if ((key == GLFW_KEY_PAUSE || key == GLFW_KEY_0) && action == GLFW_PRESS)
+	{
+		std::cout << "Running: " << g_running << std::endl;
+		Engine::g_running = !g_running;
+	}
 }
