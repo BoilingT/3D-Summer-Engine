@@ -178,7 +178,7 @@ private:
 	const float	 m_viscosity							 = 0.0f;		// Drag factor of the fluid
 	const int	 m_pressureIterations					 = 60;			// Number of iterations used to calculate more precise pressure fields
 	const float	 m_pressure_dissipation					 = 0.9f;		// TODO: Explain it... What I thought it was (but it is supposedly wrong!): The rate at which the pressure field is cleared
-	const float  m_vortitcity_scalar					 = 0;			// Vorticity scalar
+	const float  m_vortitcity_scalar					 = 30;			// Vorticity scalar
 	const float	 m_timestep_scalar						 = 0.95f;		// Factor deciding the magnitude of timesteps for each frame.
 	//Experimental
 	//const float  m_ambient_temperature					 = 18.0f;		// Ambient temperature in degrees celsius

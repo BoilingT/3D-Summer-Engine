@@ -55,7 +55,7 @@ private:
 	
 	//Engine Properties
 	float g_deltaTime										 = 0.0f;
-	float g_fps_limit										 = 10.0f;
+	float g_fps_limit										 = 144.0f;
 	float g_pc_time											 = 0.0f;
 	bool  g_result_saved									 = false;
 

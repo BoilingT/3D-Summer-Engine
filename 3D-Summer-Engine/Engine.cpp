@@ -140,11 +140,12 @@ void Engine::Run() {
 			
 			glfwSetWindowTitle(m_window->getWindow(), title.c_str());
 		}
-		if (simulationTime >= 10 && g_running)
+		if (simulationTime >= 10 && g_running && !g_result_saved)
 		{
 			std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-fps" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound);
 			std::string path = "C:/Users/tobbe/Pictures/simulated flow/result" + filename + ".png";
 			saveImage(path.c_str(), m_window->getWindow());
+			g_result_saved = true;
 			Engine::g_running = false;
 			g_pc_time = 0.0f;
 			engineTime = 0.0f;
