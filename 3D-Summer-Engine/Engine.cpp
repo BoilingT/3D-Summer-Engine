@@ -124,7 +124,7 @@ void Engine::Run() {
 			//double TPF = 1000.0 / (double)frames;
 			//std::cout << TPF << "ms/frame" << std::endl;
 			TPF = 1000.0 / (double)frames;
-			fps = frames/(currentTime - g_lastTime2-sleepTime/1000.0f + steps * c_precision);
+			fps = frames/(currentTime - g_lastTime2-sleepTime/1000.0f);
 			averageDT = (double)dtTotal/(double)frames;
 			frames = 0;
 			dtTotal = 0;
