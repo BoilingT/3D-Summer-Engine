@@ -54,7 +54,7 @@ void main(){
 	}else if(scene == 6){
 		color = vec4(color.r, color.r, color.r, color.a);
 	}
-	fragColor = mix(texture(u_image, texCoord), color, 0.6f);
+	fragColor = mix(texture(u_image, texCoord), color, 0.9f);
 	//fragColor = texture(u_image, texCoord);
 	//fragColor = texture(u_image_overlay, vUv) * vec4(vec3(1.0f), 0.5f);
 }

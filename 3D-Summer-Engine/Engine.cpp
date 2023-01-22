@@ -27,7 +27,9 @@ void Engine::Init()
 		return;
 	}
 	//glEnable(GL_DEPTH_TEST);
-
+	g_pc_time = glfwGetTime();
+	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	g_fps_limit = mode->refreshRate;
 	//Set the viewport size
 	glViewport(0, 0, c_WIDTH, c_HEIGHT);
 	//Resize the viewport when the window size is changed
@@ -98,6 +100,10 @@ void Engine::Run() {
 
 	Engine::g_running = !glfwWindowShouldClose(m_window->getWindow());
 	
+	float simulationTime = 0.0f;
+	float engineTime = 0.0;
+	float timeRatio = 1.0f;
+
 	while (!glfwWindowShouldClose(m_window->getWindow()))
 	{
 		currentTime = glfwGetTime();
@@ -113,7 +119,7 @@ void Engine::Run() {
 			sleepTime = 0;
 		}
 
-		std::string title = "FPS: " + std::to_string(fps) + " dT: " + std::to_string(g_deltaTime*1000.0f) + "ms avg dT: " + std::to_string(averageDT*1000.0f) + "ms TPF: " + std::to_string(TPF) + " precision: " + std::to_string(c_precision * 1000) + "ms";
+		std::string title = "FPS: " + std::to_string(fps) + " dT: " + std::to_string(g_deltaTime*1000.0f) + "ms avg dT: " + std::to_string(averageDT*1000.0f) + "ms TPF: " + std::to_string(TPF) + " time ratio: " + std::to_string(timeRatio);
 		if (currentTime - g_lastTime2 >= 1.f)
 		{
 			//double TPF = 1000.0 / (double)frames;
@@ -125,7 +131,24 @@ void Engine::Run() {
 			dtTotal = 0;
 			//sleepTime = 1000.f / 60.0f -(currentTime - g_lastTime2) * 2.0f;
 			g_lastTime2 += 1.f;
+
+			if (engineTime > 0)
+			{
+				timeRatio = simulationTime / engineTime;
+			}
+			std::cout << "Simulation: " << simulationTime << "s Engine: " << engineTime << "s PC: " << currentTime - g_pc_time << std::endl;
+			
 			glfwSetWindowTitle(m_window->getWindow(), title.c_str());
+		}
+		if (simulationTime >= 10 && g_running)
+		{
+			std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-fps" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound);
+			std::string path = "C:/Users/tobbe/Pictures/simulated flow/result" + filename + ".png";
+			saveImage(path.c_str(), m_window->getWindow());
+			Engine::g_running = false;
+			g_pc_time = 0.0f;
+			engineTime = 0.0f;
+			simulationTime = 0.0f;
 		}
 
 		IO_EVENTS(m_window->getWindow());
@@ -162,21 +185,41 @@ void Engine::Run() {
 		//Step forward in time until it has accounted for the number of steps lost by lag
 		if (Engine::g_running)
 		{
-			if (tpf > c_precision)
+			if (c_precision_bound)
 			{
-				float ratio = tpf / c_precision;
-				steps = ratio;
-				for (unsigned int i = 0; i < steps; i++)
+				if (tpf > c_precision) //The engine is running slower than the simulator
 				{
-					m_fluid->timeStep(c_precision);
+					float ratio = tpf / c_precision;
+					steps = ratio;
+					float c = 1 + (ratio - steps)/steps;
+					for (unsigned int i = 0; i < steps; i++)
+					{
+						m_fluid->timeStep(c_precision * c);
+					}
+					simulationTime += c_precision * c * steps;
+				}
+				else //The engine is running faster than the simulator
+				{
+					float ratio = tpf / c_precision;  //How much faster the simulation is than the engine
+					//Calulate how much faster the simulator is going measured in steps
+					//m_fluid->timeStep(c_precision);
+					m_fluid->timeStep(c_precision * ratio);
+					simulationTime += c_precision * ratio;
+					//simulationTime += tpf;
 				}
 			}
 			else
 			{
-				//Travel forward in time only if the frame time is equal or higher than the desired precision framerate
-				float ratio = tpf / c_precision;
-				m_fluid->timeStep(c_precision * ratio);
+				m_fluid->timeStep(c_precision);
+				simulationTime += c_precision;
+				//m_fluid->timeStep(tpf);
 			}
+			engineTime += tpf;
+		}
+		else
+		{
+			engineTime = 0;
+			simulationTime = 0;
 		}
 		m_fluid->Draw(origin);
 		//m_fluid->DrawCellField(origin);

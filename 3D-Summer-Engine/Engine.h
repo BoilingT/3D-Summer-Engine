@@ -55,11 +55,14 @@ private:
 	
 	//Engine Properties
 	float g_deltaTime										 = 0.0f;
-	float g_fps_limit										 = 144.0f;
+	float g_fps_limit										 = 10.0f;
+	float g_pc_time											 = 0.0f;
+	bool  g_result_saved									 = false;
 
 	//Fluid Simulation Properties
-	const int c_RESOLUTION									 = 256; // aka Gridarea
-	const float c_precision									 = 1.0f / 144.0f;
+	const int   c_RESOLUTION								 = 256;		//aka Gridarea
+	const float c_precision									 = 1.0f / 144.0f;	//Simulator speed
+	const bool  c_precision_bound							 = true;			//If the simulator should account for time lost by lag
 
 public:
 

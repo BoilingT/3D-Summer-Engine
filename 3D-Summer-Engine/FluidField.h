@@ -178,7 +178,7 @@ private:
 	const float	 m_viscosity							 = 0.0f;		// Drag factor of the fluid
 	const int	 m_pressureIterations					 = 60;			// Number of iterations used to calculate more precise pressure fields
 	const float	 m_pressure_dissipation					 = 0.9f;		// TODO: Explain it... What I thought it was (but it is supposedly wrong!): The rate at which the pressure field is cleared
-	const float  m_vortitcity_scalar					 = 30;			// Vorticity scalar
+	const float  m_vortitcity_scalar					 = 0;			// Vorticity scalar
 	const float	 m_timestep_scalar						 = 0.95f;		// Factor deciding the magnitude of timesteps for each frame.
 	//Experimental
 	//const float  m_ambient_temperature					 = 18.0f;		// Ambient temperature in degrees celsius
@@ -187,7 +187,7 @@ private:
 	//const float  m_density								 = 1.8f;		// Smoke density (Dye density)
 	const float  m_ambient_temperature					 = -7.0f;		// Ambient temperature in degrees celsius
 	const float  m_temperature_scalar					 = 25.0f;		// Scales the effect that the difference in temperature has on the boyant force
-	const float  m_mass									 = 12.0f;		// Smoke mass (Dye mass) //Downforce
+	const float  m_mass									 = 10.0f;		// Smoke mass (Dye mass) //Downforce
 	const float  m_density								 = 0.6f;		// Smoke density (Dye density) //Downforce
 
 	//Visualisation
