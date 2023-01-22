@@ -103,7 +103,6 @@ void Engine::Run() {
 	float simulationTime = 0.0f;
 	float engineTime = 0.0;
 	float timeRatio = 1.0f;
-
 	while (!glfwWindowShouldClose(m_window->getWindow()))
 	{
 		currentTime = glfwGetTime();
@@ -136,15 +135,15 @@ void Engine::Run() {
 			{
 				timeRatio = simulationTime / engineTime;
 			}
-			std::cout << "Simulation: " << simulationTime << "s Engine: " << engineTime << "s PC: " << currentTime - g_pc_time << std::endl;
+			std::cout << "Simulation: " << simulationTime << "s Engine: " << engineTime << "s PC: " << currentTime - g_pc_time << "s Steps: " << steps << std::endl;
 			
 			glfwSetWindowTitle(m_window->getWindow(), title.c_str());
 		}
 		if (simulationTime >= 10 && g_running)
 		{
-			if (!g_result_saved)
+			if (!g_result_saved && g_save_result)
 			{
-				std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-fps" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound);
+				std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-hz" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound);
 				std::string path = "C:/Users/tobbe/Pictures/simulated flow/result" + filename + ".png";
 				saveImage(path.c_str(), m_window->getWindow());
 				g_result_saved = true;
@@ -185,6 +184,11 @@ void Engine::Run() {
 		
 		m_fluid->updateMouse(&g_lastX, &g_lastY, &g_mouseDown);
 		double tpf = g_deltaTime + sleepTime / 1000.0f;
+		if (tpf < 0)
+		{
+			tpf = 0;
+			std::cout << "TPF < 0!" << std::endl;
+		}
 		//Step forward in time until it has accounted for the number of steps lost by lag
 		if (Engine::g_running)
 		{
@@ -192,7 +196,7 @@ void Engine::Run() {
 			{
 				if (tpf > c_precision) //The engine is running slower than the simulator
 				{
-					float ratio = tpf / c_precision;
+					float ratio = (tpf) / c_precision;
 					steps = ratio;
 					float c = 1 + (ratio - steps)/steps;
 					for (unsigned int i = 0; i < steps; i++)
