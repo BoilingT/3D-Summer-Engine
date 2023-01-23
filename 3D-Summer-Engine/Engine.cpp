@@ -28,8 +28,11 @@ void Engine::Init()
 	}
 	//glEnable(GL_DEPTH_TEST);
 	g_pc_time = glfwGetTime();
-	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	g_fps_limit = mode->refreshRate;
+	if (g_fps_limit <= 0)
+	{
+		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		g_fps_limit = mode->refreshRate;
+	}
 	//Set the viewport size
 	glViewport(0, 0, c_WIDTH, c_HEIGHT);
 	//Resize the viewport when the window size is changed
@@ -102,6 +105,7 @@ void Engine::Run() {
 	
 	float simulationTime = 0.0f;
 	float engineTime = 0.0;
+	float savedTime = 0.0f;
 	float timeRatio = 1.0f;
 	while (!glfwWindowShouldClose(m_window->getWindow()))
 	{
@@ -113,7 +117,7 @@ void Engine::Run() {
 
 		sleepTime = (1.0f / g_fps_limit - g_deltaTime) * 1000; //ms
 
-		if (sleepTime < 0)
+		if (sleepTime < 0 || g_fps_limit <= 0)
 		{
 			sleepTime = 0;
 		}
@@ -135,7 +139,7 @@ void Engine::Run() {
 			{
 				timeRatio = simulationTime / engineTime;
 			}
-			std::cout << "Simulation: " << simulationTime << "s Engine: " << engineTime << "s PC: " << currentTime - g_pc_time << "s Steps: " << steps << std::endl;
+			std::cout << "Simulation: " << simulationTime << "s Engine: " << engineTime << "s PC: " << currentTime - g_pc_time << "s Steps: " << steps << " Saved: " << savedTime*1000 << "ms" << std::endl;
 			
 			glfwSetWindowTitle(m_window->getWindow(), title.c_str());
 		}
@@ -199,11 +203,17 @@ void Engine::Run() {
 					float ratio = (tpf) / c_precision;
 					steps = ratio;
 					float c = 1 + (ratio - steps)/steps;
+					savedTime = 0;
 					for (unsigned int i = 0; i < steps; i++)
 					{
 						m_fluid->timeStep(c_precision * c);
+						simulationTime += c_precision * c;
+						if (i > 0)
+						{
+							savedTime += c_precision * c;
+						}
 					}
-					simulationTime += c_precision * c * steps;
+					//simulationTime += c_precision * c * steps;
 				}
 				else //The engine is running faster than the simulator
 				{
