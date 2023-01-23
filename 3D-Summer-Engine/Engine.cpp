@@ -122,9 +122,9 @@ void Engine::Run() {
 			sleepTime = 0;
 		}
 
-		std::string title = "FPS: " + std::to_string(fps) + " dT: " + std::to_string(g_deltaTime*1000.0f) + "ms avg dT: " + std::to_string(averageDT*1000.0f) + "ms TPF: " + std::to_string(TPF) + " time ratio: " + std::to_string(timeRatio);
 		if (currentTime - g_lastTime2 >= 1.f)
 		{
+			std::string title = "FPS: " + std::to_string(fps) + " dT: " + std::to_string(g_deltaTime*1000.0f) + "ms avg dT: " + std::to_string(averageDT*1000.0f) + "ms TPF: " + std::to_string(TPF);
 			//double TPF = 1000.0 / (double)frames;
 			//std::cout << TPF << "ms/frame" << std::endl;
 			TPF = 1000.0 / (double)frames;
@@ -139,16 +139,16 @@ void Engine::Run() {
 			{
 				timeRatio = simulationTime / engineTime;
 			}
-			std::cout << "Simulation: " << simulationTime << "s Engine: " << engineTime << "s PC: " << currentTime - g_pc_time << "s Steps: " << steps << " Saved: " << savedTime*1000 << "ms" << std::endl;
+			std::cout << "Simulation: " << simulationTime << "s Engine: " << engineTime << "s Ratio: " << simulationTime/engineTime << "s Steps: " << steps << " Saved: " << savedTime * 1000 << "ms PC: " << currentTime - g_pc_time << "s" << std::endl;
 			
 			glfwSetWindowTitle(m_window->getWindow(), title.c_str());
 		}
-		if (simulationTime >= 10 && g_running && !g_result_saved && g_save_result)
+		if (simulationTime >= 10 && g_running && g_save_result)
 		{
 			std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-hz" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound);
 			std::string path = "C:/Users/tobbe/Pictures/simulated flow/result" + filename + ".png";
 			saveImage(path.c_str(), m_window->getWindow());
-			g_result_saved = true;
+			g_save_result = false;
 			Engine::g_running = false;
 		}
 

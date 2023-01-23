@@ -57,8 +57,7 @@ private:
 	float g_deltaTime										 = 0.0f;
 	float g_fps_limit										 = 144.0f;
 	float g_pc_time											 = 0.0f;
-	bool  g_result_saved									 = false;
-	const bool  g_save_result								 = false;
+	bool  g_save_result										 = false;
 
 	//Fluid Simulation Properties
 	const int   c_RESOLUTION								 = 256;		//aka Gridarea
