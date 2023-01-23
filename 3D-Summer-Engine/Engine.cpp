@@ -28,11 +28,8 @@ void Engine::Init()
 	}
 	//glEnable(GL_DEPTH_TEST);
 	g_pc_time = glfwGetTime();
-	if (g_fps_limit_auto)
-	{
-		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		g_fps_limit = mode->refreshRate;
-	}
+	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	g_fps_limit = mode->refreshRate;
 	//Set the viewport size
 	glViewport(0, 0, c_WIDTH, c_HEIGHT);
 	//Resize the viewport when the window size is changed
@@ -81,16 +78,14 @@ void Engine::Run() {
 	std::cout << "STARTING::ENGINE" << std::endl;
 	glfwSetWindowTitle(m_window->getWindow(), "Starting Engine...");
 
-	float g_lastTime = 0.0f;
-	float g_lastTime2 = 0.0f;
+	float g_lastTime = glfwGetTime();
+	float g_lastTime2 = g_lastTime;
 	int frames = 0;
 	int fps = 0;
-	double TPF = c_precision;
+	double TPF = 0;
 	float averageDT = 0;
 	float dtTotal = 0;
 	float sleepTime = 0;
-	float slept = 0.0f;
-	float accountedTime = 0.0f;
 	double currentTime = glfwGetTime();
 	int steps = 0;
 	glfwSwapInterval(0);
@@ -110,45 +105,37 @@ void Engine::Run() {
 	float timeRatio = 1.0f;
 	while (!glfwWindowShouldClose(m_window->getWindow()))
 	{
-		currentTime = glfwGetTime();			//End loop time
-		g_deltaTime = currentTime - g_lastTime - sleepTime/1000.0f; //Rendering time
-		g_lastTime = glfwGetTime();				//Loop time
+		currentTime = glfwGetTime();
+		g_deltaTime = currentTime - g_lastTime - sleepTime/1000.0f;
+		g_lastTime = glfwGetTime();
 		frames++;
 		dtTotal += g_deltaTime;
-		float s2 = 0;
-		if (g_limit_fps)
-		{
-			sleepTime = (1.0f / g_fps_limit - (g_deltaTime)) * 1000.0f; //ms
-			s2 = sleepTime;
-		}
-		else
-		{
-			sleepTime = 0;
-		}
+
+		sleepTime = (1.0f / g_fps_limit - g_deltaTime) * 1000; //ms
 
 		if (sleepTime < 0)
 		{
 			sleepTime = 0;
 		}
-		std::string title = "ENG::SIM: " + std::to_string((int)(1.0f / (g_deltaTime + sleepTime / 1000.0f))) + " :: " + std::to_string((int)(1.0f / averageDT)) + " dT: " + std::to_string(g_deltaTime * 1000.0f) + "ms avg dT: " + std::to_string(averageDT * 1000.0f) + "ms TPF: " + std::to_string(TPF);
 
+		std::string title = "FPS: " + std::to_string(fps) + " dT: " + std::to_string(g_deltaTime*1000.0f) + "ms avg dT: " + std::to_string(averageDT*1000.0f) + "ms TPF: " + std::to_string(TPF) + " time ratio: " + std::to_string(timeRatio);
 		if (currentTime - g_lastTime2 >= 1.f)
 		{
 			//double TPF = 1000.0 / (double)frames;
 			//std::cout << TPF << "ms/frame" << std::endl;
 			TPF = 1000.0 / (double)frames;
-			fps = frames/(currentTime - g_lastTime2);
+			fps = frames/(currentTime - g_lastTime2-sleepTime/1000.0f);
 			averageDT = (double)dtTotal/(double)frames;
 			frames = 0;
 			dtTotal = 0;
 			//sleepTime = 1000.f / 60.0f -(currentTime - g_lastTime2) * 2.0f;
 			g_lastTime2 += 1.f;
 
-			if (engineTime > 0) 
+			if (engineTime > 0)
 			{
 				timeRatio = simulationTime / engineTime;
 			}
-			std::cout << "slept previous: " << slept << " ms " << "Sleep: " << sleepTime << "ms Simulation: " << simulationTime << "s Engine: " << engineTime << "s Ratio: " << simulationTime / engineTime << " accounted for: " << accountedTime * 1000.0f << "ms PC: " << currentTime - g_pc_time << "s Steps: " << steps << std::endl;
+			std::cout << "Simulation: " << simulationTime << "s Engine: " << engineTime << "s PC: " << currentTime - g_pc_time << "s Steps: " << steps << std::endl;
 			
 			glfwSetWindowTitle(m_window->getWindow(), title.c_str());
 		}
@@ -157,13 +144,13 @@ void Engine::Run() {
 			if (!g_result_saved && g_save_result)
 			{
 				std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-hz" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound);
-				std::string path = p_SAVE_RESULT + filename + ".png";
+				std::string path = "C:/Users/tobbe/Pictures/simulated flow/result" + filename + ".png";
 				saveImage(path.c_str(), m_window->getWindow());
 				g_result_saved = true;
 				Engine::g_running = false;
 			}
-			//engineTime = 0.0f;
-			//simulationTime = 0.0f;
+			engineTime = 0.0f;
+			simulationTime = 0.0f;
 		}
 
 		IO_EVENTS(m_window->getWindow());
@@ -192,12 +179,11 @@ void Engine::Run() {
 		//projectionM = glm::ortho(-(float)c_WIDTH / 2, (float)c_WIDTH / 2, -(float)c_HEIGHT / 2, (float)c_HEIGHT / 2, -1000.0f, 1000.0f);
 		////projectionM = glm::ortho(0.0f, (float)c_WIDTH, 0.0f, (float)c_HEIGHT, -1000.0f, 1000.0f);
 
-		//double timeValue = glfwGetTime();
-		//double val = sin(timeValue / 2);
+		double timeValue = glfwGetTime();
+		double val = sin(timeValue / 2);
 		
 		m_fluid->updateMouse(&g_lastX, &g_lastY, &g_mouseDown);
 		double tpf = g_deltaTime + sleepTime / 1000.0f;
-		//double tpf = TPF;
 		if (tpf < 0)
 		{
 			tpf = 0;
@@ -208,26 +194,16 @@ void Engine::Run() {
 		{
 			if (c_precision_bound)
 			{
-				if (steps > 1 && tpf >= accountedTime)
-				{
-					tpf -= accountedTime;
-				}
 				if (tpf > c_precision) //The engine is running slower than the simulator
 				{
-					const float ratio = (tpf) / c_precision;
+					float ratio = (tpf) / c_precision;
 					steps = ratio;
-					//const float c = 1 + (ratio - steps)/steps;
-					float c = 1;
-					accountedTime = 0;
+					float c = 1 + (ratio - steps)/steps;
 					for (unsigned int i = 0; i < steps; i++)
 					{
-						const float time = glfwGetTime();
 						m_fluid->timeStep(c_precision * c);
-						accountedTime += glfwGetTime() - time;
-						simulationTime += c_precision * c;
 					}
-					//accountedTime = glfwGetTime() - time;
-					//simulationTime += c_precision * c * steps;
+					simulationTime += c_precision * c * steps;
 				}
 				else //The engine is running faster than the simulator
 				{
@@ -241,17 +217,16 @@ void Engine::Run() {
 			}
 			else
 			{
-				float dt = c_precision;
-				m_fluid->timeStep(dt);
-				simulationTime += dt;
+				m_fluid->timeStep(c_precision);
+				simulationTime += c_precision;
 				//m_fluid->timeStep(tpf);
 			}
 			engineTime += tpf;
 		}
 		else
 		{
-			//engineTime = 0;
-			//simulationTime = 0;
+			engineTime = 0;
+			simulationTime = 0;
 		}
 		m_fluid->Draw(origin);
 		//m_fluid->DrawCellField(origin);
@@ -270,13 +245,11 @@ void Engine::Run() {
 		//Check if any events have been triggered
 		glfwPollEvents();
 		
-		slept = 0;
 		if (sleepTime > 0)
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds((long)(sleepTime)));
-			slept = sleepTime;
 		}
-		//std::cout << "slept previous: " << slept << " ms " << "Sleep: " << sleepTime << "ms Simulation: " << simulationTime << "s Engine: " << engineTime << "s Ratio: " << simulationTime / engineTime << " accounted for: " << accountedTime * 1000.0f << "ms PC: " << currentTime - g_pc_time << "s Steps: " << steps << std::endl;
+
 	}
 	std::cout << "EXITED::RENDER::LOOP" << std::endl;
 	return;

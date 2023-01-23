@@ -50,21 +50,20 @@ private:
 	const char* p_DEFAULT_FRAGMENT_SHADER					 = "Shaders/default_fragment_shader.frag";
 	const char* p_CONTAINER_IMAGE							 = "Images/LearnOpenGL/container.jpg";
 	const char* p_AWESOMEFACE_IMAGE							 = "Images/LearnOpenGL/awesomeface.png";
-	const char* p_SAVE_RESULT								 = "Images/Generated results/";
+
+	//Shader m_shader;										//Used to render to the screen	
 	
 	//Engine Properties
-	float g_deltaTime										 = 0.0f;			//Rendering time of one frame
-	float g_fps_limit										 = 1000.0f;			//Max allowed fps
-	const bool g_fps_limit_auto								 = true;			//Should the fps limit be set according to monitor refreshrate
-	const bool g_limit_fps									 = true;			//Determines i if the framerate will be clamped
-	float g_pc_time											 = 0.0f;			//Time from loading GLAD
-	bool g_result_saved										 = false;			//Has a screenshot been written of the result?
-	const bool g_save_result								 = false;			//Should the program save the result after a certain amount of time
+	float g_deltaTime										 = 0.0f;
+	float g_fps_limit										 = 144.0f;
+	float g_pc_time											 = 0.0f;
+	bool  g_result_saved									 = false;
+	const bool  g_save_result								 = false;
 
 	//Fluid Simulation Properties
-	const int   c_RESOLUTION								 = 256;				//aka Gridarea
+	const int   c_RESOLUTION								 = 256;		//aka Gridarea
 	const float c_precision									 = 1.0f / 144.0f;	//Simulator speed
-	const bool  c_precision_bound							 = true;			//If the simulator should account for time lost because of lag by stepping forward in the simulation
+	const bool  c_precision_bound							 = true;			//If the simulator should account for time lost by lag
 
 public:
 

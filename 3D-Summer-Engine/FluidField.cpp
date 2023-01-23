@@ -272,8 +272,8 @@ void FluidField::diffuse(float dt) {
 
 //Force Application
 void FluidField::addForces(float dt) {
-	float r = 0.0758f;
-	float streams = 5;
+	float r = 0.0258f;
+	float streams = 11;
 
 	for (int stream = 0; stream < streams; stream++)
 	{
@@ -284,7 +284,7 @@ void FluidField::addForces(float dt) {
 	//float o = 0.8f;
 	//float value = (sin(glfwGetTime() * 0.1f) + 1) / 2.0f * o + (1 - o) / 2.0f;
 	//glUniform1f(m_integrate_shader.uniforms["time"], value);
-	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -40.82f*0, 0.0f, 0.0f) * dt);
+	//bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -40.82f, 0.0f, 0.0f) * dt);
 	temperature(dt);
 }
 
