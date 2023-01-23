@@ -143,18 +143,13 @@ void Engine::Run() {
 			
 			glfwSetWindowTitle(m_window->getWindow(), title.c_str());
 		}
-		if (simulationTime >= 10 && g_running)
+		if (simulationTime >= 10 && g_running && !g_result_saved && g_save_result)
 		{
-			if (!g_result_saved && g_save_result)
-			{
-				std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-hz" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound);
-				std::string path = "C:/Users/tobbe/Pictures/simulated flow/result" + filename + ".png";
-				saveImage(path.c_str(), m_window->getWindow());
-				g_result_saved = true;
-				Engine::g_running = false;
-			}
-			engineTime = 0.0f;
-			simulationTime = 0.0f;
+			std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-hz" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound);
+			std::string path = "C:/Users/tobbe/Pictures/simulated flow/result" + filename + ".png";
+			saveImage(path.c_str(), m_window->getWindow());
+			g_result_saved = true;
+			Engine::g_running = false;
 		}
 
 		IO_EVENTS(m_window->getWindow());
@@ -232,11 +227,6 @@ void Engine::Run() {
 				//m_fluid->timeStep(tpf);
 			}
 			engineTime += tpf;
-		}
-		else
-		{
-			engineTime = 0;
-			simulationTime = 0;
 		}
 		m_fluid->Draw(origin);
 		//m_fluid->DrawCellField(origin);
