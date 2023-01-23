@@ -87,12 +87,6 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Images\Generated Images\Checkerpattern.png" />
-    <Image Include="Images\Generated Images\Compute_shader_result.png" />
-    <Image Include="Images\Generated Images\Framebuffer.png" />
-    <Image Include="Images\Generated Images\Multicolored_pattern.png" />
-    <Image Include="Images\Generated Images\Multicolored_wireframe_pattern.png" />
-    <Image Include="Images\Generated Images\notGenerated.jpg" />
     <Image Include="Images\LearnOpenGL\awesomeface.png" />
     <Image Include="Images\LearnOpenGl\container.jpg" />
     <Image Include="Images\LearnOpenGL\texture.png" />

@@ -132,24 +132,6 @@
     <Image Include="Images\LearnOpenGL\awesomeface.png">
       <Filter>Resource Files\Images</Filter>
     </Image>
-    <Image Include="Images\Generated Images\Checkerpattern.png">
-      <Filter>Resource Files\Images</Filter>
-    </Image>
-    <Image Include="Images\Generated Images\Compute_shader_result.png">
-      <Filter>Resource Files\Images</Filter>
-    </Image>
-    <Image Include="Images\Generated Images\Framebuffer.png">
-      <Filter>Resource Files\Images</Filter>
-    </Image>
-    <Image Include="Images\Generated Images\Multicolored_pattern.png">
-      <Filter>Resource Files\Images</Filter>
-    </Image>
-    <Image Include="Images\Generated Images\Multicolored_wireframe_pattern.png">
-      <Filter>Resource Files\Images</Filter>
-    </Image>
-    <Image Include="Images\Generated Images\notGenerated.jpg">
-      <Filter>Resource Files\Images</Filter>
-    </Image>
     <Image Include="Images\LearnOpenGL\texture.png">
       <Filter>Resource Files\Images</Filter>
     </Image>
