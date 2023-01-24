@@ -144,14 +144,9 @@ void Engine::Run() {
 			
 			glfwSetWindowTitle(m_window->getWindow(), title.c_str());
 		}
-		if (simulationTime >= 10 && g_running && g_save_result)
+		if (simulationTime >= 10)
 		{
-			std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-hz" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound) + "-Z" + std::to_string((int)sum);
-			std::string path = p_GENERATED_RESULTS + filename + ".png";
-			saveImage(path.c_str(), m_window->getWindow());
-			g_save_result = false;
-			//sum = 0;
-			Engine::g_running = false;
+			saveResults();
 		}
 
 		IO_EVENTS(m_window->getWindow());
@@ -196,11 +191,17 @@ void Engine::Run() {
 		{
 			if (c_precision_bound)
 			{
-				if (tpf > c_precision) //The engine is running slower than the simulator
+				if (true) //The engine is running slower than the simulator
 				{
 					float ratio = (tpf) / c_precision;
 					steps = ratio;
 					float c = 1 + (ratio - steps)/steps;
+					////Simulate 10 s of evolvement
+					//float time = 60; //s
+					//float ratio = time / c_precision;
+					//steps = ratio;
+					//float c = 1 + (ratio - steps)/steps;
+
 					savedTime = 0;
 					for (unsigned int i = 0; i < steps; i++)
 					{
@@ -233,6 +234,7 @@ void Engine::Run() {
 			engineTime += tpf;
 		}
 		m_fluid->Draw(origin);
+
 		//m_fluid->DrawCellField(origin);
 		
 		//int vertexColorLocation = glGetUniformLocation(m_primary_shader->getID(), "ourColor");
@@ -253,7 +255,6 @@ void Engine::Run() {
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds((long)(sleepTime)));
 		}
-
 	}
 	std::cout << "EXITED::RENDER::LOOP" << std::endl;
 	return;
@@ -277,6 +278,19 @@ void Engine::saveImage(const char* path, GLFWwindow* window)
 	stbi_flip_vertically_on_write(true);
 	stbi_write_png(path, width, height, channelAmount, buffer.data(), stride);
 	std::cout << "File has been written at " << path << std::endl;
+}
+
+void Engine::saveResults() {
+	if (g_running && g_save_result)
+	{
+		//std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-hz" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound) + "-Z" + std::to_string((int)sum);
+		std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000));
+		std::string path = p_GENERATED_RESULTS + filename + ".png";
+		saveImage(path.c_str(), m_window->getWindow());
+		g_save_result = false;
+		//sum = 0;
+		Engine::g_running = false;
+	}
 }
 
 void Engine::IO_EVENTS(GLFWwindow* window) {
