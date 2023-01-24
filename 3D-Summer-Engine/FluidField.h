@@ -32,6 +32,11 @@ class FluidField
 			height = _height;
 		}
 
+		void updateMousearea(double _width, double _height) {
+			width = _width;
+			height = _height;
+		}
+
 		void update(double mouseX, double mouseY, bool mouse_is_down) {
 			window_delta			 = glm::vec2(mouseX, mouseY) - prev_window_pos;
 			prev_window_pos			 = window_pos;
@@ -40,7 +45,7 @@ class FluidField
 
 			texcoord_delta			 = texcoord_pos - prev_texcoord_pos;
 			prev_texcoord_pos		 = texcoord_pos;
-			texcoord_pos			 = glm::vec2(mouseX / width, 1.f - mouseY / height);
+			texcoord_pos			 = glm::vec2(mouseX / width, 1-mouseY / height);
 			texcoord_travel			 += texcoord_travel;
 			down					 = mouse_is_down;
 
@@ -66,6 +71,11 @@ class FluidField
 		~DoubleFramebuffer() {
 			delete(fb1);
 			delete(fb2);
+		}
+
+		void updateDimensions(unsigned int width, unsigned int height) {
+			fb1->updateDimensions(width, height);
+			fb2->updateDimensions(width, height);
 		}
 
 		//Get the currently bound buffer which has the purpose of being read from.
@@ -272,6 +282,26 @@ public:
 		m_current_buffer = m_dye_buffer->readBuffer();
 
 		std::cout << "SUCCESS::INITIALIZATION::FLUIDFIELD" << std::endl;
+	}
+
+	void updateViewport() {
+		m_dye_buffer->updateDimensions(m_mouse.width, m_mouse.height);
+		//m_dye_buffer->readBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
+		//m_dye_buffer->writeBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
+		// Velocity
+		m_velocity_buffer->updateDimensions(m_mouse.width, m_mouse.height);
+		// Curl
+		m_curl_buffer->updateDimensions(m_mouse.width, m_mouse.height);
+		// Divergence
+		m_divergence_buffer->updateDimensions(m_mouse.width, m_mouse.height);
+		// Pressure
+		m_pressure_buffer->updateDimensions(m_mouse.width, m_mouse.height);
+
+		//Experimental
+		// Boyancy and Convection
+		m_temperature_buffer->updateDimensions(m_mouse.width, m_mouse.height);
+		// Smoke and Clouds
+		m_density_buffer->updateDimensions(m_mouse.width, m_mouse.height);
 	}
 
 	~FluidField() {

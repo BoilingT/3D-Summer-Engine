@@ -62,6 +62,34 @@ Framebuffer::Framebuffer(float res, unsigned int w, unsigned int h, GLint intern
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void Framebuffer::updateDimensions(unsigned int w, unsigned int h) {
+	width = w;
+	height = h;
+
+	float ratio = (float)width / (float)height;
+	if (ratio < 1.0f)
+	{
+		ratio = 1.0f / ratio;
+	}
+	float min = round(resolution);
+	float max = round(resolution * ratio);
+	if (w > h)
+	{
+		width = max;
+		height = min;
+	}
+	else {
+		width = min;
+		height = max;
+	}
+
+	//width = (float) w;
+	//height = (float) h;
+
+	texelSizeX = 1.f / width;
+	texelSizeY = 1.f / height;
+}
+
 int Framebuffer::status() {
 	return (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
 }
