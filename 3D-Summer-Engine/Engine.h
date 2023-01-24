@@ -51,23 +51,23 @@ private:
 	const char* p_CONTAINER_IMAGE							 = "Images/LearnOpenGL/container.jpg";
 	const char* p_AWESOMEFACE_IMAGE							 = "Images/LearnOpenGL/awesomeface.png";
 	const char* p_GENERATED_RESULTS							 = "Images/Generated Results/";
-
-	//Shader m_shader;										//Used to render to the screen	
 	
-	//Engine Properties
+	//Engine variables
 	float g_deltaTime										 = 0.0f;
-	float g_fps_limit										 = 144.0f;
 	float g_pc_time											 = 0.0f;
 	bool  g_save_result										 = false;
 
+	//Engine Properties
+	float g_fps_limit										 = 0.0f;			// Monitor refreshrate: (x < 0), No limit: (x = 0)
+
 	//Fluid Simulation Properties
-	const int   c_RESOLUTION								 = 256;		//aka Gridarea
-	const float c_precision									 = 1.0f / 144.0f;	//Simulator speed
-	const bool  c_precision_bound							 = true;			//If the simulator should account for time lost by lag
+	const int   c_RESOLUTION								 = 256;				// aka Gridarea
+	const float c_precision									 = 1.0f / 144.0f;	// Simulator speed
+	const bool  c_precision_bound							 = true;			// If the simulator should account for time lost by lag
 
 public:
 
-	Engine()//:	m_shader(p_DEFAULT_VERTEX_SHADER, p_DEFAULT_FRAGMENT_SHADER)
+	Engine()
 	{
 		std::cout << "INITIALIZING::ENGINE" << std::endl;
 
