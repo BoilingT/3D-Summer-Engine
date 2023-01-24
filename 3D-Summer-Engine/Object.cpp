@@ -22,13 +22,13 @@ void Object::SetupMesh(float* vertices, int vSize, unsigned int* indices, int iS
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
  	glBufferData(GL_ELEMENT_ARRAY_BUFFER, iSize, indices, GL_DYNAMIC_DRAW);
 
-
 	//Vertex position
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)0);
 	glEnableVertexAttribArray(0);
 	//Enable texture coordinates data
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	//glEnableVertexAttribArray(2);
 	/*
 	//Vertex normals
 	glEnableVertexAttribArray(1);
@@ -63,6 +63,7 @@ void Object::SetupMesh(float* vertices, int vSize) {
 	//Vertex position
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
 	glEnableVertexAttribArray(0);
+
 	/*
 	//Vertex normals
 	glEnableVertexAttribArray(1);
@@ -128,7 +129,7 @@ void Object::Draw(Shader& shader) {
 	//modelM = glm::rotate(modelM, transform.rot.y, glm::vec3(0.0f, 1.0f, 1.0f));
 
 	shader.setMat4f("model", modelM);
-	if (verticesSize / sizeof(float) / 3 <= 2)
+	if (verticesSize / sizeof(float) / 3.0f <= 2.0f)
 	{
 		glDrawArrays(GL_LINES, 0, (verticesSize / sizeof(float)));
 	}

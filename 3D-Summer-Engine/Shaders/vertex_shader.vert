@@ -1,8 +1,9 @@
 #version 430 core
 #define mode 0
 layout (location = 0) in vec3 aPos;
-layout (location = 2) in vec2 aTexCoord;
-layout (location = 1) in vec2 aOffset;
+layout (location = 1) in vec2 aTexCoord;
+//layout (location = 2) in vec2 aTexCoord;
+//layout (location = 1) in vec2 aOffset;
 
 out vec2 texCoord;
 out vec2 vUv;
@@ -29,5 +30,6 @@ void main(){
 	vB	= vUv - vec2(0.0f, texelSize.y);
 
 	//gl_Position = clip_space * vec4(aPos.x + aOffset.x, aPos.y + aOffset.y, aPos.z, 1.0f);
-	gl_Position = vec4(aPos.x + aOffset.x, aPos.y + aOffset.y, aPos.z, 1.0f);
+	//gl_Position = vec4(aPos.x + aOffset.x, aPos.y + aOffset.y, aPos.z, 1.0f);
+	gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0f);
 }

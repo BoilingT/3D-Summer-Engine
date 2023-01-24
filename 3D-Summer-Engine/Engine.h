@@ -29,6 +29,9 @@ public:
 	static bool g_firstMouseEnter;
 	static bool g_mouse_constrain;
 
+	//Fluid simulation
+	static unsigned int g_running;
+
 private:
 	WindowHandler*		m_window;
 	Camera*				m_camera;
@@ -47,16 +50,20 @@ private:
 	const char* p_DEFAULT_FRAGMENT_SHADER					 = "Shaders/default_fragment_shader.frag";
 	const char* p_CONTAINER_IMAGE							 = "Images/LearnOpenGL/container.jpg";
 	const char* p_AWESOMEFACE_IMAGE							 = "Images/LearnOpenGL/awesomeface.png";
+	const char* p_GENERATED_RESULTS							 = "Images/Generated Results/";
 
-	//Shader m_shader;										//Used to render to the screen
-
-	//dT
+	//Shader m_shader;										//Used to render to the screen	
+	
+	//Engine Properties
 	float g_deltaTime										 = 0.0f;
-	float g_lastTime										 = 0.0f;
-	float g_lastTime2										 = 0.0f;
+	float g_fps_limit										 = 144.0f;
+	float g_pc_time											 = 0.0f;
+	bool  g_save_result										 = false;
 
-	//Fluid Simulation
-	const int c_RESOLUTION									 = 256; // aka Gridarea
+	//Fluid Simulation Properties
+	const int   c_RESOLUTION								 = 256;		//aka Gridarea
+	const float c_precision									 = 1.0f / 144.0f;	//Simulator speed
+	const bool  c_precision_bound							 = true;			//If the simulator should account for time lost by lag
 
 public:
 
@@ -95,6 +102,7 @@ public:
 private:
 	static void FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow* window, int width, int height);
 	static void MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos);
+	static void KEY_CALLBACK(GLFWwindow* window, int key, int scancode, int action, int mods);
 	void IO_EVENTS(GLFWwindow* window);
 };
 

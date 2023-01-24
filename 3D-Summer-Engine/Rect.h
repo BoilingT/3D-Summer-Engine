@@ -1,4 +1,5 @@
 #pragma once
+#define borderDebugging 0
 #include "Object.h"
 #include <glad/glad.h>
 
@@ -6,6 +7,7 @@ class Rect :
     public Object
 {
 private:
+#if borderDebugging == 0
     float planeVertices[4 * 5] = {
         //Positions              //TexCoords
         -1.0f, 1.0f, 0.0f,       0.0f, 1.0f,     //Top left corner
@@ -13,7 +15,15 @@ private:
         1.0f, 1.0f, 0.0f,        1.0f, 1.0f,     //Top right corner
         1.0f, -1.0f, 0.0f,       1.0f, 0.0f      //Lower right corner
     };
-
+#elif borderDebugging == 1
+    float planeVertices[4 * 5] = {
+        //Positions              //TexCoords
+        -1.0f, 1.0f, 0.0f,       0.0f - 0.3f, 1.0f + 0.3f,     //Top left corner
+        -1.0f, -1.0f, 0.0f,      0.0f - 0.3f, 0.0f - 0.3f,     //Lower left corner
+        1.0f, 1.0f, 0.0f,        1.0f + 0.3f, 1.0f + 0.3f,     //Top right corner
+        1.0f, -1.0f, 0.0f,       1.0f + 0.3f, 0.0f - 0.3f      //Lower right corner
+    };
+#endif
     unsigned int indices[6] = {
         0, 1, 2,
         1, 2, 3

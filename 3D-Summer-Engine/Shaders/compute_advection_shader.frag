@@ -65,6 +65,7 @@ void main(){
 	vec4 result = advect(coords);
 	float decay = 1.0 + dissipation * timestep;
 	fragColor = result / decay;
+
 	//gl_FragColor = vec4(f2texRect(x, coords * rdx * rdx), 0.0f, 1.0f);
 	//gl_FragColor = texture2D(x, vec2(1.0f, 1.0f)/rdx * rdx * rdx * coords);
 }
