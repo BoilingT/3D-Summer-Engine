@@ -28,7 +28,7 @@ void Engine::Init()
 	}
 	//glEnable(GL_DEPTH_TEST);
 	g_pc_time = glfwGetTime();
-	if (g_fps_limit <= 0)
+	if (g_fps_limit < 0)
 	{
 		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		g_fps_limit = mode->refreshRate;
@@ -118,7 +118,7 @@ void Engine::Run() {
 
 		sleepTime = (1.0f / g_fps_limit - g_deltaTime) * 1000; //ms
 
-		if (sleepTime < 0 || g_fps_limit <= 0)
+		if (sleepTime < 0 || g_fps_limit == 0)
 		{
 			sleepTime = 0;
 		}
