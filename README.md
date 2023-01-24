@@ -7,7 +7,8 @@ has been changed during a large time of the project and the 3D-features have not
 # 2D Fluid Simulation
 The purpose of this project is to get a somewhat large pool of knowledge about computer graphics such as computing optimizations by using shaders.
 
-#Examples
+# Screenshots
+## Used an image as dye
 ![Alt text](/3D-Summer-Engine/Images/Generated%20Images/Framebuffer.png)
 
 ### Using this content does not gaurantee a fully working product. By using this product you acknowledge there will be no responsibility for the creator to update and fix problems that may occur.
