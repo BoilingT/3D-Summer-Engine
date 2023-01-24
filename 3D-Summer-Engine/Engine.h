@@ -50,6 +50,7 @@ private:
 	const char* p_DEFAULT_FRAGMENT_SHADER					 = "Shaders/default_fragment_shader.frag";
 	const char* p_CONTAINER_IMAGE							 = "Images/LearnOpenGL/container.jpg";
 	const char* p_AWESOMEFACE_IMAGE							 = "Images/LearnOpenGL/awesomeface.png";
+	const char* p_GENERATED_RESULTS							 = "Images/Generated Results/";
 
 	//Shader m_shader;										//Used to render to the screen	
 	
