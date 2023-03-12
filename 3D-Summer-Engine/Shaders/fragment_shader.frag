@@ -54,7 +54,16 @@ void main(){
 	}else if(scene == 6){
 		color = vec4(color.r, color.r, color.r, color.a);
 	}
+
+	vec2 pos = gl_FragCoord.xy; //0x0 -- 700x700
+	if((int(pos.x/1920.0f * 1.0f/texelSize.x) + int(pos.y/1080.0f * 1.0f/texelSize.y)) % 2 == 0){
+		color += vec4(vec3(0.1f), 1.0f);
+	}else{
+		color += vec4(vec3(-0.1f), 1.0);
+	}
+
 	fragColor = mix(texture(u_image, texCoord), color, 0.9f);
+
 	//fragColor = texture(u_image, texCoord);
 	//fragColor = texture(u_image_overlay, vUv) * vec4(vec3(1.0f), 0.5f);
 }
