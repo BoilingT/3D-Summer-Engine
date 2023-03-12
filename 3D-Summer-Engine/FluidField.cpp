@@ -238,10 +238,10 @@ void FluidField::diffuse(float dt) {
 		int alphaLoc = m_jacobi_iteration_shader.uniforms["alpha"];
 		int rBetaLoc = m_jacobi_iteration_shader.uniforms["rBeta"];
 		// Velocity
-		float alpha = ((float) pow(1, 2)) / (dt * m_viscosity);
-		float rBeta = 1.0f / (4.0f + alpha);
-		glUniform1f(alphaLoc, alpha);  //Alpha = pow(dx, 2)/t
-		glUniform1f(rBetaLoc, rBeta); //rBeta = 1/(4+Alpha)
+		float alpha = 1.0f / (dt * m_viscosity); //Alpha = pow(x, 2)/t
+		float rBeta = 1.0f / (4.0f + alpha);	 //rBeta = 1/(4+Alpha)
+		glUniform1f(alphaLoc, alpha);
+		glUniform1f(rBetaLoc, rBeta); 
 		glUniform2f(xTexelLoc, m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
 		glUniform1i(bLoc, m_velocity_buffer->readBuffer()->setTexture(0));
 
@@ -277,23 +277,23 @@ void FluidField::addForces(float dt) {
 
 	for (int stream = 0; stream < streams; stream++)
 	{
-		splat(glm::vec2((1.0f) / streams * ((stream + 1.0f)) - ((1.0f) / streams / 2.0f), 0.1f), r, true, false);
+		splat(glm::vec2((1.0f) / streams * ((stream + 1.0f)) - ((1.0f) / streams / 2.0f), 0.9f), r, true, false);
 		//splat(glm::vec2(0.1f, 1.0f - (1.0f) / streams * ((stream + 1.0f)) + ((1.0f) / streams / 2.0f)), r, true, false);
 	}
 	m_integrate_shader.use();
 	//float o = 0.8f;
 	//float value = (sin(glfwGetTime() * 0.1f) + 1) / 2.0f * o + (1 - o) / 2.0f;
 	//glUniform1f(m_integrate_shader.uniforms["time"], value);
-	//bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -40.82f, 0.0f, 0.0f) * dt);
-	temperature(dt);
+	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -90.82f, 0.0f, 0.0f) * dt);
+	//temperature(dt);
 }
 
 //Projection, by removing any divergence
 void FluidField::project(float dt) {
 	//Compute a normalized vorticity vector field
-	curl(dt);
+	//curl(dt);
 	//Restore, approximate, computated and dissipated vorticity
-	vorticity(dt);
+	//vorticity(dt);
 	divergence(dt);
 	clearBuffer(m_pressure_buffer, m_pressure_dissipation);
 	pressure(dt);
@@ -448,6 +448,8 @@ void FluidField::splat(glm::vec2 pos, float r, bool dye, bool velocity) {
 		blit(m_density_buffer->writeBuffer(), &m_splat_shader);
 		m_density_buffer->swap();
 	}
+
+	
 }
 
 void FluidField::DrawCellField(glm::vec3 o) {

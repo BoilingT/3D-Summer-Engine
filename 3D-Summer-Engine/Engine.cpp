@@ -88,6 +88,15 @@ void Engine::Run() {
 	double TPF = 0;
 	float averageDT = 0;
 	float dtTotal = 0;
+	float avarageFPS = 0;
+	float totalFPS = 0;
+	float maxDt = 0;
+	float lowDt = 0; 
+	float oldDt = 0;
+	float newDt = 0;
+	float PM = 0;
+	float PMTotal = 0;
+	float avgPM = 0;
 	float sleepTime = 0;
 	double currentTime = glfwGetTime();
 	int steps = 0;
@@ -110,11 +119,14 @@ void Engine::Run() {
 	float sum = 0.0f;
 	while (!glfwWindowShouldClose(m_window->getWindow()))
 	{
+		oldDt = g_deltaTime;
 		currentTime = glfwGetTime();
 		g_deltaTime = currentTime - g_lastTime - sleepTime/1000.0f;
 		g_lastTime = glfwGetTime();
+		newDt = g_deltaTime;
 		frames++;
 		dtTotal += g_deltaTime;
+		totalFPS += fps;
 
 		sleepTime = (1.0f / g_fps_limit - g_deltaTime) * 1000; //ms
 
@@ -123,15 +135,31 @@ void Engine::Run() {
 			sleepTime = 0;
 		}
 
+		if (newDt > oldDt)
+		{
+			maxDt = newDt;
+			PM = newDt - oldDt;
+		}
+		else if (newDt < oldDt) {
+			lowDt = newDt;
+			PM = oldDt - newDt;
+		}
+		PMTotal += PM;
+		averageDT = (double)dtTotal/(double)frames;
+		avarageFPS = (double)totalFPS / (double)frames;
+		avgPM = PMTotal / frames;
+
+		std::string title = "avg dT: " + std::to_string(averageDT * 1000.0f) + "ms maxDt: " + std::to_string(maxDt*1000.0f) + "ms lowDt: " + std::to_string(lowDt*1000.0f) + "ms PM: " + std::to_string(avgPM * 1000.0f);
 		if (currentTime - g_lastTime2 >= 1.f)
 		{
-			std::string title = "FPS: " + std::to_string(fps) + " dT: " + std::to_string(g_deltaTime*1000.0f) + "ms avg dT: " + std::to_string(averageDT*1000.0f) + "ms TPF: " + std::to_string(TPF);
+			//std::string title = "FPS: " + std::to_string(fps) + " dT: " + std::to_string(g_deltaTime * 1000.0f) + "ms avg dT: " + std::to_string(averageDT * 1000.0f) + "ms TPF: " + std::to_string(TPF);
 			//double TPF = 1000.0 / (double)frames;
 			//std::cout << TPF << "ms/frame" << std::endl;
 			TPF = 1000.0 / (double)frames;
 			fps = frames/(currentTime - g_lastTime2-sleepTime/1000.0f);
-			averageDT = (double)dtTotal/(double)frames;
 			frames = 0;
+			PMTotal = 0;
+			totalFPS = 0;
 			dtTotal = 0;
 			//sleepTime = 1000.f / 60.0f -(currentTime - g_lastTime2) * 2.0f;
 			g_lastTime2 += 1.f;
@@ -140,12 +168,18 @@ void Engine::Run() {
 			{
 				timeRatio = simulationTime / engineTime;
 			}
-			std::cout << "Simulation: " << simulationTime << "s Engine: " << engineTime << "s Ratio: " << simulationTime/engineTime << "s Steps: " << steps << " Sum: " << sum << " Saved: " << savedTime * 1000 << "ms PC: " << currentTime - g_pc_time << "s" << std::endl;
-			
-			glfwSetWindowTitle(m_window->getWindow(), title.c_str());
 		}
-		if (simulationTime >= 10)
+		if (Engine::g_running)
 		{
+			//std::cout << "Simulation: " << simulationTime << "s Engine: " << engineTime << "s Ratio: " << simulationTime/engineTime << "s Steps: " << steps << " Sum: " << sum << " Saved: " << savedTime * 1000 << "ms PC: " << currentTime - g_pc_time << "s" << std::endl;
+			//std::cout << title << std::endl;
+			//glfwSetWindowTitle(m_window->getWindow(), title.c_str());
+		}
+		if (simulationTime >= g_save_result_time && Engine::g_running)
+		{
+			std::cout << "Simulation: " << simulationTime << "s Engine: " << engineTime << "s Ratio: " << simulationTime / engineTime << "s Steps: " << steps << " Sum: " << sum << " Saved: " << savedTime * 1000 << "ms PC: " << currentTime - g_pc_time << "s" << std::endl;
+			std::cout << title << std::endl;
+			glfwSetWindowTitle(m_window->getWindow(), title.c_str());
 			saveResults();
 		}
 
@@ -283,13 +317,13 @@ void Engine::saveImage(const char* path, GLFWwindow* window)
 void Engine::saveResults() {
 	if (g_running && g_save_result)
 	{
+		Engine::g_running = false;
 		//std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-hz" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound) + "-Z" + std::to_string((int)sum);
 		std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000));
 		std::string path = p_GENERATED_RESULTS + filename + ".png";
 		saveImage(path.c_str(), m_window->getWindow());
 		g_save_result = false;
 		//sum = 0;
-		Engine::g_running = false;
 	}
 }
 
