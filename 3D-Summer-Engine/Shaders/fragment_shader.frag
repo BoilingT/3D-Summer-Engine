@@ -8,7 +8,8 @@ in vec2 texCoord;
 
 uniform sampler2D u_image;
 uniform sampler2D u_image_overlay;
-uniform vec2 texelSize;
+uniform vec2 dyeTexelSize;
+uniform vec2 velTexelSize;
 uniform int scene;
 
 vec4 getSciColor(float value, float minVal, float maxVal) {
@@ -31,7 +32,7 @@ vec4 getSciColor(float value, float minVal, float maxVal) {
 	}
 
 void main(){
-	vec2 coord = gl_FragCoord.xy * texelSize;
+	vec2 coord = gl_FragCoord.xy * dyeTexelSize;
 	vec4 color = texture(u_image_overlay, texCoord);
 	if((color.g + color.b)/2.f <= 0.0f){ //if g and b are not in use
 		if(color.r < 0){ //show negative red as positive blue
@@ -55,13 +56,18 @@ void main(){
 		color = vec4(color.r, color.r, color.r, color.a);
 	}
 
+	vec2 res = vec2(900.0f, 900.0f);
 	vec2 pos = gl_FragCoord.xy; //0x0 -- 700x700
-	if((int(pos.x/1920.0f * 1.0f/texelSize.x) + int(pos.y/1080.0f * 1.0f/texelSize.y)) % 2 == 0){
+	if((int(pos.x/res.x * 1.0f/dyeTexelSize.x) + int(pos.y/res.y * 1.0f/dyeTexelSize.y)) % 2 == 0){
 		color += vec4(vec3(0.1f), 1.0f);
 	}else{
-		color += vec4(vec3(-0.1f), 1.0);
+		color += vec4(vec3(0.01f), 1.0);
 	}
-
+	if((int(pos.x/res.x * 1.0f/velTexelSize.x) + int(pos.y/res.y * 1.0f/velTexelSize.y)) % 2 == 0){
+		color += vec4(0.1f, 0.0f, 0.0f, 1.0f);
+	}else{
+		color += vec4(0.0f, 0.0f, 0.1f, 1.0f);
+	}
 	fragColor = mix(texture(u_image, texCoord), color, 0.9f);
 
 	//fragColor = texture(u_image, texCoord);

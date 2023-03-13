@@ -11,10 +11,11 @@ void FluidField::Draw(glm::vec3 origin) {
 	glUniform1f(m_primary_shader->uniforms["u_time"], (GLfloat) glfwGetTime());
 
 	glUniform1i(m_primary_shader->uniforms["u_image"], m_dye_buffer->readBuffer()->setTexture(0));
+	glUniform2f(m_primary_shader->uniforms["dyeTexelSize"], m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
+	glUniform2f(m_primary_shader->uniforms["velTexelSize"], m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
 	if (m_current_buffer != m_dye_buffer->readBuffer())
 	{
 		glUniform1i(m_primary_shader->uniforms["u_image_overlay"], m_current_buffer->setTexture(1));
-		glUniform2f(m_primary_shader->uniforms["texelSize"], m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
 	}
 	else
 	{
@@ -126,7 +127,7 @@ void FluidField::timeStep(float dt) {
 	float time = dt * m_timestep_scalar; 
 	advect(time);
 	diffuse(time);
-	addForces(time);
+	//addForces(time);
 	project(time);
 }
 
@@ -284,16 +285,16 @@ void FluidField::addForces(float dt) {
 	//float o = 0.8f;
 	//float value = (sin(glfwGetTime() * 0.1f) + 1) / 2.0f * o + (1 - o) / 2.0f;
 	//glUniform1f(m_integrate_shader.uniforms["time"], value);
-	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -90.82f, 0.0f, 0.0f) * dt);
+	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -140.82f, 0.0f, 0.0f) * dt);
 	//temperature(dt);
 }
 
 //Projection, by removing any divergence
 void FluidField::project(float dt) {
 	//Compute a normalized vorticity vector field
-	//curl(dt);
+	curl(dt);
 	//Restore, approximate, computated and dissipated vorticity
-	//vorticity(dt);
+	vorticity(dt);
 	divergence(dt);
 	clearBuffer(m_pressure_buffer, m_pressure_dissipation);
 	pressure(dt);

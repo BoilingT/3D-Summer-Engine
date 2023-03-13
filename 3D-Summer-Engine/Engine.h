@@ -39,8 +39,8 @@ private:
 	FileHandler			fileSystem;
 
 	//Window Properties
-	static const int c_WIDTH								 = 700;
-	static const int c_HEIGHT								 = 700;
+	static const int c_WIDTH								 = 900;
+	static const int c_HEIGHT								 = 900;
 	const char* c_WINDOW_NAME								 = "Summer Engine";
 	const float c_DEFAULT_CLEAR_COLOR[4]					 = { 0.0f, 0.0f, 0.0f, 1.0f };
 	const float c_CLEAR_COLOR[4]							 = { 0.28f, 0.41f, 0.61f, 1.0f };
@@ -55,7 +55,7 @@ private:
 	//Engine variables
 	float g_deltaTime										 = 0.0f;
 	float g_pc_time											 = 0.0f;
-	bool  g_save_result										 = true;
+	bool  g_save_result										 = false;
 	float g_save_result_time								 = 20.0f;
 
 	//Engine Properties
