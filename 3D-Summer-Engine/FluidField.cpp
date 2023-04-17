@@ -285,7 +285,7 @@ void FluidField::addForces(float dt) {
 	//float o = 0.8f;
 	//float value = (sin(glfwGetTime() * 0.1f) + 1) / 2.0f * o + (1 - o) / 2.0f;
 	//glUniform1f(m_integrate_shader.uniforms["time"], value);
-	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -140.82f, 0.0f, 0.0f) * dt);
+	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -90.82f, 0.0f, 0.0f) * dt);
 	//temperature(dt);
 }
 

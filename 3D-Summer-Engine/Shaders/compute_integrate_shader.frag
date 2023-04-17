@@ -7,7 +7,7 @@ uniform float time;
 
 void main () {
 	vec2 coords = gl_FragCoord.xy;
-	vec2 margin = vec2(texelSize.x*300, texelSize.y*100) * 0;
+	vec2 margin = vec2(texelSize.x*300, texelSize.y*200) * 0.09f;
 	vec4 u = texture2D(uTexture, coords*texelSize);
 
 	vec2 vL = (coords - vec2(1, 0));
@@ -37,11 +37,11 @@ void main () {
 	bool rectCondition = (pos.x + dim.x > coords.x && pos.x - dim.x < coords.x) && (pos.y + dim.y > coords.y && pos.y - dim.y < coords.y);
 	rectCondition = false;
 
-	if((shapeCoord < size) || rectCondition){
-		fragColor = vec4(0, 0, 0.0f, 0.0f);
-	}
-
-	if((shapeCoord < size + 5 && shapeCoord > size)){
-		fragColor = vec4(-u.x, -u.y, 0.0f, 1.0f);
-	}
+	//if((shapeCoord < size) || rectCondition){
+	//	fragColor = vec4(0, 0, 0.0f, 0.0f);
+	//}
+	//
+	//if((shapeCoord < size + 5 && shapeCoord > size)){
+	//	fragColor = vec4(-u.x, -u.y, 0.0f, 1.0f);
+	//}
 }
