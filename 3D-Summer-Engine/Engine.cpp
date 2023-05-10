@@ -177,10 +177,10 @@ void Engine::Run() {
 		}
 		if (simulationTime >= g_save_result_time && Engine::g_running)
 		{
-			std::cout << "Simulation: " << simulationTime << "s Engine: " << engineTime << "s Ratio: " << simulationTime / engineTime << "s Steps: " << steps << " Sum: " << sum << " Saved: " << savedTime * 1000 << "ms PC: " << currentTime - g_pc_time << "s" << std::endl;
-			std::cout << title << std::endl;
-			glfwSetWindowTitle(m_window->getWindow(), title.c_str());
-			saveResults();
+			//std::cout << "Simulation: " << simulationTime << "s Engine: " << engineTime << "s Ratio: " << simulationTime / engineTime << "s Steps: " << steps << " Sum: " << sum << " Saved: " << savedTime * 1000 << "ms PC: " << currentTime - g_pc_time << "s" << std::endl;
+			//std::cout << title << std::endl;
+			//glfwSetWindowTitle(m_window->getWindow(), title.c_str());
+			//saveResults();
 		}
 
 		IO_EVENTS(m_window->getWindow());
