@@ -39,8 +39,8 @@ private:
 	FileHandler			fileSystem;
 
 	//Window Properties
-	static const int c_WIDTH								 = 900;
-	static const int c_HEIGHT								 = 900;
+	static const int c_WIDTH								 = 1920;
+	static const int c_HEIGHT								 = 1080;
 	const char* c_WINDOW_NAME								 = "Summer Engine";
 	const float c_DEFAULT_CLEAR_COLOR[4]					 = { 0.0f, 0.0f, 0.0f, 1.0f };
 	const float c_CLEAR_COLOR[4]							 = { 0.28f, 0.41f, 0.61f, 1.0f };
@@ -62,7 +62,7 @@ private:
 	float g_fps_limit										 = 0.0f;			// Monitor refreshrate: (x < 0), No limit: (x = 0)
 
 	//Fluid Simulation Properties
-	const int   c_RESOLUTION								 = 256;				// aka Gridarea
+	const int   c_RESOLUTION								 = 512;				// aka Gridarea
 	const float c_precision									 = 1.0f / 144.0f;	// Simulator speed
 	const bool  c_precision_bound							 = false;			// If the simulator should account for time lost by lag
 

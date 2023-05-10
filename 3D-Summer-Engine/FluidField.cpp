@@ -222,11 +222,11 @@ void FluidField::advect(float dt) {
 	m_dye_buffer->swap();
 
 	//Advect density
-	glUniform1f(dissipationLoc, m_dye_dissipation);
+	/*glUniform1f(dissipationLoc, m_dye_dissipation);
 	glUniform1i(xLoc, m_density_buffer->readBuffer()->setTexture(1)); //x = quantity scalar texture
 	glUniform2f(texelLoc, m_density_buffer->readBuffer()->texelSizeX, m_density_buffer->readBuffer()->texelSizeY);
 	blit(m_density_buffer->writeBuffer(), &m_advection_shader);
-	m_density_buffer->swap();
+	m_density_buffer->swap();*/
 }
 
 //Diffusion, by using jacobi iterations
@@ -273,14 +273,15 @@ void FluidField::diffuse(float dt) {
 
 //Force Application
 void FluidField::addForces(float dt) {
-	float r = 0.0258f;
+	float r = 0.0358f;
 	float streams = 11;
 
-	for (int stream = 0; stream < streams; stream++)
-	{
-		splat(glm::vec2((1.0f) / streams * ((stream + 1.0f)) - ((1.0f) / streams / 2.0f), 0.9f), r, true, false);
-		//splat(glm::vec2(0.1f, 1.0f - (1.0f) / streams * ((stream + 1.0f)) + ((1.0f) / streams / 2.0f)), r, true, false);
-	}
+	//for (int stream = 0; stream < streams; stream++)
+	//{
+	//	splat(glm::vec2((1.0f) / streams * ((stream + 1.0f)) - ((1.0f) / streams / 2.0f), 0.9f), r, true, false);
+	//	//splat(glm::vec2(0.1f, 1.0f - (1.0f) / streams * ((stream + 1.0f)) + ((1.0f) / streams / 2.0f)), r, true, false);
+	//}
+	splat(glm::vec2(0.5f, 0.9f), r, streams, true, false);
 	m_integrate_shader.use();
 	//float o = 0.8f;
 	//float value = (sin(glfwGetTime() * 0.1f) + 1) / 2.0f * o + (1 - o) / 2.0f;
@@ -404,6 +405,13 @@ void FluidField::gradientSubtract(float dt)
 	m_velocity_buffer->swap();
 }
 
+void FluidField::splat(glm::vec2 pos, float r, unsigned int amount, bool dye, bool velocity) {
+	m_splat_shader.use();
+	glUniform1i(m_splat_shader.uniforms["amount"], amount);
+	splat(pos, r, dye, velocity);
+	glUniform1i(m_splat_shader.uniforms["amount"], 1);
+}
+
 void FluidField::splat(glm::vec2 pos, float r, bool dye, bool velocity) {
 	m_splat_shader.use();
 	//Uniforms
@@ -442,12 +450,12 @@ void FluidField::splat(glm::vec2 pos, float r, bool dye, bool velocity) {
 		blit(m_dye_buffer->writeBuffer(), &m_splat_shader);
 		m_dye_buffer->swap();
 		//Add density
-		color = glm::vec3(m_density, 0.0f, 0.0f);
+		/*color = glm::vec3(m_density, 0.0f, 0.0f);
 		glUniform3f(uColorLoc, color.r, 0.0f, 0.0f);
 		glUniform1i(m_splat_shader.uniforms["uTarget"], m_density_buffer->readBuffer()->setTexture(0));
 		glUniform2f(uTexLoc, m_density_buffer->readBuffer()->texelSizeX, m_density_buffer->readBuffer()->texelSizeY);
 		blit(m_density_buffer->writeBuffer(), &m_splat_shader);
-		m_density_buffer->swap();
+		m_density_buffer->swap();*/
 	}
 
 	
