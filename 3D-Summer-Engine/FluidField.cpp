@@ -257,14 +257,14 @@ void FluidField::diffuse(float dt) {
 
 		//float alpha = pow(1, 2) / m_timestep;
 		//float rBeta = 1 / (4 + alpha);
-		glUniform1f(alphaLoc, alpha);  //Alpha = pow(dx, 2)/t
-		glUniform1f(rBetaLoc, rBeta); //rBeta = 1/(4+Alpha)
+		//glUniform1f(alphaLoc, alpha);  //Alpha = pow(dx, 2)/t
+		//glUniform1f(rBetaLoc, rBeta); //rBeta = 1/(4+Alpha)
 		glUniform2f(xTexelLoc, m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
 		glUniform1i(bLoc, m_dye_buffer->readBuffer()->setTexture(0));
 
 		for (unsigned int k = 0; k < m_diffuseIterations; k++) //20 to 50 iterations
 		{
-			glUniform1i(xLoc, m_dye_buffer->readBuffer()->setTexture(1)); // x = b = u (velocity)
+			glUniform1i(xLoc, m_dye_buffer->readBuffer()->setTexture(1)); // x = b = u (dye)
 			blit(m_dye_buffer->writeBuffer(), &m_jacobi_iteration_shader);
 			m_dye_buffer->swap();
 		}

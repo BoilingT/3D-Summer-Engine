@@ -114,29 +114,29 @@ class FluidField
 	};
 
 private:
-	const char* p_COMPUTE_SHADER						 = "Shaders/compute_shader_backup.glsl";
-	const char* p_advection_shader						 = "Shaders/compute_advection_shader.frag";
-	const char* p_jacobi_shader							 = "Shaders/compute_jacobi_shader.frag";
-	const char* p_force_shader							 = "Shaders/compute_force_shader.frag";
-	const char* p_divergence_shader						 = "Shaders/compute_divergence_shader.frag";
-	const char* p_clear_shader							 = "Shaders/compute_clear_shader.frag";
-	const char* p_integrate_shader						 = "Shaders/compute_integrate_shader.frag";
-	const char* p_gradient_subtraction_shader			 = "Shaders/compute_gradient_subtraction_shader.frag";
-	const char* p_vorticity_shader						 = "Shaders/compute_vorticity_shader.frag";
-	const char* p_curl_shader							 = "Shaders/compute_curl_shader.frag";
-	const char* p_temperature_shader					 = "Shaders/compute_temperature_shader.frag";
-	const char* p_density_shader						 = "Shaders/compute_density_shader.frag";
-	const char* p_bounds_shader							 = "Shaders/compute_bounds_shader.frag";
-	const char* p_splat_shader							 = "Shaders/compute_splat_shader.frag";
+	const char* p_COMPUTE_SHADER						 = "./Shaders/compute_shader_backup.glsl";
+	const char* p_advection_shader						 = "./Shaders/compute_advection_shader.frag";
+	const char* p_jacobi_shader							 = "./Shaders/compute_jacobi_shader.frag";
+	const char* p_force_shader							 = "./Shaders/compute_force_shader.frag";
+	const char* p_divergence_shader						 = "./Shaders/compute_divergence_shader.frag";
+	const char* p_clear_shader							 = "./Shaders/compute_clear_shader.frag";
+	const char* p_integrate_shader						 = "./Shaders/compute_integrate_shader.frag";
+	const char* p_gradient_subtraction_shader			 = "./Shaders/compute_gradient_subtraction_shader.frag";
+	const char* p_vorticity_shader						 = "./Shaders/compute_vorticity_shader.frag";
+	const char* p_curl_shader							 = "./Shaders/compute_curl_shader.frag";
+	const char* p_temperature_shader					 = "./Shaders/compute_temperature_shader.frag";
+	const char* p_density_shader						 = "./Shaders/compute_density_shader.frag";
+	const char* p_bounds_shader							 = "./Shaders/compute_bounds_shader.frag";
+	const char* p_splat_shader							 = "./Shaders/compute_splat_shader.frag";
 
-	const char* p_VISUALISE_GRID_VERTEX_SHADER			 = "Shaders/visualise_grid_vertex_shader.vert";
-	const char* p_VISUALISE_GRID_FRAGMENT_SHADER		 = "Shaders/visualise_grid_fragment_shader.frag";
-	const char* p_VERTEX_SHADER							 = "Shaders/vertex_shader.vert";
-	const char* p_FRAGMENT_SHADER						 = "Shaders/fragment_shader.frag";
-	const char* p_OBJECT_VERTEX_SHADER					 = "Shaders/object_vertex_shader.vert";
-	const char* p_OBJECT_FRAGMENT_SHADER				 = "Shaders/object_fragment_shader.frag";
-	const char* p_TEXTURE								 = "Images/Generated Images/notGenerated.jpg";
-	const char* p_TEMPERATURE_TEXTURE					 = "Images/Generated Images/temp.png";
+	const char* p_VISUALISE_GRID_VERTEX_SHADER			 = "./Shaders/visualise_grid_vertex_shader.vert";
+	const char* p_VISUALISE_GRID_FRAGMENT_SHADER		 = "./Shaders/visualise_grid_fragment_shader.frag";
+	const char* p_VERTEX_SHADER							 = "./Shaders/vertex_shader.vert";
+	const char* p_FRAGMENT_SHADER						 = "./Shaders/fragment_shader.frag";
+	const char* p_OBJECT_VERTEX_SHADER					 = "./Shaders/object_vertex_shader.vert";
+	const char* p_OBJECT_FRAGMENT_SHADER				 = "./Shaders/object_fragment_shader.frag";
+	const char* p_TEXTURE								 = "./Images/Generated Images/notGenerated.jpg";
+	const char* p_TEMPERATURE_TEXTURE					 = "./Images/Generated Images/temp.png";
 
 	//Framebuffers
 	DoubleFramebuffer* m_velocity_buffer;				//Contains velocities to be advected
