@@ -6,10 +6,11 @@ Framebuffer::Framebuffer(float res, unsigned int w, unsigned int h, GLint intern
 	resolution = res;
 	width = w;
 	height = h;
-	float ratio = (float)w / (float)h;
-	if (ratio < 1)
+
+	float ratio = (float)width / (float)height;
+	if (ratio < 1.0f)
 	{
-		ratio = 1 / ratio;
+		ratio = 1.0f / ratio;
 	}
 	float min = round(resolution);
 	float max = round(resolution * ratio);
@@ -39,14 +40,54 @@ Framebuffer::Framebuffer(float res, unsigned int w, unsigned int h, GLint intern
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, param);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, param);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, 100);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, -100);
+	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 100);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, NULL);
+	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
-	GLuint clearColor[4] = { 0, 0, 0, 0 };
-	glClearBufferuiv(GL_COLOR, fbo, clearColor);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	if (!status())
+	{
+		std::cout << "ERROR::BLIT::FRAMEBUFFER::STATUS::INCOMPLETE" << std::endl;
+		return;
+	}
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Framebuffer::updateDimensions(unsigned int w, unsigned int h) {
+	width = w;
+	height = h;
+
+	float ratio = (float)width / (float)height;
+	if (ratio < 1.0f)
+	{
+		ratio = 1.0f / ratio;
+	}
+	float min = round(resolution);
+	float max = round(resolution * ratio);
+	if (w > h)
+	{
+		width = max;
+		height = min;
+	}
+	else {
+		width = min;
+		height = max;
+	}
+
+	//width = (float) w;
+	//height = (float) h;
+
+	texelSizeX = 1.f / width;
+	texelSizeY = 1.f / height;
 }
 
 int Framebuffer::status() {
@@ -80,13 +121,15 @@ void Framebuffer::setTextureSource(const char* path, int screen_width, int scree
 		}
 		glGenTextures(1, &texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		texelSizeX = 1.f / w;
 		texelSizeY = 1.f / h;
+		width = w;
+		height = h;
 		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, w, h, 0, format, type, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -94,7 +137,10 @@ void Framebuffer::setTextureSource(const char* path, int screen_width, int scree
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
 		GLuint clearColor[4] = { 0, 0, 0, 0 };
 		glClearBufferuiv(GL_COLOR, fbo, clearColor);
+		//glClearColor(0, 0, 0.0f, 0.0f);
+		//glClear(GL_COLOR_BUFFER_BIT);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		
 	}
 	else {
 		std::cout << "ERROR::FAILURE::LOADING::TEXTURE" << std::endl;

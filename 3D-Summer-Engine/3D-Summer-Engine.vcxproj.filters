@@ -155,9 +155,6 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Shaders\compute_shader.glsl">
-      <Filter>Resource Files\Shaders</Filter>
-    </Text>
     <Text Include="Shaders\compute_advection_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
@@ -165,6 +162,12 @@
       <Filter>Resource Files\Shaders</Filter>
     </Text>
     <Text Include="Shaders\compute_clear_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\compute_curl_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\compute_density_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
     <Text Include="Shaders\compute_divergence_shader.frag">
@@ -176,13 +179,25 @@
     <Text Include="Shaders\compute_gradient_subtraction_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
+    <Text Include="Shaders\compute_integrate_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
     <Text Include="Shaders\compute_jacobi_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\compute_shader.glsl">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
     <Text Include="Shaders\compute_shader_backup.glsl">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
     <Text Include="Shaders\compute_splat_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\compute_temperature_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\compute_vorticity_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
     <Text Include="Shaders\default_fragment_shader.frag">
@@ -192,6 +207,12 @@
       <Filter>Resource Files\Shaders</Filter>
     </Text>
     <Text Include="Shaders\fragment_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\object_fragment_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="Shaders\object_vertex_shader.vert">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
     <Text Include="Shaders\vertex_shader.vert">

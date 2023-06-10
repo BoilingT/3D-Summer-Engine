@@ -10,6 +10,7 @@ double Engine::g_lastY				 = 0;
 bool Engine::g_mouseDown			 = 0;
 bool Engine::g_firstMouseEnter		 = 0;
 bool Engine::g_mouse_constrain		 = true;
+unsigned int Engine::g_running		 = false;
 
 void Engine::Init()
 {
@@ -25,13 +26,18 @@ void Engine::Init()
 		std::cout << "ERROR :: Unable to initialize GLAD";
 		return;
 	}
-	
 	//glEnable(GL_DEPTH_TEST);
-
+	g_pc_time = glfwGetTime();
+	if (g_fps_limit < 0)
+	{
+		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		g_fps_limit = mode->refreshRate;
+	}
 	//Set the viewport size
 	glViewport(0, 0, c_WIDTH, c_HEIGHT);
 	//Resize the viewport when the window size is changed
 	glfwSetFramebufferSizeCallback(m_window->getWindow(), FRAME_BUFFER_SIZE_CALLBACK);
+	glfwSetKeyCallback(m_window->getWindow(), KEY_CALLBACK);
 	//Mouse Events
 	glfwSetCursorPosCallback(m_window->getWindow(), MOUSE_CALLBACK);
 	//Key Events
@@ -75,50 +81,114 @@ void Engine::Run() {
 	std::cout << "STARTING::ENGINE" << std::endl;
 	glfwSetWindowTitle(m_window->getWindow(), "Starting Engine...");
 
+	float g_lastTime = glfwGetTime();
+	float g_lastTime2 = g_lastTime;
 	int frames = 0;
 	int fps = 0;
 	double TPF = 0;
-	int maxFps = 0;
+	float averageDT = 0;
+	float dtTotal = 0;
+	float avarageFPS = 0;
+	float totalFPS = 0;
+	float maxDt = 0;
+	float lowDt = 0; 
+	float oldDt = 0;
+	float newDt = 0;
+	float PM = 0;
+	float PMTotal = 0;
+	float avgPM = 0;
 	float sleepTime = 0;
-	
+	double currentTime = glfwGetTime();
+	int steps = 0;
+	glfwSwapInterval(0);
 	//Rect plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
 
 	//glm::vec3 origin = glm::vec3(-c_WIDTH / 2.f, c_HEIGHT / 2.f, 0);
+
 	glm::vec3 origin = glm::vec3(0, 0, 0);
 	
-	std::cout << "STARTING::RENDER::LOOP" << std::endl;
+	std::cout << "ENTERING::RENDER::LOOP" << std::endl;
 	glfwSetWindowTitle(m_window->getWindow(), "Started rendering loop...");
+
+	Engine::g_running = !glfwWindowShouldClose(m_window->getWindow());
 	
-	g_lastTime = glfwGetTime();
-	g_lastTime2 = glfwGetTime();
-	sleepTime = 1000.0f / 60.0f;
+	float simulationTime = 0.0f;
+	float engineTime = 0.0;
+	float savedTime = 0.0f;
+	float timeRatio = 1.0f;
+	float sum = 0.0f;
 	while (!glfwWindowShouldClose(m_window->getWindow()))
 	{
-		double currentTime = glfwGetTime();
-		g_deltaTime = currentTime - g_lastTime;
+		oldDt = g_deltaTime;
+		currentTime = glfwGetTime();
+		g_deltaTime = currentTime - g_lastTime - sleepTime/1000.0f;
 		g_lastTime = glfwGetTime();
+		newDt = g_deltaTime;
 		frames++;
+		dtTotal += g_deltaTime;
+		totalFPS += fps;
 
-		sleepTime = 1000.0f / 144.0f - g_deltaTime * 1000.0f;
-		std::string title = "FPS: " + std::to_string(fps) + " dT: " + std::to_string(g_deltaTime*1000.0f) + "ms TPF: " + std::to_string(TPF) + "ms";
+		sleepTime = (1.0f / g_fps_limit - g_deltaTime) * 1000; //ms
+
+		if (sleepTime < 0 || g_fps_limit == 0)
+		{
+			sleepTime = 0;
+		}
+
+		if (newDt > oldDt)
+		{
+			maxDt = newDt;
+			PM = newDt - oldDt;
+		}
+		else if (newDt < oldDt) {
+			lowDt = newDt;
+			PM = oldDt - newDt;
+		}
+		PMTotal += PM;
+		averageDT = (double)dtTotal/(double)frames;
+		avarageFPS = (double)totalFPS / (double)frames;
+		avgPM = PMTotal / frames;
+
+		std::string title = "avg dT: " + std::to_string(averageDT * 1000.0f) + "ms maxDt: " + std::to_string(maxDt*1000.0f) + "ms lowDt: " + std::to_string(lowDt*1000.0f) + "ms PM: " + std::to_string(avgPM * 1000.0f);
 		if (currentTime - g_lastTime2 >= 1.f)
 		{
+			//std::string title = "FPS: " + std::to_string(fps) + " dT: " + std::to_string(g_deltaTime * 1000.0f) + "ms avg dT: " + std::to_string(averageDT * 1000.0f) + "ms TPF: " + std::to_string(TPF);
 			//double TPF = 1000.0 / (double)frames;
 			//std::cout << TPF << "ms/frame" << std::endl;
 			TPF = 1000.0 / (double)frames;
-			fps = frames/(currentTime - g_lastTime2);
-			maxFps = fps > maxFps ? fps : maxFps;
+			fps = frames/(currentTime - g_lastTime2-sleepTime/1000.0f);
 			frames = 0;
-			//sleepTime = 1000.f / 60.f;// -(currentTime - g_lastTime2) * 1000.0f;
+			PMTotal = 0;
+			totalFPS = 0;
+			dtTotal = 0;
+			//sleepTime = 1000.f / 60.0f -(currentTime - g_lastTime2) * 2.0f;
 			g_lastTime2 += 1.f;
-			glfwSetWindowTitle(m_window->getWindow(), title.c_str());
+
+			if (engineTime > 0)
+			{
+				timeRatio = simulationTime / engineTime;
+			}
+		}
+		if (Engine::g_running)
+		{
+			//std::cout << "Simulation: " << simulationTime << "s Engine: " << engineTime << "s Ratio: " << simulationTime/engineTime << "s Steps: " << steps << " Sum: " << sum << " Saved: " << savedTime * 1000 << "ms PC: " << currentTime - g_pc_time << "s" << std::endl;
+			//std::cout << title << std::endl;
+			//glfwSetWindowTitle(m_window->getWindow(), title.c_str());
+		}
+		if (simulationTime >= g_save_result_time && Engine::g_running)
+		{
+			//std::cout << "Simulation: " << simulationTime << "s Engine: " << engineTime << "s Ratio: " << simulationTime / engineTime << "s Steps: " << steps << " Sum: " << sum << " Saved: " << savedTime * 1000 << "ms PC: " << currentTime - g_pc_time << "s" << std::endl;
+			//std::cout << title << std::endl;
+			//glfwSetWindowTitle(m_window->getWindow(), title.c_str());
+			//saveResults();
 		}
 
 		IO_EVENTS(m_window->getWindow());
 
 		//Render
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(c_DEFAULT_CLEAR_COLOR[0], c_DEFAULT_CLEAR_COLOR[1], c_DEFAULT_CLEAR_COLOR[2], c_DEFAULT_CLEAR_COLOR[3]);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		//Transform Matrices
 		/*
@@ -143,8 +213,62 @@ void Engine::Run() {
 		double val = sin(timeValue / 2);
 		
 		m_fluid->updateMouse(&g_lastX, &g_lastY, &g_mouseDown);
-		m_fluid->timeStep(g_deltaTime);
+		double tpf = g_deltaTime + sleepTime / 1000.0f;
+
+		if (tpf < 0)
+		{
+			tpf = 0;
+			std::cout << "TPF < 0!" << std::endl;
+		}
+		//Step forward in time until it has accounted for the number of steps lost by lag
+		if (Engine::g_running)
+		{
+			if (c_precision_bound)
+			{
+				if (true) //The engine is running slower than the simulator
+				{
+					float ratio = (tpf) / c_precision;
+					steps = ratio;
+					float c = 1 + (ratio - steps)/steps;
+					////Simulate 10 s of evolvement
+					//float time = 60; //s
+					//float ratio = time / c_precision;
+					//steps = ratio;
+					//float c = 1 + (ratio - steps)/steps;
+
+					savedTime = 0;
+					for (unsigned int i = 0; i < steps; i++)
+					{
+						m_fluid->timeStep(c_precision);
+						simulationTime += c_precision;
+						if (i > 0)
+						{
+							savedTime += c_precision;
+						}
+						sum++;
+					}
+					//simulationTime += c_precision * c * steps;
+				}
+				else //The engine is running faster than the simulator
+				{
+					float ratio = tpf / c_precision;  //How much faster the simulation is than the engine
+					//Calulate how much faster the simulator is going measured in steps
+					//m_fluid->timeStep(c_precision);
+					m_fluid->timeStep(c_precision * ratio);
+					simulationTime += c_precision * ratio;
+					//simulationTime += tpf;
+				}
+			}
+			else
+			{
+				m_fluid->timeStep(c_precision);
+				simulationTime += c_precision;
+				//m_fluid->timeStep(tpf);
+			}
+			engineTime += tpf;
+		}
 		m_fluid->Draw(origin);
+
 		//m_fluid->DrawCellField(origin);
 		
 		//int vertexColorLocation = glGetUniformLocation(m_primary_shader->getID(), "ourColor");
@@ -165,8 +289,8 @@ void Engine::Run() {
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds((long)(sleepTime)));
 		}
-
 	}
+	std::cout << "EXITED::RENDER::LOOP" << std::endl;
 	return;
 }
 
@@ -188,6 +312,19 @@ void Engine::saveImage(const char* path, GLFWwindow* window)
 	stbi_flip_vertically_on_write(true);
 	stbi_write_png(path, width, height, channelAmount, buffer.data(), stride);
 	std::cout << "File has been written at " << path << std::endl;
+}
+
+void Engine::saveResults() {
+	if (g_running && g_save_result)
+	{
+		Engine::g_running = false;
+		//std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-hz" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound) + "-Z" + std::to_string((int)sum);
+		std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000));
+		std::string path = p_GENERATED_RESULTS + filename + ".png";
+		saveImage(path.c_str(), m_window->getWindow());
+		g_save_result = false;
+		//sum = 0;
+	}
 }
 
 void Engine::IO_EVENTS(GLFWwindow* window) {
@@ -224,6 +361,8 @@ void Engine::IO_EVENTS(GLFWwindow* window) {
 	float cameraSpeed = 2.5f;
 
 	const float cameraSensitivity = m_camera->sensitivity * g_deltaTime;
+	float time = glfwGetTime(); //Seconds
+	float passed_time = 0;
 
 	//Dye
 	if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
@@ -250,6 +389,23 @@ void Engine::IO_EVENTS(GLFWwindow* window) {
 	{
 		m_fluid->swapBuffer(5);
 	}
+	//Temperature
+	if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+	{
+		m_fluid->swapBuffer(6);
+	}
+	//Density
+	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+	{
+		m_fluid->swapBuffer(7);
+	}
+	//Step forward a single timestep
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && Engine::g_running == false)
+	{
+		m_fluid->timeStep(c_precision);
+	}
+
+	/*
 	//Forward
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
@@ -298,6 +454,7 @@ void Engine::IO_EVENTS(GLFWwindow* window) {
 	{
 		m_camera->rotate(glm::vec3(1.0f, 0.0f, 0.0f) * -cameraSensitivity);
 	}
+	*/
 }
 
 void Engine::MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos) {
@@ -338,4 +495,12 @@ void Engine::MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos) {
 
 void Engine::FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
+}
+
+void Engine::KEY_CALLBACK(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	if ((key == GLFW_KEY_PAUSE || key == GLFW_KEY_0) && action == GLFW_PRESS)
+	{
+		std::cout << "Running: " << g_running << std::endl;
+		Engine::g_running = !g_running;
+	}
 }

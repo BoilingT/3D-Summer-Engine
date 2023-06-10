@@ -20,6 +20,7 @@ public:
 		std::cout << "DESTROYED::FRAMEBUFFER" << std::endl;
 	}
 
+	void updateDimensions(unsigned int width, unsigned int height);
 	void bind();
 	int setTexture(unsigned int id);
 	void setTextureSource(const char* path, int width, int height, GLint internalFormat, GLenum format, GLenum type, GLint param);
