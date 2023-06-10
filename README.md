@@ -1,7 +1,7 @@
 # 3D-Summer-Engine
 ## Created by *Tobias Andersson*
 ### Note: 
-Currently this project focuses mainly towards 2D graphics at the moment. It has 3D-features implemented already but a much time has passed since the last revision the 3D-features have not yet been tested.
+Currently this project focuses mainly towards 2D graphics at the moment. It has 3D-features implemented already but much time has passed since the last revision, the 3D-features have not yet been tested.
 
 # 2D Fluid Simulation
 The purpose of this project is to get a somewhat large pool of understanding about computer graphics such as optimizations by using shaders.
