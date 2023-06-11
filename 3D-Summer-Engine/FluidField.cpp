@@ -1,15 +1,8 @@
 #include "FluidField.h"
 
-//Fill the cellgrid with the corresponding x- and y-values
-void FluidField::Init() {
-
-} 
-
 void FluidField::Draw(glm::vec3 origin) {
 
 	m_primary_shader->use();
-	glUniform1f(m_primary_shader->uniforms["u_time"], (GLfloat) glfwGetTime());
-
 	glUniform1i(m_primary_shader->uniforms["u_image"], m_dye_buffer->readBuffer()->setTexture(0));
 	glUniform2f(m_primary_shader->uniforms["dyeTexelSize"], m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
 	glUniform2f(m_primary_shader->uniforms["velTexelSize"], m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
@@ -35,13 +28,13 @@ void FluidField::Draw(glm::vec3 origin) {
 	rectangle.transform.dim = glm::vec3(50.0f);
 	rectangle.transform.pos = glm::vec3(300.0f, 300.0f, 0.0f);
 	//rectangle.Draw(m_object_shader);
-
 }
 
+//Draw to specified framebuffer with specified shader
 void FluidField::blit(Framebuffer* target, Shader* shader) {
-	glm::mat4 modelM = glm::mat4(1.0f);
-	glm::mat4 viewM = glm::mat4(1.0f);
-	glm::mat4 projectionM = glm::mat4(1.0f);
+	//glm::mat4 modelM = glm::mat4(1.0f);
+	//glm::mat4 viewM = glm::mat4(1.0f);
+	//glm::mat4 projectionM = glm::mat4(1.0f);
 
 	//projectionM = glm::ortho(0.0f, (float)m_WIDTH, 0.0f, (float)m_HEIGHT, -1000.0f, 1000.0f);
 
@@ -74,7 +67,7 @@ void FluidField::blit(Framebuffer* target, Shader* shader) {
 	}
 
 	m_fieldQuad->Draw(*shader);
-
+	//Unbind framebuffer
 	int boundBuffer = 0;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &boundBuffer);
 	if (target != nullptr && boundBuffer == target->fbo)
@@ -83,6 +76,7 @@ void FluidField::blit(Framebuffer* target, Shader* shader) {
 	}
 }
 
+//Is not being used
 void FluidField::boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer* target, Shader& shader)
 {
 	line.width(10.0f);
@@ -125,12 +119,13 @@ void FluidField::boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer* 
 //Advection -> Diffusion -> Force Application -> Projection
 void FluidField::timeStep(float dt) {
 	float time = dt * m_timestep_scalar; 
-	advect(time);
-	diffuse(time);
-	//addForces(time);
-	project(time);
+	advect(time);		//Move the fluid and its quantities
+	diffuse(time);		//Spread out the fluid (if viscosity > 0)
+	//addForces(time);	//Add a ball in the center and gravity. Also add multiple splats
+	project(time);		//Remove unwanted stuff
 }
 
+//Is not being used
 void FluidField::boundary(float dt, float scale, float offset, DoubleFramebuffer* target) {
 	m_bounds_shader.use();
 	int uLoc = m_bounds_shader.uniforms["u"];
@@ -147,6 +142,7 @@ void FluidField::boundary(float dt, float scale, float offset, DoubleFramebuffer
 	boundaryContainer(1, 1, 1, 1, target->writeBuffer(), m_bounds_shader);
 }
 
+//Isn't being used
 void FluidField::boundaries(float dt) {
 	//Velocity
 	//boundary(dt, 1.0f, 0, m_dye_buffer);
@@ -154,6 +150,7 @@ void FluidField::boundaries(float dt) {
 	//boundary(dt, 0, 0, m_pressure_buffer);
 }
 
+//Add a value to an entire framebuffer
 void FluidField::bufferIntegrate(DoubleFramebuffer* target, glm::vec4 values)
 {
 	m_integrate_shader.use();
@@ -167,6 +164,7 @@ void FluidField::bufferIntegrate(DoubleFramebuffer* target, glm::vec4 values)
 	target->swap();
 }
 
+//Calculate and add forces due to temprature (Is not being used)
 void FluidField::temperature(float dt) {
 	m_temperature_shader.use();
 	int uLoc = m_temperature_shader.uniforms["u"];
@@ -192,6 +190,7 @@ void FluidField::temperature(float dt) {
 	m_velocity_buffer->swap();
 }
 
+//Move the quantities in the fluid
 void FluidField::advect(float dt) {
 	//Advection
 	m_advection_shader.use();
@@ -229,7 +228,7 @@ void FluidField::advect(float dt) {
 	m_density_buffer->swap();*/
 }
 
-//Diffusion, by using jacobi iterations
+//Diffusion, by using jacobi iterations, spread out the fluid
 void FluidField::diffuse(float dt) {
 	if (m_viscosity > 0) {
 		m_jacobi_iteration_shader.use();
@@ -459,25 +458,6 @@ void FluidField::splat(glm::vec2 pos, float r, bool dye, bool velocity) {
 	}
 
 	
-}
-
-void FluidField::DrawCellField(glm::vec3 o) {
-	m_visualise_grid_shader->use();
-
-	int uniformLocation = glGetUniformLocation(m_visualise_grid_shader->getID(), "resolution");
-	glUniform1i(uniformLocation, m_resolution);
-
-	m_quad->transform.dim = glm::vec3(m_WIDTH / (float)m_fieldWidth, m_HEIGHT / (float)m_fieldWidth, 0.0f);
-	m_quad->transform.pos.x = o.x + m_quad->transform.dim.x / 2.f + m_quad->transform.dim.x * 0;
-	m_quad->transform.pos.y = o.y + m_quad->transform.dim.y / 2.f + m_quad->transform.dim.y * 0;
-	for (unsigned int r = 0; r < m_fieldWidth; r++)
-	{
-		for (unsigned int c = 0; c < m_fieldWidth; c++)
-		{
-			m_translations[(double)r * m_fieldWidth + (double)c] = glm::vec2(c, r);
-		}
-	}
-	m_quad->DrawInstanced(*m_visualise_grid_shader, m_translations.data(), m_resolution);
 }
 
 void FluidField::updateMouse(double* mouseX, double* mouseY, bool* mouse_down)
