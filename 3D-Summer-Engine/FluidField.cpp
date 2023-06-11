@@ -461,25 +461,6 @@ void FluidField::splat(glm::vec2 pos, float r, bool dye, bool velocity) {
 	
 }
 
-void FluidField::DrawCellField(glm::vec3 o) {
-	m_visualise_grid_shader->use();
-
-	int uniformLocation = glGetUniformLocation(m_visualise_grid_shader->getID(), "resolution");
-	glUniform1i(uniformLocation, m_resolution);
-
-	m_quad->transform.dim = glm::vec3(m_WIDTH / (float)m_fieldWidth, m_HEIGHT / (float)m_fieldWidth, 0.0f);
-	m_quad->transform.pos.x = o.x + m_quad->transform.dim.x / 2.f + m_quad->transform.dim.x * 0;
-	m_quad->transform.pos.y = o.y + m_quad->transform.dim.y / 2.f + m_quad->transform.dim.y * 0;
-	for (unsigned int r = 0; r < m_fieldWidth; r++)
-	{
-		for (unsigned int c = 0; c < m_fieldWidth; c++)
-		{
-			m_translations[(double)r * m_fieldWidth + (double)c] = glm::vec2(c, r);
-		}
-	}
-	m_quad->DrawInstanced(*m_visualise_grid_shader, m_translations.data(), m_resolution);
-}
-
 void FluidField::updateMouse(double* mouseX, double* mouseY, bool* mouse_down)
 {
 	m_mouse.update(*mouseX, *mouseY, *mouse_down);

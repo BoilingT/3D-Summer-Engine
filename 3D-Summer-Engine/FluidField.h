@@ -159,8 +159,8 @@ private:
 	Shader m_integrate_shader;							//Used for adding a value to an entire buffer
 	Shader m_clear_shader;								//Used for clearing a buffer of its values
 	Shader m_gradient_subtraction_shader;				//Subtract a gradient from given buffer
-	Shader m_vorticity_shader;							//TODO
-	Shader m_curl_shader;								//TODO
+	Shader m_vorticity_shader;							//Adds swirly movement and details lost by numerical error.
+	Shader m_curl_shader;								//Calculates how the fluid curls
 	Shader m_temperature_shader;						//TODO
 	Shader m_density_shader;							//TODO
 	Shader m_bounds_shader;								//TODO: Control of Fluid boundaries
@@ -168,7 +168,7 @@ private:
 	//Screen rendering shaders
 	Shader  m_object_shader;							//Used to render objects to the screen
 	Shader* m_primary_shader;							//Used to render the fluid to the screen
-	Shader* m_visualise_grid_shader;					//TODO: Used to render a visual representation of the resolution used to the screen
+	Shader* m_visualise_grid_shader;					//TODO: Used to render a visual representation of the resolution used to the screen (Is not being used)
 
 	Texture2D*	 m_texture;
 	unsigned int texture;
@@ -178,7 +178,7 @@ private:
 	const int	 m_resolution;
 	const int	 m_fieldWidth;
 
-	const float	 m_dye_scalar							 = 512*2.0f/768.0f;
+	const float	 m_dye_scalar							 = 512*2.0f/768.0f; //This makes the dye resolution always larger than the velocity resolution, this achieves better details
 	const float	 m_velocity_scalar						 = 1.0f;
 	const float	 m_dye_color[3]							 = { 1.0f, 0.2f, 0.0f };
 	const bool	 m_dye_color_acc_dependent				 = true;		// If color should depend on mouse acceleration
@@ -193,10 +193,11 @@ private:
 	const float  m_vortitcity_scalar					 = 30;			// Vorticity scalar
 	const float	 m_timestep_scalar						 = 1.00f;		// Factor deciding the magnitude of timesteps for each frame.
 	//Experimental
-	//const float  m_ambient_temperature					 = 18.0f;		// Ambient temperature in degrees celsius
+	//const float  m_ambient_temperature					 = 18.0f;	// Ambient temperature in degrees celsius
 	//const float  m_temperature_scalar					 = 10.0f;		// Scales the effect that the difference in temperature has on the boyant force
-	//const float  m_mass									 = 3.0f;		// Smoke mass (Dye mass)
-	//const float  m_density								 = 1.8f;		// Smoke density (Dye density)
+	//const float  m_mass									 = 3.0f;	// Smoke mass (Dye mass)
+	//const float  m_density								 = 1.8f;	// Smoke density (Dye density)
+	//Experimental (Is not in use)
 	const float  m_ambient_temperature					 = -7.0f;		// Ambient temperature in degrees celsius
 	const float  m_temperature_scalar					 = 25.0f;		// Scales the effect that the difference in temperature has on the boyant force
 	const float  m_mass									 = 10.0f;		// Smoke mass (Dye mass) //Downforce
@@ -246,13 +247,13 @@ public:
 		m_visualise_grid_shader	 = new Shader(p_VISUALISE_GRID_VERTEX_SHADER, p_VISUALISE_GRID_FRAGMENT_SHADER);
 		m_texture				 = new Texture2D(p_TEXTURE);
 		m_texture_buffer		 = new Texture2D();
-		m_quad					 = new Rect();
+		//This is the rectangle that is used for displaying the simulation
+		//The simulation is simply a texture drawn on this rectangle
 		m_fieldQuad				 = new Rect(
 									glm::vec3(0.0f), 
 									glm::vec3(0.0f), 
 									glm::vec3(0.0f), 
 									m_texture->get());
-		//&m_translations.resize(resolution);		//reserve memory
 		Init();
 
 		GLenum textureType = GL_UNSIGNED_BYTE;	//Field type
@@ -260,6 +261,8 @@ public:
 		TexFormat rg(GL_RG32F, GL_RG);			//Vector field
 		TexFormat r(GL_R32F, GL_RED);			//Scalar field
 		glDisable(GL_BLEND);
+
+		//Buffers that store the calculated results
 		// Dye
 		m_dye_buffer = new DoubleFramebuffer(m_resolution*m_dye_scalar, m_WIDTH, m_HEIGHT, rgba.internal, rgba.format, textureType, GL_LINEAR);
 		//m_dye_buffer->readBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
@@ -307,6 +310,7 @@ public:
 	}
 
 	~FluidField() {
+		//There is probably a better way to do this
 		delete(m_dye_buffer);
 		delete(m_velocity_buffer);
 		delete(m_temperature_buffer);
@@ -325,10 +329,6 @@ public:
 
 	//Draw the fluid
 	void Draw(glm::vec3 origin); //Should be used with a template?
-	//Draw a visual representation of the dimensions of a grid containing data
-	//NOTE: Not sure if its working. 
-	//TODO: Create shader that draws when this function is called 
-	void DrawCellField(glm::vec3 origin);
 	//Set mouse position and button properties
 	void updateMouse(double* mouseX, double* mouseY, bool* mouse_down);
 	//Move forward in time, update values
