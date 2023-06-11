@@ -62,7 +62,7 @@ private:
 	//Engine Properties
 	//Note: Higher fps will result in faster simulation speed (144 FPS is currently the "sweetspot")
 
-	float g_fps_limit										 = 0.0f;			// Monitor refreshrate: (x < 0), No limit: (x = 0)
+	float g_fps_limit										 = 144.0f;			// Monitor refreshrate: (x < 0), No limit: (x = 0)
 
 	//Fluid Simulation Properties
 	const int   c_RESOLUTION								 = 768;				// The amount of cells that the velocityfield will contain the fluid. Note: The visual resolution is 1.333333 times larger than this resolution.

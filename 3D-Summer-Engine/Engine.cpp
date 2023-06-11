@@ -20,13 +20,13 @@ void Engine::Init()
 		return;
 	}
 
-	//GLAD
+	//GLAD library loading
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		std::cout << "ERROR :: Unable to initialize GLAD";
 		return;
 	}
-	//glEnable(GL_DEPTH_TEST);
+	
 	g_pc_time = glfwGetTime();
 	if (g_fps_limit < 0)
 	{
@@ -42,7 +42,7 @@ void Engine::Init()
 	glfwSetCursorPosCallback(m_window->getWindow(), MOUSE_CALLBACK);
 	//Key Events
 	glfwSetInputMode(m_window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-
+	//Create The Fluid Simulation
 	m_fluid = new FluidField(c_WIDTH, c_HEIGHT, c_RESOLUTION);
 }
 
@@ -77,10 +77,12 @@ void Engine::Init()
 			After all the color values have been determined the final object will then go through the "Alpha test" and "Blending stage". This stage checks the
 			depth values of the fragment to determine if a fragment is in front or behind another object and should thus be discarded accordingly.
 	*/
+
 void Engine::Run() {
 	std::cout << "STARTING::ENGINE" << std::endl;
 	glfwSetWindowTitle(m_window->getWindow(), "Starting Engine...");
-
+	//DONT LOOK AT THESE!!!
+	//I'm basically trying to calculate FPS and how fast the simulation should be running (Haven't succeded yet :( )
 	float g_lastTime = glfwGetTime();
 	float g_lastTime2 = g_lastTime;
 	int frames = 0;
@@ -100,9 +102,10 @@ void Engine::Run() {
 	float sleepTime = 0;
 	double currentTime = glfwGetTime();
 	int steps = 0;
+	//This removes the FPS cap
 	glfwSwapInterval(0);
-	//Rect plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
 
+	//Rect plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
 	//glm::vec3 origin = glm::vec3(-c_WIDTH / 2.f, c_HEIGHT / 2.f, 0);
 
 	glm::vec3 origin = glm::vec3(0, 0, 0);
@@ -117,8 +120,10 @@ void Engine::Run() {
 	float savedTime = 0.0f;
 	float timeRatio = 1.0f;
 	float sum = 0.0f;
+	//Rendering loop
 	while (!glfwWindowShouldClose(m_window->getWindow()))
 	{
+		//Keeping track of time
 		oldDt = g_deltaTime;
 		currentTime = glfwGetTime();
 		g_deltaTime = currentTime - g_lastTime - sleepTime/1000.0f;
@@ -130,11 +135,12 @@ void Engine::Run() {
 
 		sleepTime = (1.0f / g_fps_limit - g_deltaTime) * 1000; //ms
 
+		//Avoiding negative numbers
 		if (sleepTime < 0 || g_fps_limit == 0)
 		{
 			sleepTime = 0;
 		}
-
+		//Some magic
 		if (newDt > oldDt)
 		{
 			maxDt = newDt;
@@ -144,6 +150,7 @@ void Engine::Run() {
 			lowDt = newDt;
 			PM = oldDt - newDt;
 		}
+		//Calculating measurable results
 		PMTotal += PM;
 		averageDT = (double)dtTotal/(double)frames;
 		avarageFPS = (double)totalFPS / (double)frames;
@@ -180,12 +187,13 @@ void Engine::Run() {
 			//std::cout << "Simulation: " << simulationTime << "s Engine: " << engineTime << "s Ratio: " << simulationTime / engineTime << "s Steps: " << steps << " Sum: " << sum << " Saved: " << savedTime * 1000 << "ms PC: " << currentTime - g_pc_time << "s" << std::endl;
 			//std::cout << title << std::endl;
 			//glfwSetWindowTitle(m_window->getWindow(), title.c_str());
-			//saveResults();
+			saveResults();
 		}
 
 		IO_EVENTS(m_window->getWindow());
 
-		//Render
+		//Rendering
+		
 		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(c_DEFAULT_CLEAR_COLOR[0], c_DEFAULT_CLEAR_COLOR[1], c_DEFAULT_CLEAR_COLOR[2], c_DEFAULT_CLEAR_COLOR[3]);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -220,7 +228,8 @@ void Engine::Run() {
 			tpf = 0;
 			std::cout << "TPF < 0!" << std::endl;
 		}
-		//Step forward in time until it has accounted for the number of steps lost by lag
+		//Step forward in time until it has accounted for the number of steps lost by lag (Is disabled, the simulation steps forward with constant timesteps)
+		//Experimenting with dynamic and constant timesteps
 		if (Engine::g_running)
 		{
 			if (c_precision_bound)
@@ -259,7 +268,7 @@ void Engine::Run() {
 					//simulationTime += tpf;
 				}
 			}
-			else
+			else //This is what is currently being used
 			{
 				m_fluid->timeStep(c_precision);
 				simulationTime += c_precision;
@@ -267,12 +276,8 @@ void Engine::Run() {
 			}
 			engineTime += tpf;
 		}
+		//Bring the results to the screen!
 		m_fluid->Draw(origin);
-
-		//m_fluid->DrawCellField(origin);
-		
-		//int vertexColorLocation = glGetUniformLocation(m_primary_shader->getID(), "ourColor");
-		//glUniform4f(vertexColorLocation, 0.0f, val, timeValue, 1.0f);
 
 		glBindVertexArray(0);
 
@@ -294,6 +299,7 @@ void Engine::Run() {
 	return;
 }
 
+//This is some copy pasta from somewhere on stackoverflow
 void Engine::saveImage(const char* path, GLFWwindow* window)
 {
 	std::cout << "Writing file..." << std::endl;
@@ -404,7 +410,7 @@ void Engine::IO_EVENTS(GLFWwindow* window) {
 	{
 		m_fluid->timeStep(c_precision);
 	}
-
+	//Camera movement
 	/*
 	//Forward
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
