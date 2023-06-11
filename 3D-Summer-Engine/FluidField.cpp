@@ -3,8 +3,6 @@
 void FluidField::Draw(glm::vec3 origin) {
 
 	m_primary_shader->use();
-	glUniform1f(m_primary_shader->uniforms["u_time"], (GLfloat) glfwGetTime());
-
 	glUniform1i(m_primary_shader->uniforms["u_image"], m_dye_buffer->readBuffer()->setTexture(0));
 	glUniform2f(m_primary_shader->uniforms["dyeTexelSize"], m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
 	glUniform2f(m_primary_shader->uniforms["velTexelSize"], m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
@@ -30,7 +28,6 @@ void FluidField::Draw(glm::vec3 origin) {
 	rectangle.transform.dim = glm::vec3(50.0f);
 	rectangle.transform.pos = glm::vec3(300.0f, 300.0f, 0.0f);
 	//rectangle.Draw(m_object_shader);
-
 }
 
 void FluidField::blit(Framebuffer* target, Shader* shader) {
