@@ -178,8 +178,8 @@ private:
 	const int	 m_resolution;
 	const int	 m_fieldWidth;
 
-	const float	 m_dye_scalar							 = 2.0f;
-	const float	 m_velocity_scalar						 = 1.5f;
+	const float	 m_dye_scalar							 = 512*2.0f/768.0f;
+	const float	 m_velocity_scalar						 = 1.0f;
 	const float	 m_dye_color[3]							 = { 1.0f, 0.2f, 0.0f };
 	const bool	 m_dye_color_acc_dependent				 = true;		// If color should depend on mouse acceleration
 	const float	 m_dye_force							 = 6000.0f;		// Force used to create velocities
