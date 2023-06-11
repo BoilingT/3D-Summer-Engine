@@ -16,3 +16,6 @@ To test the simulation you will need to build the application on your own. There
 ### Using this content does not gaurantee a fully working product. By using this product you acknowledge there will be no responsibility for the creator to update and fix problems that may occur.
 
 ## Have Fun!
+
+Icon used:
+https://www.flaticon.com/free-icons/letter-f Created by riajulislam
