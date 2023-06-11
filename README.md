@@ -7,7 +7,7 @@ Currently this project focuses mainly towards 2D graphics at the moment. It has 
 The purpose of this project is to get a somewhat large pool of understanding about computer graphics such as optimizations by using shaders.
 
 # Usage
-To test the simulation you will need to build the application on your own. There are no built "exe-files" in this repository. 
+To test the simulation you can build the application on your own. You can also download the setup file in the releases https://github.com/BoilingT/3D-Summer-Engine/releases. 
 
 ### Using this content does not gaurantee a fully working product. By using this product you acknowledge there will be no responsibility for the creator to update and fix problems that may occur.
 
