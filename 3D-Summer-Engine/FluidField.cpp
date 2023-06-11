@@ -30,10 +30,11 @@ void FluidField::Draw(glm::vec3 origin) {
 	//rectangle.Draw(m_object_shader);
 }
 
+//Draw to specified framebuffer with specified shader
 void FluidField::blit(Framebuffer* target, Shader* shader) {
-	glm::mat4 modelM = glm::mat4(1.0f);
-	glm::mat4 viewM = glm::mat4(1.0f);
-	glm::mat4 projectionM = glm::mat4(1.0f);
+	//glm::mat4 modelM = glm::mat4(1.0f);
+	//glm::mat4 viewM = glm::mat4(1.0f);
+	//glm::mat4 projectionM = glm::mat4(1.0f);
 
 	//projectionM = glm::ortho(0.0f, (float)m_WIDTH, 0.0f, (float)m_HEIGHT, -1000.0f, 1000.0f);
 
