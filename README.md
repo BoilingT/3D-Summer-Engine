@@ -18,9 +18,6 @@ GLAD 3.3 core
 
 GLM
 
-Application Icon:
-https://www.flaticon.com/free-icons/letter-f Created by riajulislam
-
 ## Have Fun!
 
 # Screenshots
@@ -30,3 +27,7 @@ By pressing the key 'O' you can view the difference in pressure
 ![-Res256-dx6-dt1](https://github.com/BoilingT/3D-Summer-Engine/assets/34101043/644655b9-4006-40ff-bf55-1be964cdc92b)
 By pressing the key 'I' you can get a simple view that shows how the fluid is moving and how it behaves
 ![image](https://github.com/BoilingT/3D-Summer-Engine/assets/34101043/408001be-5a2a-4d2d-971d-840bbc743396)
+
+### Credits
+Application Icon:
+https://www.flaticon.com/free-icons/letter-f Created by riajulislam
