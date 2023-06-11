@@ -13,7 +13,9 @@ To test the simulation you will need to build the application on your own. There
 
 # Libraries and Includes
 GLFW 3.3.8
+
 GLAD 3.3 core
+
 GLM
 
 Application Icon:
