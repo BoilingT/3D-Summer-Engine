@@ -1,10 +1,5 @@
 #include "FluidField.h"
 
-//Fill the cellgrid with the corresponding x- and y-values
-void FluidField::Init() {
-
-} 
-
 void FluidField::Draw(glm::vec3 origin) {
 
 	m_primary_shader->use();

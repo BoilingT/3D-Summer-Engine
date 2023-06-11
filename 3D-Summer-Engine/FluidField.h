@@ -213,9 +213,6 @@ private:
 
 	Mouse  m_mouse;
 
-	//Initialize the grid (Not nessecary!)
-	void Init();
-
 public:
 	FluidField(const float WIDTH, const float HEIGHT, const int resolution) :
 		m_resolution(resolution),
@@ -254,7 +251,6 @@ public:
 									glm::vec3(0.0f), 
 									glm::vec3(0.0f), 
 									m_texture->get());
-		Init();
 
 		GLenum textureType = GL_UNSIGNED_BYTE;	//Field type
 		TexFormat rgba(GL_RGBA32F, GL_RGBA);	//Quantity field
