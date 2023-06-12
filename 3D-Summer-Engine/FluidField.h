@@ -171,7 +171,6 @@ private:
 	Shader* m_visualise_grid_shader;					//TODO: Used to render a visual representation of the resolution used to the screen (Is not being used)
 
 	Texture2D*	 m_texture;
-	unsigned int texture;
 	Texture2D*	 m_texture_buffer;
 	Rect*		 m_fieldQuad;
 	const float	 m_WIDTH, m_HEIGHT;
@@ -204,12 +203,8 @@ private:
 	const float  m_density								 = 0.6f;		// Smoke density (Dye density) //Downforce
 
 	//Visualisation
-	bool					m_showDataVectors;  //TODO
-	std::vector<glm::vec2>	m_translations;		//TODO
-	Rect*					m_quad;				//TODO
 	Rect					rectangle;
 	Line					line;
-	Line*					m_line;				//TODO
 
 	Mouse  m_mouse;
 
@@ -318,8 +313,6 @@ public:
 		delete(m_primary_shader);
 		delete(m_visualise_grid_shader);
 		delete(m_fieldQuad);
-		delete(m_quad);
-		delete(m_line);
 		std::cout << "DESTROYED::FLUIDFIELD" << std::endl;
 	}
 

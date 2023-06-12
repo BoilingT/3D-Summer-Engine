@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="cfgParser.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="fileHandler.cpp" />
@@ -36,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="cfgParser.h" />
     <ClInclude Include="Compute.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Engine.h" />
@@ -201,6 +203,26 @@
       <DeploymentContent>true</DeploymentContent>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="engine.cfg">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="fluid.cfg">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="engine_default.cfg">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="fluid_default.cfg">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
