@@ -147,6 +147,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_A2F75078B94D492FBBDF399264475746"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_AF7909DE47B9480088921EA94AC303AA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -172,12 +178,6 @@
         "Entry"
         {
         "MsmKey" = "8:_CD04F1670DDF4094976FA1F9DD3EDF1D"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_D196198CEA604BA9A66AD04B1FCAFF1B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -286,16 +286,6 @@
                     {
                     "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
                     "ProductCode" = "8:.NETFramework,Version=v4.7.2"
-                    }
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Visual.C++.14.0.x64"
-                    {
-                    "Name" = "8:Visual C++ \"14\" Runtime Libraries (x64)"
-                    "ProductCode" = "8:Microsoft.Visual.C++.14.0.x64"
-                    }
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Visual.C++.14.0.x86"
-                    {
-                    "Name" = "8:Visual C++ \"14\" Runtime Libraries (x86)"
-                    "ProductCode" = "8:Microsoft.Visual.C++.14.0.x86"
                     }
                 }
             }
@@ -740,6 +730,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A2F75078B94D492FBBDF399264475746"
+            {
+            "SourcePath" = "8:..\\..\\..\\..\\..\\..\\..\\Pictures\\Icons\\letter-f (1).ico"
+            "TargetName" = "8:letter-f (1).ico"
+            "Tag" = "8:"
+            "Folder" = "8:_B9682DCD96624F16A8464B8299F4836B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AF7909DE47B9480088921EA94AC303AA"
             {
             "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\compute_bounds_shader.frag"
@@ -826,26 +836,6 @@
             "TargetName" = "8:object_vertex_shader.vert"
             "Tag" = "8:"
             "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D196198CEA604BA9A66AD04B1FCAFF1B"
-            {
-            "SourcePath" = "8:..\\..\\..\\..\\..\\..\\..\\Pictures\\Icons\\letter-f.ico"
-            "TargetName" = "8:letter-f.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_B9682DCD96624F16A8464B8299F4836B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1210,7 +1200,7 @@
             "Target" = "8:_1075DD6B58B94737A53D0F73D52E0583"
             "Folder" = "8:_14BD571110E34659A8C458E3345B8499"
             "WorkingFolder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
-            "Icon" = "8:_D196198CEA604BA9A66AD04B1FCAFF1B"
+            "Icon" = "8:_A2F75078B94D492FBBDF399264475746"
             "Feature" = "8:"
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_409A1C3C2D5F47E3AB17484695806180"
@@ -1224,7 +1214,7 @@
             "Target" = "8:_1075DD6B58B94737A53D0F73D52E0583"
             "Folder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
             "WorkingFolder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
-            "Icon" = "8:_D196198CEA604BA9A66AD04B1FCAFF1B"
+            "Icon" = "8:_A2F75078B94D492FBBDF399264475746"
             "Feature" = "8:"
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_C51C337BFB2A4276A41D651515409E83"
@@ -1238,7 +1228,7 @@
             "Target" = "8:_1075DD6B58B94737A53D0F73D52E0583"
             "Folder" = "8:_EF42981A457243CFBB437C673E62A5B1"
             "WorkingFolder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
-            "Icon" = "8:_D196198CEA604BA9A66AD04B1FCAFF1B"
+            "Icon" = "8:_A2F75078B94D492FBBDF399264475746"
             "Feature" = "8:"
             }
         }
@@ -1642,7 +1632,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_1075DD6B58B94737A53D0F73D52E0583"
             {
-            "SourcePath" = "8:..\\x64\\Debug\\3D-Summer-Engine.exe"
+            "SourcePath" = "8:..\\x64\\Release\\3D-Summer-Engine.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
