@@ -21,6 +21,10 @@
       <UniqueIdentifier>{a5ac1561-2639-441e-b4f0-31d93de72941}</UniqueIdentifier>
       <Extensions>jpg;png</Extensions>
     </Filter>
+    <Filter Include="cfg">
+      <UniqueIdentifier>{b1246e2f-7c9e-4e6d-895a-34523911d814}</UniqueIdentifier>
+      <Extensions>cfg;</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
@@ -63,6 +67,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Framebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -119,6 +126,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Framebuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -224,5 +234,13 @@
     <Text Include="Shaders\visualise_grid_vertex_shader.vert">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="fluid_config.cfg">
+      <Filter>cfg</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="fluid_config_default.cfg">
+      <Filter>cfg</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

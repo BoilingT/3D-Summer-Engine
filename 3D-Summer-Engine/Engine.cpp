@@ -410,6 +410,9 @@ void Engine::IO_EVENTS(GLFWwindow* window) {
 	{
 		m_fluid->timeStep(c_precision);
 	}
+	if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS) {
+		m_fluid->updateConfiguration();
+	}
 	//Camera movement
 	/*
 	//Forward
