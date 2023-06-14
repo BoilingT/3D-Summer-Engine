@@ -69,7 +69,7 @@
     <ClCompile Include="Framebuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cfgParser.cpp">
+    <ClCompile Include="config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -128,7 +128,7 @@
     <ClInclude Include="Framebuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cfgParser.h">
+    <ClInclude Include="config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -236,16 +236,10 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="engine.cfg">
+    <CopyFileToFolders Include="fluid_config.cfg">
       <Filter>cfg</Filter>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="fluid.cfg">
-      <Filter>cfg</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="fluid_default.cfg">
-      <Filter>cfg</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="engine_default.cfg">
+    <CopyFileToFolders Include="fluid_config_default.cfg">
       <Filter>cfg</Filter>
     </CopyFileToFolders>
   </ItemGroup>

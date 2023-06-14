@@ -87,6 +87,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_4AA70E78148240648665DEC6D7D77F58"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_4C5F8A9D89C7403E8DE8AF491FDDF4FD"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -160,6 +166,12 @@
         "Entry"
         {
         "MsmKey" = "8:_B0885A12A8214ACEA88BAC6CFE334843"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B2CBEA69303A44F483B19DFA135E0751"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -530,6 +542,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4AA70E78148240648665DEC6D7D77F58"
+            {
+            "SourcePath" = "8:..\\3D-Summer-Engine\\fluid_config_default.cfg"
+            "TargetName" = "8:fluid_config_default.cfg"
+            "Tag" = "8:"
+            "Folder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4C5F8A9D89C7403E8DE8AF491FDDF4FD"
             {
             "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\fragment_shader.frag"
@@ -776,6 +808,26 @@
             "TargetName" = "8:compute_advection_shader.frag"
             "Tag" = "8:"
             "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B2CBEA69303A44F483B19DFA135E0751"
+            {
+            "SourcePath" = "8:..\\3D-Summer-Engine\\fluid_config.cfg"
+            "TargetName" = "8:fluid_config.cfg"
+            "Tag" = "8:"
+            "Folder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1199,20 +1251,6 @@
             "Transitive" = "11:FALSE"
             "Target" = "8:_1075DD6B58B94737A53D0F73D52E0583"
             "Folder" = "8:_14BD571110E34659A8C458E3345B8499"
-            "WorkingFolder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
-            "Icon" = "8:_A2F75078B94D492FBBDF399264475746"
-            "Feature" = "8:"
-            }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_409A1C3C2D5F47E3AB17484695806180"
-            {
-            "Name" = "8:Fluid Simulation"
-            "Arguments" = "8:"
-            "Description" = "8:"
-            "ShowCmd" = "3:1"
-            "IconIndex" = "3:0"
-            "Transitive" = "11:FALSE"
-            "Target" = "8:_1075DD6B58B94737A53D0F73D52E0583"
-            "Folder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
             "WorkingFolder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
             "Icon" = "8:_A2F75078B94D492FBBDF399264475746"
             "Feature" = "8:"

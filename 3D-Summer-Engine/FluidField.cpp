@@ -119,10 +119,10 @@ void FluidField::boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer* 
 //Advection -> Diffusion -> Force Application -> Projection
 void FluidField::timeStep(float dt) {
 	float time = dt * m_timestep_scalar; 
-	advect(time);		//Move the fluid and its quantities
-	diffuse(time);		//Spread out the fluid (if viscosity > 0)
-	//addForces(time);	//Add a ball in the center and gravity. Also add multiple splats
-	project(time);		//Remove unwanted stuff
+	if(m_advect)	advect(time);		//Move the fluid and its quantities
+	if(m_diffuse)	diffuse(time);		//Spread out the fluid (if viscosity > 0)
+	if(m_forces)	addForces(time);	//Add a ball in the center and gravity. Also add multiple splats
+	if(m_project)	project(time);		//Remove unwanted stuff
 }
 
 //Is not being used
@@ -520,4 +520,39 @@ void FluidField::swapBuffer(int i) {
 
 void FluidField::reset()
 {
+}
+
+void FluidField::applyConfiguration(Config &configurationFile)
+{
+	try
+	{
+		m_dye_scalar = std::stof(configurationFile.values[FLUID.dye_scalar]);
+		m_velocity_scalar = std::stof(configurationFile.values[FLUID.velocity_scalar]);
+		//m_dye_color = std::stof(configurationFile.values[FLUID.dye_color]);
+		m_dye_color_acc_dependent = configurationFile.values[FLUID.dye_color_acc_dependent] == "1";
+		m_dye_force = std::stof(configurationFile.values[FLUID.dye_force]);
+		m_dye_radius = std::stof(configurationFile.values[FLUID.dye_radius]);
+		m_dye_dissipation = std::stof(configurationFile.values[FLUID.dye_dissipation]);
+		m_velocity_dissipation = std::stof(configurationFile.values[FLUID.velocity_dissipation]);
+		//m_diffuseIterations = std::stof(configurationFile.values[FLUID.diffuseIterations]);
+		m_viscosity = std::stof(configurationFile.values[FLUID.viscosity]);
+		//m_pressureIterations = std::stof(configurationFile.values[FLUID.pressureIterations]);
+		m_vortitcity_scalar = std::stof(configurationFile.values[FLUID.vortitcity_scalar]);
+		m_timestep_scalar = std::stof(configurationFile.values[FLUID.timestep_scalar]);
+		m_advect = configurationFile.values[FLUID.advect] == "1";
+		m_diffuse = configurationFile.values[FLUID.diffuse] == "1";
+		m_forces = configurationFile.values[FLUID.forces] == "1";
+		m_project = configurationFile.values[FLUID.project] == "1";
+		m_image = configurationFile.values[FLUID.image] == "1";
+	}
+	catch (const std::exception&)
+	{
+		return;
+	}
+}
+
+void FluidField::updateConfiguration()
+{
+	fluid_config_file.updateValues();
+	FluidField::applyConfiguration(fluid_config_file);
 }

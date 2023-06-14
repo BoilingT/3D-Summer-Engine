@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "config.h"
 
 #include "object_includes.h"
 #include "Line.h"
@@ -10,6 +11,8 @@
 #include "Compute.h"
 
 #include <GLFW/glfw3.h>
+#include <chrono>
+#include <thread>
 
 class FluidField
 {
@@ -113,7 +116,11 @@ class FluidField
 		TexFormat(GLint internalFormat, GLenum format) : internal(internalFormat), format(format){}
 	};
 
+
 private:
+	const char* p_CONFIG_FILE							 = "./fluid_config.cfg";
+	const char* p_DEFAULT_CONFIG_FILE					 = "./fluid_config_default.cfg";
+
 	const char* p_COMPUTE_SHADER						 = "./Shaders/compute_shader_backup.glsl";
 	const char* p_advection_shader						 = "./Shaders/compute_advection_shader.frag";
 	const char* p_jacobi_shader							 = "./Shaders/compute_jacobi_shader.frag";
@@ -137,6 +144,33 @@ private:
 	const char* p_OBJECT_FRAGMENT_SHADER				 = "./Shaders/object_fragment_shader.frag";
 	const char* p_TEXTURE								 = "./Images/Generated Images/notGenerated.jpg";
 	const char* p_TEMPERATURE_TEXTURE					 = "./Images/Generated Images/temp.png";
+
+	//Config files
+	Config fluid_config_file;
+	Config default_fluid_config_file;
+
+	//Keys
+	struct FluidConfigKeys {
+		const std::string dye_scalar = "dye_resolution_scalar";
+		const std::string velocity_scalar = "velocity_resolution_scalar";
+		const std::string dye_color = "dye_color";
+		const std::string dye_color_acc_dependent = "dye_color_acc_dependent";
+		const std::string dye_force = "dye_force";
+		const std::string dye_radius = "dye_radius";
+		const std::string dye_dissipation = "dye_dissipation";
+		const std::string velocity_dissipation = "velocity_dissipation";	
+		const std::string diffuseIterations = "diffuseIterations";		
+		const std::string viscosity = "viscosity";
+		const std::string pressureIterations = "pressureIterations";		
+		const std::string pressure_dissipation = "pressure_dissipation";	
+		const std::string vortitcity_scalar = "vortitcity_scalar";		
+		const std::string timestep_scalar = "timestep_scalar";
+		const std::string advect = "advect";
+		const std::string diffuse = "diffuse";
+		const std::string forces = "forces";
+		const std::string project = "project";
+		const std::string image = "image";
+	} FLUID;
 
 	//Framebuffers
 	DoubleFramebuffer* m_velocity_buffer;				//Contains velocities to be advected
@@ -177,20 +211,27 @@ private:
 	const int	 m_resolution;
 	const int	 m_fieldWidth;
 
-	const float	 m_dye_scalar							 = 512*2.0f/768.0f; //This makes the dye resolution always larger than the velocity resolution, this achieves better details
-	const float	 m_velocity_scalar						 = 1.0f;
-	const float	 m_dye_color[3]							 = { 1.0f, 0.2f, 0.0f };
-	const bool	 m_dye_color_acc_dependent				 = true;		// If color should depend on mouse acceleration
-	const float	 m_dye_force							 = 6000.0f;		// Force used to create velocities
-	const float	 m_dye_radius							 = 0.35f;		// Radius of the applicable dye and velocites
-	const float	 m_dye_dissipation						 = 0.2f;		// The rate at which the dye clears from the screen
-	const float	 m_velocity_dissipation					 = 0.1f;		// The rate at which the velocities reduces to zero
-	const int	 m_diffuseIterations					 = 30;			// Number of iterations used to calculate proper diffusion of the applied dye or velocities
-	const float	 m_viscosity							 = 0.0f;		// Drag factor of the fluid
-	const int	 m_pressureIterations					 = 60;			// Number of iterations used to calculate more precise pressure fields
-	const float	 m_pressure_dissipation					 = 0.9f;		// TODO: Explain it... What I thought it was (but it is supposedly wrong!): The rate at which the pressure field is cleared
-	const float  m_vortitcity_scalar					 = 30;			// Vorticity scalar
-	const float	 m_timestep_scalar						 = 1.00f;		// Factor deciding the magnitude of timesteps for each frame.
+	float	 m_dye_scalar							 = 512*2.0f/768.0f; //This makes the dye resolution always larger than the velocity resolution, this achieves better details
+	float	 m_velocity_scalar						 = 1.0f;
+	float	 m_dye_color[3]							 = { 1.0f, 0.2f, 0.0f };
+	bool	 m_dye_color_acc_dependent				 = 0;			// If color should depend on mouse acceleration
+	float	 m_dye_force							 = 6000.0f;		// Force used to create velocities
+	float	 m_dye_radius							 = 0.35f;		// Radius of the applicable dye and velocites
+	float	 m_dye_dissipation						 = 0.2f;		// The rate at which the dye clears from the screen
+	float	 m_velocity_dissipation					 = 0.1f;		// The rate at which the velocities reduces to zero
+	int		 m_diffuseIterations					 = 30;			// Number of iterations used to calculate proper diffusion of the applied dye or velocities
+	float	 m_viscosity							 = 0.0f;		// Drag factor of the fluid
+	int		 m_pressureIterations					 = 60;			// Number of iterations used to calculate more precise pressure fields
+	float	 m_pressure_dissipation					 = 0.9f;		// TODO: Explain it... What I thought it was (but it is supposedly wrong!): The rate at which the pressure field is cleared
+	float	 m_vortitcity_scalar					 = 30;			// Vorticity scalar
+	float	 m_timestep_scalar						 = 1.00f;		// Factor deciding the magnitude of timesteps for each frame.
+	
+	bool	 m_advect = 1;
+	bool	 m_diffuse = 1;
+	bool	 m_forces = 0;
+	bool	 m_project = 1;
+	bool	 m_image = 0;
+
 	//Experimental
 	//const float  m_ambient_temperature					 = 18.0f;	// Ambient temperature in degrees celsius
 	//const float  m_temperature_scalar					 = 10.0f;		// Scales the effect that the difference in temperature has on the boyant force
@@ -218,6 +259,9 @@ public:
 		rectangle(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)),
 		line(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f),
 
+		fluid_config_file(p_CONFIG_FILE),
+		default_fluid_config_file(p_DEFAULT_CONFIG_FILE),
+
 		m_object_shader(p_OBJECT_VERTEX_SHADER, p_OBJECT_FRAGMENT_SHADER),
 		m_advection_shader(p_VERTEX_SHADER, p_advection_shader),
 		m_jacobi_iteration_shader(p_VERTEX_SHADER, p_jacobi_shader),
@@ -234,7 +278,7 @@ public:
 		m_splat_shader(p_VERTEX_SHADER, p_splat_shader)
 	{
 		std::cout << "INITIALIZING::FLUIDFIELD" << std::endl;
-
+		
 		m_primary_shader		 = new Shader(p_VERTEX_SHADER, p_FRAGMENT_SHADER);
 		m_visualise_grid_shader	 = new Shader(p_VISUALISE_GRID_VERTEX_SHADER, p_VISUALISE_GRID_FRAGMENT_SHADER);
 		m_texture				 = new Texture2D(p_TEXTURE);
@@ -276,6 +320,20 @@ public:
 		m_density_buffer = new DoubleFramebuffer(m_resolution * m_dye_scalar, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 
 		m_current_buffer = m_dye_buffer->readBuffer();
+
+		std::cout << "APPLYING::CONFIGURATIONS" << std::endl;
+		//If default config file is found
+		if (default_fluid_config_file.isFile()) {
+			applyConfiguration(default_fluid_config_file);
+		}
+		else {
+			//create default file
+			//applyConfiguration(default_fluid_config_file);
+		}
+		//If config file is found
+		if (fluid_config_file.isFile()) {
+			applyConfiguration(fluid_config_file);
+		}
 
 		std::cout << "SUCCESS::INITIALIZATION::FLUIDFIELD" << std::endl;
 	}
@@ -324,6 +382,11 @@ public:
 	void timeStep(float dt); 
 	void swapBuffer(int i);
 
+	//Clear everything and start from the beginning
+	void reset(); //TODO
+	void applyConfiguration(Config& configurationFile);
+	void updateConfiguration();
+
 private:
 	//Draw using specified shader together with a specified framebuffer (NULL if the purpose is to render to the screen with specified shader)
 	void blit(Framebuffer* target, Shader* shader);
@@ -353,7 +416,5 @@ private:
 	/// <param name="r">Radius of the splat</param>
 	void splat(glm::vec2 pos, float r, bool dye, bool velocity);
 	void splat(glm::vec2 pos, float r, unsigned int amount, bool dye, bool velocity);
-	//Clear everything and start from the beginning
-	void reset(); //TODO
 };
 

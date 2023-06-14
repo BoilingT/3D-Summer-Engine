@@ -14,6 +14,7 @@ public:
 	bool readFile(std::string fileName, std::string & content);
 	bool removeFile(const char * fileName);
 	bool createDir(const char* path);
+	bool isFile(std::string fileName);
 
 
 private:
