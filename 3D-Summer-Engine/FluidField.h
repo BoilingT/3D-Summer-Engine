@@ -165,6 +165,7 @@ private:
 		const std::string pressure_dissipation = "pressure_dissipation";	
 		const std::string vortitcity_scalar = "vortitcity_scalar";		
 		const std::string timestep_scalar = "timestep_scalar";
+		const std::string splats = "splats";
 		const std::string advect = "advect";
 		const std::string diffuse = "diffuse";
 		const std::string forces = "forces";
@@ -226,11 +227,12 @@ private:
 	float	 m_vortitcity_scalar					 = 30;			// Vorticity scalar
 	float	 m_timestep_scalar						 = 1.00f;		// Factor deciding the magnitude of timesteps for each frame.
 	
-	bool	 m_advect = 1;
-	bool	 m_diffuse = 1;
-	bool	 m_forces = 0;
-	bool	 m_project = 1;
-	bool	 m_image = 0;
+	int		 m_splats								 = 11;
+	bool	 m_advect								 = 1;
+	bool	 m_diffuse								 = 1;
+	bool	 m_forces								 = 0;
+	bool	 m_project								 = 1;
+	bool	 m_image								 = 0;
 
 	//Experimental
 	//const float  m_ambient_temperature					 = 18.0f;	// Ambient temperature in degrees celsius

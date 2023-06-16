@@ -273,7 +273,7 @@ void FluidField::diffuse(float dt) {
 //Force Application
 void FluidField::addForces(float dt) {
 	float r = 0.0358f;
-	float streams = 11;
+	float streams = m_splats;
 
 	//for (int stream = 0; stream < streams; stream++)
 	//{
@@ -534,11 +534,13 @@ void FluidField::applyConfiguration(Config &configurationFile)
 		m_dye_radius = std::stof(configurationFile.values[FLUID.dye_radius]);
 		m_dye_dissipation = std::stof(configurationFile.values[FLUID.dye_dissipation]);
 		m_velocity_dissipation = std::stof(configurationFile.values[FLUID.velocity_dissipation]);
-		//m_diffuseIterations = std::stof(configurationFile.values[FLUID.diffuseIterations]);
+		m_diffuseIterations = std::stoi(configurationFile.values[FLUID.diffuseIterations]);
 		m_viscosity = std::stof(configurationFile.values[FLUID.viscosity]);
-		//m_pressureIterations = std::stof(configurationFile.values[FLUID.pressureIterations]);
+		m_pressureIterations = std::stoi(configurationFile.values[FLUID.pressureIterations]);
 		m_vortitcity_scalar = std::stof(configurationFile.values[FLUID.vortitcity_scalar]);
 		m_timestep_scalar = std::stof(configurationFile.values[FLUID.timestep_scalar]);
+
+		m_splats = std::stoi(configurationFile.values[FLUID.splats]);
 		m_advect = configurationFile.values[FLUID.advect] == "1";
 		m_diffuse = configurationFile.values[FLUID.diffuse] == "1";
 		m_forces = configurationFile.values[FLUID.forces] == "1";

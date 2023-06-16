@@ -48,7 +48,7 @@ void Config::parseContents(std::string contents)
 		std::string value = parts[1];
 
 		values[key] = value;
-		std::cout << key << " = " << value << std::endl;
+		//std::cout << key << " = " << value << std::endl;
 	}
 
 }
