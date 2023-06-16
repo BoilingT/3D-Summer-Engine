@@ -159,6 +159,7 @@ void Engine::Run() {
 		std::string title = "avg dT: " + std::to_string(averageDT * 1000.0f) + "ms maxDt: " + std::to_string(maxDt*1000.0f) + "ms lowDt: " + std::to_string(lowDt*1000.0f) + "ms PM: " + std::to_string(avgPM * 1000.0f);
 		if (currentTime - g_lastTime2 >= 1.f)
 		{
+			m_fluid->updateConfiguration();
 			//std::string title = "FPS: " + std::to_string(fps) + " dT: " + std::to_string(g_deltaTime * 1000.0f) + "ms avg dT: " + std::to_string(averageDT * 1000.0f) + "ms TPF: " + std::to_string(TPF);
 			//double TPF = 1000.0 / (double)frames;
 			//std::cout << TPF << "ms/frame" << std::endl;
