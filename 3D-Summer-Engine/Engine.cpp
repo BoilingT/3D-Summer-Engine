@@ -414,6 +414,9 @@ void Engine::IO_EVENTS(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS) {
 		m_fluid->updateConfiguration();
 	}
+	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
+		m_fluid->reset();
+	}
 	//Camera movement
 	/*
 	//Forward

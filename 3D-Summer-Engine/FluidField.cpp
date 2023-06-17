@@ -520,6 +520,11 @@ void FluidField::swapBuffer(int i) {
 
 void FluidField::reset()
 {
+	clearBuffer(m_dye_buffer, 0.0);
+	clearBuffer(m_velocity_buffer, 0.0);
+	clearBuffer(m_pressure_buffer, 0.0);
+	clearBuffer(m_density_buffer, 0.0);
+	clearBuffer(m_curl_buffer, 0.0);
 }
 
 void FluidField::applyConfiguration(Config &configurationFile)
