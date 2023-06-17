@@ -542,6 +542,7 @@ void FluidField::applyConfiguration(Config &configurationFile)
 		m_diffuseIterations = std::stoi(configurationFile.values[FLUID.diffuseIterations]);
 		m_viscosity = std::stof(configurationFile.values[FLUID.viscosity]);
 		m_pressureIterations = std::stoi(configurationFile.values[FLUID.pressureIterations]);
+		m_pressure_dissipation = std::stof(configurationFile.values[FLUID.pressure_dissipation]);
 		m_vortitcity_scalar = std::stof(configurationFile.values[FLUID.vortitcity_scalar]);
 		m_timestep_scalar = std::stof(configurationFile.values[FLUID.timestep_scalar]);
 

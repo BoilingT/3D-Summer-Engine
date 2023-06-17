@@ -32,7 +32,7 @@ void Config::parseContents(std::string contents)
 	//Divide parts between equal sign (=)
 	std::string delimiter = " ";
 	for (std::string line : lines) {
-		if (line.empty() || line == " " || line.length() <= 0) {
+		if (line.empty() || line == " " || line.length() <= 0 || line.find("//") != std::string::npos) {
 			continue;
 		}
 		std::vector<std::string> parts = split(line, delimiter);
