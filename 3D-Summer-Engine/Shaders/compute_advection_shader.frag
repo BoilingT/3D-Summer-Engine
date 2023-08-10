@@ -7,6 +7,7 @@ uniform float timestep;
 uniform sampler2D u;	//Input velocity
 uniform sampler2D x;	//Quantity to advect
 uniform vec2 texelSize;
+uniform vec2 sourceTexelSize;
 uniform bool linearFiltering;
 uniform float dissipation;
 
@@ -23,18 +24,18 @@ vec4 lerp(vec4 a, vec4 b, float k){
 }
 
 //Get a bilinearly interpolated velocity at given coordinates
-vec4 f4texRECTbilerp(sampler2D q, vec2 coords){
+vec4 f4texRECTbilerp(sampler2D q, vec2 coords, vec2 txSize){
 	float offset = OFFSET;
-	vec2 pos = coords / texelSize - offset;
+	vec2 pos = coords / txSize - offset;
 
 	vec2 ic = floor(pos); //Point closest to origin
 	vec2 fc = fract(pos);
 
 	//Get four surrounding texels with quantity data and interpolate between them to find the estimated quantity
-	vec4 a = texture2D(q, (ic + vec2(0, 0) + offset) * texelSize); //Bottom left
-	vec4 b = texture2D(q, (ic + vec2(1, 0) + offset) * texelSize);	//Bottom right
-	vec4 c = texture2D(q, (ic + vec2(1, 1) + offset) * texelSize); //Top right
-	vec4 d = texture2D(q, (ic + vec2(0, 1) + offset) * texelSize);	//Top left
+	vec4 a = texture2D(q, (ic + vec2(0, 0) + offset) * txSize); //Bottom left
+	vec4 b = texture2D(q, (ic + vec2(1, 0) + offset) * txSize);	//Bottom right
+	vec4 c = texture2D(q, (ic + vec2(1, 1) + offset) * txSize); //Top right
+	vec4 d = texture2D(q, (ic + vec2(0, 1) + offset) * txSize);	//Top left
 
 	//Interpolate top values -> Interpolate bottom values -> Interpolate top and bottom values
 	//return a;
@@ -46,11 +47,12 @@ vec4 advect(vec2 coords){
 	vec2 pos = vec2(0.0f);
 	//Track the velocity back in time
 	if(linearFiltering){
-		pos = coords - timestep * texelSize * f4texRECTbilerp(u, coords).xy;
-		return f4texRECTbilerp(x, pos);
+		pos = coords - timestep * texelSize * f4texRECTbilerp(u, coords, texelSize).xy;
+		return f4texRECTbilerp(x, pos, sourceTexelSize);
 	}else{
+		//return f2texRect(x, pos);
 		pos = coords - timestep * texelSize * f2texRect(u, coords).xy;
-		return f2texRect(x, pos);
+		return texture2D(x, pos);
 	}
 	//vec2 pos = coords - timestep * f2texRect(u, coords);
 	//vec2 pos = coords - timestep * tx * f4texRECTbilerp(u, coords).xy;

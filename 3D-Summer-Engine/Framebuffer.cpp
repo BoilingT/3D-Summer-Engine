@@ -50,6 +50,7 @@ Framebuffer::Framebuffer(float res, unsigned int w, unsigned int h, GLint intern
 	glBindTexture(GL_TEXTURE_2D, 0);
 	
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+	glViewport(0, 0, width, height);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 

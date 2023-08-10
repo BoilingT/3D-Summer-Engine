@@ -17,7 +17,8 @@
 class FluidField
 {
 	struct Mouse {
-		bool down = false;
+		bool left_mouse_down = false;
+		bool right_mouse_down = false;
 		double height, width;
 
 		glm::vec2 texcoord_travel	 = glm::vec2(0.0f);
@@ -40,7 +41,7 @@ class FluidField
 			height = _height;
 		}
 
-		void update(double mouseX, double mouseY, bool mouse_is_down) {
+		void update(double mouseX, double mouseY, bool left_mouse_is_down, bool right_mouse_is_down) {
 			window_delta			 = glm::vec2(mouseX, mouseY) - prev_window_pos;
 			prev_window_pos			 = window_pos;
 			window_pos				 = glm::vec2(mouseX, mouseY);
@@ -50,9 +51,10 @@ class FluidField
 			prev_texcoord_pos		 = texcoord_pos;
 			texcoord_pos			 = glm::vec2(mouseX / width, 1-mouseY / height);
 			texcoord_travel			 += texcoord_travel;
-			down					 = mouse_is_down;
+			left_mouse_down			 = left_mouse_is_down;
+			right_mouse_down		 = right_mouse_is_down;
 
-			if (!mouse_is_down)
+			if (!left_mouse_is_down && !right_mouse_is_down)
 			{
 				texcoord_travel		 = glm::vec2(0.0f);
 				window_travel		 = glm::vec2(0.0f);
@@ -212,7 +214,7 @@ private:
 	const int	 m_resolution;
 	const int	 m_fieldWidth;
 
-	float	 m_dye_scalar							 = 512*2.0f/768.0f; //This makes the dye resolution always larger than the velocity resolution, this achieves better details
+	float	 m_dye_scalar							 = 1.0; //This makes the dye resolution always larger than the velocity resolution, this achieves better details
 	float	 m_velocity_scalar						 = 1.0f;
 	float	 m_dye_color[3]							 = { 1.0f, 0.2f, 0.0f };
 	bool	 m_dye_color_acc_dependent				 = 0;			// If color should depend on mouse acceleration
@@ -279,6 +281,20 @@ public:
 		m_bounds_shader(p_VERTEX_SHADER, p_bounds_shader),
 		m_splat_shader(p_VERTEX_SHADER, p_splat_shader)
 	{
+		std::cout << "APPLYING::CONFIGURATIONS" << std::endl;
+		//If default config file is found
+		if (default_fluid_config_file.isFile()) {
+			applyConfiguration(default_fluid_config_file);
+		}
+		else {
+			//create default file
+			//applyConfiguration(default_fluid_config_file);
+		}
+		//If config file is found
+		if (fluid_config_file.isFile()) {
+			applyConfiguration(fluid_config_file);
+		}
+
 		std::cout << "INITIALIZING::FLUIDFIELD" << std::endl;
 		
 		m_primary_shader		 = new Shader(p_VERTEX_SHADER, p_FRAGMENT_SHADER);
@@ -323,20 +339,6 @@ public:
 
 		m_current_buffer = m_dye_buffer->readBuffer();
 
-		std::cout << "APPLYING::CONFIGURATIONS" << std::endl;
-		//If default config file is found
-		if (default_fluid_config_file.isFile()) {
-			applyConfiguration(default_fluid_config_file);
-		}
-		else {
-			//create default file
-			//applyConfiguration(default_fluid_config_file);
-		}
-		//If config file is found
-		if (fluid_config_file.isFile()) {
-			applyConfiguration(fluid_config_file);
-		}
-
 		std::cout << "SUCCESS::INITIALIZATION::FLUIDFIELD" << std::endl;
 	}
 
@@ -379,14 +381,14 @@ public:
 	//Draw the fluid
 	void Draw(glm::vec3 origin); //Should be used with a template?
 	//Set mouse position and button properties
-	void updateMouse(double* mouseX, double* mouseY, bool* mouse_down);
+	void updateMouse(double* mouseX, double* mouseY, bool* left_mouse_down, bool* right_mouse_down);
 	//Move forward in time, update values
 	void timeStep(float dt); 
 	void swapBuffer(int i);
 
 	//Clear everything and start from the beginning
 	void reset(); //TODO
-	void applyConfiguration(Config& configurationFile);
+	int applyConfiguration(Config& configurationFile);
 	void updateConfiguration();
 
 private:

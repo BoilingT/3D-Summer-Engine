@@ -7,7 +7,8 @@
 
 double Engine::g_lastX				 = 0;
 double Engine::g_lastY				 = 0;
-bool Engine::g_mouseDown			 = 0;
+bool Engine::g_leftMouseDown		 = 0;
+bool Engine::g_rightMouseDown		 = 0;
 bool Engine::g_firstMouseEnter		 = 0;
 bool Engine::g_mouse_constrain		 = true;
 unsigned int Engine::g_running		 = false;
@@ -171,7 +172,7 @@ void Engine::Run() {
 			dtTotal = 0;
 			//sleepTime = 1000.f / 60.0f -(currentTime - g_lastTime2) * 2.0f;
 			g_lastTime2 += 1.f;
-
+			glfwSetWindowTitle(m_window->getWindow(), std::to_string(TPF).c_str());
 			if (engineTime > 0)
 			{
 				timeRatio = simulationTime / engineTime;
@@ -221,7 +222,7 @@ void Engine::Run() {
 		double timeValue = glfwGetTime();
 		double val = sin(timeValue / 2);
 		
-		m_fluid->updateMouse(&g_lastX, &g_lastY, &g_mouseDown);
+		m_fluid->updateMouse(&g_lastX, &g_lastY, &g_leftMouseDown, &g_rightMouseDown);
 		double tpf = g_deltaTime + sleepTime / 1000.0f;
 
 		if (tpf < 0)
@@ -271,9 +272,9 @@ void Engine::Run() {
 			}
 			else //This is what is currently being used
 			{
-				m_fluid->timeStep(c_precision);
+				//m_fluid->timeStep(c_precision);
 				simulationTime += c_precision;
-				//m_fluid->timeStep(tpf);
+				m_fluid->timeStep(tpf);
 			}
 			engineTime += tpf;
 		}
@@ -501,7 +502,8 @@ void Engine::MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos) {
 	yTravel = yPos - g_lastY;
 	g_lastX = xPos;
 	g_lastY = yPos;
-	g_mouseDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
+	g_leftMouseDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
+	g_rightMouseDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
 	//const float sensitivity = m_camera->sensitivity / 100.f;
 	//m_camera->processMouseMovement(yTravel * -sensitivity, xTravel * -sensitivity);
 }

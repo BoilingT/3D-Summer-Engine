@@ -2,6 +2,7 @@
 
 Config::Config(std::string _filepath) {
 	filepath = _filepath;
+	file.readFile(filepath, contents);
 	parseContents(contents);
 }
 
@@ -44,11 +45,18 @@ void Config::parseContents(std::string contents)
 			}
 		}
 
-		std::string key = parts[0];
-		std::string value = parts[1];
+		
+		try
+		{
+			std::string key = parts[0];
+			std::string value = parts[1];
 
-		values[key] = value;
-		//std::cout << key << " = " << value << std::endl;
+			values[key] = value;
+		}
+		catch (const std::exception&)
+		{
+			std::cout << "Line inside config file could not be read: \n\"" << line << "\"" << std::endl;
+		}
 	}
 
 }

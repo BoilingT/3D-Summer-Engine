@@ -56,20 +56,20 @@ void main(){
 		color = vec4(color.r, color.r, color.r, color.a);
 	}
 
-	//vec2 res = vec2(1920.0f, 1080.0f);
-	//vec2 pos = gl_FragCoord.xy; //0x0 -- 700x700
-	//if((int(pos.x/res.x * 1.0f/dyeTexelSize.x) + int(pos.y/res.y * 1.0f/dyeTexelSize.y)) % 2 == 0){
-	//	color += vec4(vec3(0.1f), 1.0f);
-	//}else{
-	//	color += vec4(vec3(0.01f), 1.0);
-	//}
-	//if((int(pos.x/res.x * 1.0f/velTexelSize.x) + int(pos.y/res.y * 1.0f/velTexelSize.y)) % 2 == 0){
-	//	color += vec4(0.1f, 0.0f, 0.0f, 1.0f);
-	//}else{
-	//	color += vec4(0.0f, 0.0f, 0.1f, 1.0f);
-	//}
-	fragColor = mix(texture(u_image, texCoord), color, 0.9f);
-
+	vec2 res = vec2(1920.0f, 1080.0f);
+	vec2 pos = gl_FragCoord.xy; //0x0 -- 700x700
+	if((int(pos.x/res.x * 1.0f/dyeTexelSize.x) + int(pos.y/res.y * 1.0f/dyeTexelSize.y)) % 2 == 0){
+		color += vec4(vec3(0.1f), 1.0f);
+	}else{
+		color += vec4(vec3(0.01f), 1.0);
+	}
+	if((int(pos.x/res.x * 1.0f/velTexelSize.x) + int(pos.y/res.y * 1.0f/velTexelSize.y)) % 2 == 0){
+		color += vec4(0.1f, 0.0f, 0.0f, 1.0f);
+	}else{
+		color += vec4(0.0f, 0.0f, 0.1f, 1.0f);
+	}
+	//fragColor = mix(texture(u_image, texCoord), color, 0.9f);
+	fragColor = color;
 	//fragColor = texture(u_image, texCoord);
 	//fragColor = texture(u_image_overlay, vUv) * vec4(vec3(1.0f), 0.5f);
 }

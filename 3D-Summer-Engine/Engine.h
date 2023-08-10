@@ -25,7 +25,8 @@ public:
 	//Mouse properties
 	static double g_lastX;
 	static double g_lastY;
-	static bool g_mouseDown;
+	static bool g_leftMouseDown;
+	static bool g_rightMouseDown;
 	static bool g_firstMouseEnter;
 	static bool g_mouse_constrain;
 
@@ -62,10 +63,10 @@ private:
 	//Engine Properties
 	//Note: Higher fps will result in faster simulation speed (144 FPS is currently the "sweetspot")
 
-	float g_fps_limit										 = 144.0f;			// Monitor refreshrate: (x < 0), No limit: (x = 0)
+	float g_fps_limit										 = 300.0f;			// Monitor refreshrate: (x < 0), No limit: (x = 0)
 
 	//Fluid Simulation Properties
-	const int   c_RESOLUTION								 = 768;				// The amount of cells that the velocityfield will contain the fluid. Note: The visual resolution is 1.333333 times larger than this resolution.
+	const int   c_RESOLUTION								 = 256;				// The amount of cells that the velocityfield will contain the fluid. Note: The visual resolution is 1.333333 times larger than this resolution.
 	//Experimental
 	const float c_precision									 = 1.0f / 144.0f;	// The time step for each new iteration
 	const bool  c_precision_bound							 = false;			// If the simulator should account for time lost by lag

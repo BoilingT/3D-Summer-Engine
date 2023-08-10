@@ -28,6 +28,7 @@ vec4 jacobi(vec2 coords){
 	//if(posT.y * texelSize.y > 1.0f){xT.y *= 0;}
 	//if(posB.y * texelSize.y < 0.0f){xB.y *= 0;}
 	return (xL + xR + xB + xT + alpha * bC) * rBeta;
+	//(l + r + b + t + divergence * -1) * 0.25
 }
 
 void main(){
