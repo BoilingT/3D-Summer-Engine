@@ -1,5 +1,6 @@
 #version 430 core
-#define OFFSET 0.5f
+#define OFFSET 0.5f //This causes "myrornas krig"
+//#define OFFSET 0.0f
 
 in vec2 vUv;
 out vec4 fragColor;
@@ -62,7 +63,7 @@ vec4 advect(vec2 coords){
 //Transport quantities in the fluid
 void main(){
 	//Get the current coordinates relative to the window
-	vec2 coords = gl_FragCoord.xy * texelSize;
+	vec2 coords = vUv;
 	//Advect the current quantities at the current coordinates
 	vec4 result = advect(coords);
 	float decay = 1.0 + dissipation * timestep;
