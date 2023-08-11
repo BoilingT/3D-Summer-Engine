@@ -9,16 +9,15 @@ uniform vec2 texelSize;
 uniform int amount;
 
 float calcSplat(vec2 pos, float r, vec2 coord, float ratio){
-	vec2 p = coord * texelSize - pos;
+	vec2 p = coord - pos;
 	p*=ratio;
 	return exp(-dot(p, p) / (r/100.0f));
 }
 
-void applySplat(float splat, vec3 rgb){
+void applySplat(float splat, vec3 rgb, vec2 coord){
 	float ratio = 1.0f / (texelSize.x / texelSize.y);
-	vec2 coord = gl_FragCoord.xy;
 
-	vec3 base = texture2D(uTarget, coord * texelSize).xyz;
+	vec3 base = texture2D(uTarget, coord).xyz;
 
 	fragColor = vec4(base + splat * rgb, 1.0f);
 }
@@ -30,7 +29,7 @@ void main(){
 	//vec3 base = splat(vec2(0.5f, 0.5f), 0.25f, vec3(1.0f), vec3(0.0));
 	
 	float ratio = 1.0f / (texelSize.x / texelSize.y);
-	vec2 coord = gl_FragCoord.xy;
+	vec2 coord = vUv;
 	
 	float splat = 0.0f;
 	if(amount <= 1){
@@ -40,7 +39,7 @@ void main(){
 			splat += calcSplat(vec2((1.0f) / amount * ((i + 1.0f)) - ((1.0f) / amount / 2.0f), point.y), radius, coord, ratio);
 		}
 	}
-	applySplat(splat, color);
+	applySplat(splat, color, coord);
 
 	/*vec2 p = vUv - point.xy;
     p.x *= 1920.0f / 1080.0f;

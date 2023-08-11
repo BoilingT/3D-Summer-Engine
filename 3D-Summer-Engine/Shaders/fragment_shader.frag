@@ -32,7 +32,6 @@ vec4 getSciColor(float value, float minVal, float maxVal) {
 	}
 
 void main(){
-	vec2 coord = gl_FragCoord.xy * dyeTexelSize;
 	vec4 color = texture(u_image_overlay, texCoord);
 	if((color.g + color.b)/2.f <= 0.0f){ //if g and b are not in use
 		if(color.r < 0){ //show negative red as positive blue

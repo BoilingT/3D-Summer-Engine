@@ -156,6 +156,7 @@ private:
 		const std::string dye_scalar = "dye_resolution_scalar";
 		const std::string velocity_scalar = "velocity_resolution_scalar";
 		const std::string dye_color = "dye_color";
+		const std::string dye_brightness = "dye_brightness";
 		const std::string dye_color_acc_dependent = "dye_color_acc_dependent";
 		const std::string dye_force = "dye_force";
 		const std::string dye_radius = "dye_radius";
@@ -217,6 +218,7 @@ private:
 	float	 m_dye_scalar							 = 1.0; //This makes the dye resolution always larger than the velocity resolution, this achieves better details
 	float	 m_velocity_scalar						 = 1.0f;
 	float	 m_dye_color[3]							 = { 1.0f, 0.2f, 0.0f };
+	float	 m_dye_brightness						 = 0.5f;
 	bool	 m_dye_color_acc_dependent				 = 0;			// If color should depend on mouse acceleration
 	float	 m_dye_force							 = 6000.0f;		// Force used to create velocities
 	float	 m_dye_radius							 = 0.35f;		// Radius of the applicable dye and velocites

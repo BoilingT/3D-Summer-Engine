@@ -66,7 +66,7 @@ private:
 	float g_fps_limit										 = 300.0f;			// Monitor refreshrate: (x < 0), No limit: (x = 0)
 
 	//Fluid Simulation Properties
-	const int   c_RESOLUTION								 = 768;				// The amount of cells that the velocityfield will contain the fluid. Note: The visual resolution is 1.333333 times larger than this resolution.
+	const int   c_RESOLUTION								 = 256;				// The amount of cells that the velocityfield will contain the fluid. Note: The visual resolution is 1.333333 times larger than this resolution.
 	//Experimental
 	const float c_precision									 = 1.0f / 144.0f;	// The time step for each new iteration
 	const bool  c_precision_bound							 = false;			// If the simulator should account for time lost by lag

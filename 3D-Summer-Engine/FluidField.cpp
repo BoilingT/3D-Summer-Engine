@@ -445,13 +445,13 @@ void FluidField::splat(glm::vec2 pos, float r, bool dye, bool velocity) {
 	glUniform2f(uTexLoc, m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
 
 	glm::vec3 color = glm::vec3(0.0f);
-	if (m_dye_color_acc_dependent) {
-		color = glm::vec3(m_mouse.texcoord_delta.x * m_dye_force /100.f, m_mouse.texcoord_delta.y * m_dye_force / 100.f, 0.2f);
-		color *= 0.5f;
+	if (m_dye_color_acc_dependent) {;
+		color = glm::normalize(glm::vec3(m_mouse.texcoord_delta.x * m_dye_force, m_mouse.texcoord_delta.y * m_dye_force, 0.2f));
+		color *= m_dye_brightness;
 	}
 	else {
 		color = glm::vec3(m_dye_color[0], m_dye_color[1], m_dye_color[2]);
-		color *= 0.5f;
+		color *= m_dye_brightness;
 	}
 	glUniform3f(uColorLoc, abs(color.r), abs(color.g), abs(color.b + (color.r+color.g)/5.0f) * 0.3f);
 	if (dye)
@@ -554,6 +554,7 @@ int FluidField::applyConfiguration(Config &configurationFile)
 		m_dye_scalar = std::stof(configurationFile.values[FLUID.dye_scalar]);
 		m_velocity_scalar = std::stof(configurationFile.values[FLUID.velocity_scalar]);
 		//m_dye_color = std::stof(configurationFile.values[FLUID.dye_color]);
+		m_dye_brightness = std::stof(configurationFile.values[FLUID.dye_brightness]);
 		m_dye_color_acc_dependent = configurationFile.values[FLUID.dye_color_acc_dependent] == "1";
 		m_dye_force = std::stof(configurationFile.values[FLUID.dye_force]);
 		m_dye_radius = std::stof(configurationFile.values[FLUID.dye_radius]);
