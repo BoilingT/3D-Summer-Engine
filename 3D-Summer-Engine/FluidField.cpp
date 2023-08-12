@@ -247,10 +247,10 @@ void FluidField::diffuse(float dt) {
 //Force Application
 void FluidField::addForces(float dt) {
 	m_integrate_shader.use();
-	float r = 0.0358f;
+	float r = m_dye_radius / 10.0f;
 
 	splat(glm::vec2(0.5f, 0.9f), r, m_splats, true, false);
-	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -90.82f, 0.0f, 0.0f) * dt);
+	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -150.82f, 0.0f, 0.0f) * dt);
 	//temperature(dt);
 }
 

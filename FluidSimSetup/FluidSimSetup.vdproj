@@ -27,6 +27,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_08B486E5855D4C3495CC2FAEDC45A076"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_09206163938C4C469E81A2450869DC76"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -129,8 +135,20 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_798182DC32C278C91B098ACB9AE8E16A"
+        "OwnerKey" = "8:_08B486E5855D4C3495CC2FAEDC45A076"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_814AEE9768E24422B9E03A424AAD8E38"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_88F4CB2ED7411732A830B9E736A486B4"
+        "OwnerKey" = "8:_08B486E5855D4C3495CC2FAEDC45A076"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -207,6 +225,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_E5E4AB3332A82252FF249FD98EDCC2B3"
+        "OwnerKey" = "8:_08B486E5855D4C3495CC2FAEDC45A076"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_E6307390F07F4223BEF28C604A6D8357"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -214,12 +238,6 @@
         "Entry"
         {
         "MsmKey" = "8:_EA0528C75F21418B9AA012FA209D663E"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_F1F89E1012C54CABA411E66A5A85593E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -696,6 +714,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_798182DC32C278C91B098ACB9AE8E16A"
+            {
+            "SourcePath" = "8:MSVCP140D.dll"
+            "TargetName" = "8:MSVCP140D.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_814AEE9768E24422B9E03A424AAD8E38"
             {
             "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\compute_clear_shader.frag"
@@ -714,6 +752,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_88F4CB2ED7411732A830B9E736A486B4"
+            {
+            "SourcePath" = "8:ucrtbased.dll"
+            "TargetName" = "8:ucrtbased.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A19895588D974EEEBA72884739040D5B"
@@ -956,6 +1014,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E5E4AB3332A82252FF249FD98EDCC2B3"
+            {
+            "SourcePath" = "8:VCRUNTIME140D.dll"
+            "TargetName" = "8:VCRUNTIME140D.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E6307390F07F4223BEF28C604A6D8357"
             {
             "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\visualise_grid_vertex_shader.vert"
@@ -1095,7 +1173,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:FluidSimulation"
         "ProductCode" = "8:{C30D1E91-4254-408C-996B-424468326315}"
-        "PackageCode" = "8:{1CA3309D-DB8B-4FB4-9662-CA5E1BD42A7F}"
+        "PackageCode" = "8:{377AEF33-0B51-4B2E-B2C5-D58D31856D97}"
         "UpgradeCode" = "8:{D030A42E-C51F-4F62-A1AA-A2838A3F71AF}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -1215,7 +1293,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_826D0E4D75C747D09BD3755A92D20DFA"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_0B8E281D55C84CAC924A8CE7F41AFEF4"
             {
             "Name" = "8:Fluid Simulation"
             "Arguments" = "8:"
@@ -1223,13 +1301,13 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_F1F89E1012C54CABA411E66A5A85593E"
-            "Folder" = "8:_14BD571110E34659A8C458E3345B8499"
+            "Target" = "8:_08B486E5855D4C3495CC2FAEDC45A076"
+            "Folder" = "8:_EF42981A457243CFBB437C673E62A5B1"
             "WorkingFolder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
             "Icon" = "8:_A2F75078B94D492FBBDF399264475746"
             "Feature" = "8:"
             }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_CFC43CD80738409AAB3AF25B764AB8E0"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_E8ECBF197E374E60B3E33E58B517B6AE"
             {
             "Name" = "8:Fluid Simulation"
             "Arguments" = "8:"
@@ -1237,8 +1315,8 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_F1F89E1012C54CABA411E66A5A85593E"
-            "Folder" = "8:_EF42981A457243CFBB437C673E62A5B1"
+            "Target" = "8:_08B486E5855D4C3495CC2FAEDC45A076"
+            "Folder" = "8:_14BD571110E34659A8C458E3345B8499"
             "WorkingFolder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
             "Icon" = "8:_A2F75078B94D492FBBDF399264475746"
             "Feature" = "8:"
@@ -1642,7 +1720,7 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_F1F89E1012C54CABA411E66A5A85593E"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_08B486E5855D4C3495CC2FAEDC45A076"
             {
             "SourcePath" = "8:..\\x64\\Debug\\3D-Summer-Engine.exe"
             "TargetName" = "8:"
