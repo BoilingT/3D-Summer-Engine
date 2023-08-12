@@ -1,6 +1,7 @@
 #include "config.h"
 
-Config::Config(std::string _filepath) {
+Config::Config(std::string _filepath)
+{
 	filepath = _filepath;
 	file.readFile(filepath, contents);
 	parseContents(contents);

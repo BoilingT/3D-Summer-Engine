@@ -85,7 +85,8 @@ public:
 		glfwSetWindowTitle(m_window->getWindow(), "Engine Initialized");
 	}
 
-	~Engine() {
+	~Engine() 
+	{
 		glfwTerminate();
 
 		delete m_fluid;
