@@ -13,9 +13,25 @@ void Config::updateValues()
 	parseContents(contents);
 }
 
-bool Config::isFile()
+bool Config::fileExists()
 {
-	return file.isFile(filepath);
+	return file.fileExists(filepath);
+}
+
+std::string Config::getValue(std::string key)
+{
+	if (key.length() <= 0 || values.find(key) == values.end()) return std::string();
+	return values[key];
+}
+
+std::string Config::getPath()
+{
+	return filepath;
+}
+
+int Config::size()
+{
+	return values.size();
 }
 
 //Load the map with keys and values from the contents of a file

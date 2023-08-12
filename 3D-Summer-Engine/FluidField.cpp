@@ -545,46 +545,46 @@ void FluidField::reset()
 
 int FluidField::applyConfiguration(Config &configurationFile)
 {
-	if (configurationFile.values.size() <= 0) {
+	if (configurationFile.size() <= 0) {
 		std::cout << "WARNING: Unable to read values" << std::endl;
 		return -1;
 	}
 	try
 	{
-		m_dye_scalar = std::stof(configurationFile.values[FLUID.dye_scalar]);
-		m_velocity_scalar = std::stof(configurationFile.values[FLUID.velocity_scalar]);
-		//m_dye_color = std::stof(configurationFile.values[FLUID.dye_color]);
-		m_dye_brightness = std::stof(configurationFile.values[FLUID.dye_brightness]);
-		m_dye_color_acc_dependent = configurationFile.values[FLUID.dye_color_acc_dependent] == "1";
-		m_dye_force = std::stof(configurationFile.values[FLUID.dye_force]);
-		m_dye_radius = std::stof(configurationFile.values[FLUID.dye_radius]);
-		m_dye_dissipation = std::stof(configurationFile.values[FLUID.dye_dissipation]);
-		m_velocity_dissipation = std::stof(configurationFile.values[FLUID.velocity_dissipation]);
-		m_diffuseIterations = std::stoi(configurationFile.values[FLUID.diffuseIterations]);
-		m_viscosity = std::stof(configurationFile.values[FLUID.viscosity]);
-		m_pressureIterations = std::stoi(configurationFile.values[FLUID.pressureIterations]);
-		m_pressure_dissipation = std::stof(configurationFile.values[FLUID.pressure_dissipation]);
-		m_vortitcity_scalar = std::stof(configurationFile.values[FLUID.vortitcity_scalar]);
-		m_timestep_scalar = std::stof(configurationFile.values[FLUID.timestep_scalar]);
+		m_dye_scalar = std::stof(configurationFile.getValue(FLUID.dye_scalar));
+		m_velocity_scalar = std::stof(configurationFile.getValue(FLUID.velocity_scalar));
+		//m_dye_color = std::stof(configurationFile.getValue(FLUID.dye_color));
+		m_dye_brightness = std::stof(configurationFile.getValue(FLUID.dye_brightness));
+		m_dye_color_acc_dependent = configurationFile.getValue(FLUID.dye_color_acc_dependent) == "1";
+		m_dye_force = std::stof(configurationFile.getValue(FLUID.dye_force));
+		m_dye_radius = std::stof(configurationFile.getValue(FLUID.dye_radius));
+		m_dye_dissipation = std::stof(configurationFile.getValue(FLUID.dye_dissipation));
+		m_velocity_dissipation = std::stof(configurationFile.getValue(FLUID.velocity_dissipation));
+		m_diffuseIterations = std::stoi(configurationFile.getValue(FLUID.diffuseIterations));
+		m_viscosity = std::stof(configurationFile.getValue(FLUID.viscosity));
+		m_pressureIterations = std::stoi(configurationFile.getValue(FLUID.pressureIterations));
+		m_pressure_dissipation = std::stof(configurationFile.getValue(FLUID.pressure_dissipation));
+		m_vortitcity_scalar = std::stof(configurationFile.getValue(FLUID.vortitcity_scalar));
+		m_timestep_scalar = std::stof(configurationFile.getValue(FLUID.timestep_scalar));
 
-		m_splats = std::stoi(configurationFile.values[FLUID.splats]);
-		m_advect = configurationFile.values[FLUID.advect] == "1";
-		m_diffuse = configurationFile.values[FLUID.diffuse] == "1";
-		m_forces = configurationFile.values[FLUID.forces] == "1";
-		m_project = configurationFile.values[FLUID.project] == "1";
-		m_image = configurationFile.values[FLUID.image] == "1";
+		m_splats = std::stoi(configurationFile.getValue(FLUID.splats));
+		m_advect = configurationFile.getValue(FLUID.advect) == "1";
+		m_diffuse = configurationFile.getValue(FLUID.diffuse) == "1";
+		m_forces = configurationFile.getValue(FLUID.forces) == "1";
+		m_project = configurationFile.getValue(FLUID.project) == "1";
+		m_image = configurationFile.getValue(FLUID.image) == "1";
 
 		return 0;
 	}
 	catch (const std::exception& ex)
 	{
-		std::cout << "ERROR::PARSING::CONFIGURATION \"" << configurationFile.filepath << "\" -> '" << ex.what() << "'" << std::endl;
+		std::cout << "ERROR::PARSING::CONFIGURATION \"" << configurationFile.getPath() << "\" -> '" << ex.what() << "'" << std::endl;
 		return -1;
 	}
 }
 
 void FluidField::updateConfiguration()
 {
-	fluid_config_file.updateValues();
-	FluidField::applyConfiguration(fluid_config_file);
+	fluid_config.updateValues();
+	FluidField::applyConfiguration(fluid_config);
 }

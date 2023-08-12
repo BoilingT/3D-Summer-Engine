@@ -146,7 +146,7 @@ private:
 	const char* p_TEMPERATURE_TEXTURE					 = "./Images/Generated Images/temp.png";
 
 	//Config files
-	Config fluid_config_file;
+	Config fluid_config;
 
 	//Keys
 	struct FluidConfigKeys {
@@ -262,7 +262,7 @@ public:
 		rectangle(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)),
 		line(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f),
 
-		fluid_config_file(p_CONFIG_FILE),
+		fluid_config(p_CONFIG_FILE),
 
 		m_object_shader(p_OBJECT_VERTEX_SHADER, p_OBJECT_FRAGMENT_SHADER),
 		m_advection_shader(p_VERTEX_SHADER, p_advection_shader),
@@ -280,10 +280,8 @@ public:
 		m_splat_shader(p_VERTEX_SHADER, p_splat_shader)
 	{
 		std::cout << "APPLYING::CONFIGURATIONS" << std::endl;
-		//If config file is found
-		if (fluid_config_file.isFile()) {
-			applyConfiguration(fluid_config_file);
-		}
+
+		if (fluid_config.fileExists()) applyConfiguration(fluid_config);
 
 		std::cout << "INITIALIZING::FLUIDFIELD" << std::endl;
 		

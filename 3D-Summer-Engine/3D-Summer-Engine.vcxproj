@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="config.cpp" />
+    <ClCompile Include="Config.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="fileHandler.cpp" />
@@ -37,7 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="config.h" />
+    <ClInclude Include="Config.h" />
     <ClInclude Include="Compute.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Engine.h" />

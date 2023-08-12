@@ -83,7 +83,7 @@ bool FileHandler::createDir(const char* path) {
 	return _mkdir(path) ? true : false;
 }
 
-bool FileHandler::isFile(std::string fileName)
+bool FileHandler::fileExists(std::string fileName)
 {
 	std::ifstream f(fileName.c_str());
 	return f.good();
