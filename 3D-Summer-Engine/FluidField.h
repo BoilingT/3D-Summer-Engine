@@ -65,8 +65,8 @@ class FluidField
 	struct DoubleFramebuffer
 	{
 	private:
-		Framebuffer* fb1;	//Read
-		Framebuffer* fb2;	//Write
+		Framebuffer* fb1;
+		Framebuffer* fb2;
 	public:
 		DoubleFramebuffer(float res, unsigned int width, unsigned int height, GLint internalFormat, GLenum format, GLenum type, GLint param) {
 			fb1 = new Framebuffer(res, width, height, internalFormat, format, type, param);
@@ -289,6 +289,7 @@ public:
 		m_visualise_grid_shader	 = new Shader(p_VISUALISE_GRID_VERTEX_SHADER, p_VISUALISE_GRID_FRAGMENT_SHADER);
 		m_texture				 = new Texture2D(p_TEXTURE);
 		m_texture_buffer		 = new Texture2D();
+
 		//This is the rectangle that is used for displaying the simulation
 		//The simulation is simply a texture drawn on this rectangle
 		m_fieldQuad				 = new Rect(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), m_texture->get());
@@ -315,6 +316,7 @@ public:
 		m_temperature_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 		m_temperature_buffer->readBuffer()->setTextureSource(p_TEMPERATURE_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_NEAREST);
 		m_temperature_buffer->writeBuffer()->setTextureSource(p_TEMPERATURE_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_NEAREST);
+		
 		// Smoke and Clouds
 		m_density_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 
@@ -335,6 +337,7 @@ public:
 		//Experimental
 		// Boyancy and Convection
 		m_temperature_buffer->updateDimensions(m_mouse.width, m_mouse.height);
+		
 		// Smoke and Clouds
 		m_density_buffer->updateDimensions(m_mouse.width, m_mouse.height);
 	}
@@ -361,6 +364,7 @@ public:
 	void updateMouse(double* mouseX, double* mouseY, bool* left_mouse_down, bool* right_mouse_down);
 	//Move forward in time, update values
 	void timeStep(float dt); 
+	void setCurrentBuffer(Framebuffer* buffer);
 	void swapBuffer(int i);
 
 	//Clear everything and start from the beginning
