@@ -1,14 +1,13 @@
-# 3D-Summer-Engine
-## Created by *Tobias Andersson*
+# 3D-Summer-Engine (Fluid Simulation)
 Currently this project focuses mainly towards 2D graphics at the moment. It has 3D-features implemented already but much time has passed since the last revision, the 3D-features have not yet been tested.
 
 # 2D Fluid Simulation
 The purpose of this project is to get a somewhat large pool of understanding about computer graphics such as optimizations by using shaders.
 
 # Usage
-To test the simulation you can build the application on your own. You can also download the setup file in the releases https://github.com/BoilingT/3D-Summer-Engine/releases. 
+To test the simulation you can build the application on your own (But that requires that you have all the libraries on your machine). You can also download the setup file in the releases https://github.com/BoilingT/3D-Summer-Engine/releases (This is the way). 
 
-### Using this content does not gaurantee a fully working product. By using this product you acknowledge there will be no responsibility for the creator to update and fix problems that may occur.
+### Using this content does not gaurantee a fully working product.
 
 # Libraries and Includes
 GLFW 3.3.8
@@ -29,5 +28,5 @@ By pressing the key 'I' you can get a simple view that shows how the fluid is mo
 ![image](https://github.com/BoilingT/3D-Summer-Engine/assets/34101043/408001be-5a2a-4d2d-971d-840bbc743396)
 
 ### Credits
-Application Icon:
-https://www.flaticon.com/free-icons/letter-f Created by riajulislam
+Application Icon created by riajulislam:
+https://www.flaticon.com/free-icons/letter-f 
