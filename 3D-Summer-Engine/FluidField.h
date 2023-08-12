@@ -121,8 +121,6 @@ class FluidField
 
 private:
 	const char* p_CONFIG_FILE							 = "./fluid_config.cfg";
-	const char* p_DEFAULT_CONFIG_FILE					 = "./fluid_config_default.cfg";
-
 	const char* p_COMPUTE_SHADER						 = "./Shaders/compute_shader_backup.glsl";
 	const char* p_advection_shader						 = "./Shaders/compute_advection_shader.frag";
 	const char* p_jacobi_shader							 = "./Shaders/compute_jacobi_shader.frag";
@@ -149,7 +147,6 @@ private:
 
 	//Config files
 	Config fluid_config_file;
-	Config default_fluid_config_file;
 
 	//Keys
 	struct FluidConfigKeys {
@@ -217,7 +214,7 @@ private:
 
 	float	 m_dye_scalar							 = 1.0; //This makes the dye resolution always larger than the velocity resolution, this achieves better details
 	float	 m_velocity_scalar						 = 1.0f;
-	float	 m_dye_color[3]							 = { 1.0f, 0.2f, 0.0f };
+	float	 m_dye_color[3]							 = { 0.0f, 0.1f, 1.0f };
 	float	 m_dye_brightness						 = 0.5f;
 	bool	 m_dye_color_acc_dependent				 = 0;			// If color should depend on mouse acceleration
 	float	 m_dye_force							 = 6000.0f;		// Force used to create velocities
@@ -266,7 +263,6 @@ public:
 		line(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f),
 
 		fluid_config_file(p_CONFIG_FILE),
-		default_fluid_config_file(p_DEFAULT_CONFIG_FILE),
 
 		m_object_shader(p_OBJECT_VERTEX_SHADER, p_OBJECT_FRAGMENT_SHADER),
 		m_advection_shader(p_VERTEX_SHADER, p_advection_shader),
@@ -284,14 +280,6 @@ public:
 		m_splat_shader(p_VERTEX_SHADER, p_splat_shader)
 	{
 		std::cout << "APPLYING::CONFIGURATIONS" << std::endl;
-		//If default config file is found
-		if (default_fluid_config_file.isFile()) {
-			applyConfiguration(default_fluid_config_file);
-		}
-		else {
-			//create default file
-			//applyConfiguration(default_fluid_config_file);
-		}
 		//If config file is found
 		if (fluid_config_file.isFile()) {
 			applyConfiguration(fluid_config_file);
@@ -305,11 +293,7 @@ public:
 		m_texture_buffer		 = new Texture2D();
 		//This is the rectangle that is used for displaying the simulation
 		//The simulation is simply a texture drawn on this rectangle
-		m_fieldQuad				 = new Rect(
-									glm::vec3(0.0f), 
-									glm::vec3(0.0f), 
-									glm::vec3(0.0f), 
-									m_texture->get());
+		m_fieldQuad				 = new Rect(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), m_texture->get());
 
 		GLenum textureType = GL_UNSIGNED_BYTE;	//Field type
 		TexFormat rgba(GL_RGBA32F, GL_RGBA);	//Quantity field

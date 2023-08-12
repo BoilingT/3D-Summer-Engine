@@ -7,9 +7,9 @@
 class Config
 {
 	FileHandler file;
-	std::string filepath;
 	std::string contents;
 public:
+	std::string filepath;
 	std::map<std::string, std::string> values;
 
 	Config(std::string _filepath);

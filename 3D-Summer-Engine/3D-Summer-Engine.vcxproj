@@ -209,11 +209,6 @@
       <FileType>Document</FileType>
     </CopyFileToFolders>
   </ItemGroup>
-  <ItemGroup>
-    <CopyFileToFolders Include="fluid_config_default.cfg">
-      <FileType>Document</FileType>
-    </CopyFileToFolders>
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

@@ -546,7 +546,7 @@ void FluidField::reset()
 int FluidField::applyConfiguration(Config &configurationFile)
 {
 	if (configurationFile.values.size() <= 0) {
-		std::cout << "Configuration file has not been read" << std::endl;
+		std::cout << "WARNING: Unable to read values" << std::endl;
 		return -1;
 	}
 	try
@@ -576,9 +576,9 @@ int FluidField::applyConfiguration(Config &configurationFile)
 
 		return 0;
 	}
-	catch (const std::exception&)
+	catch (const std::exception& ex)
 	{
-		std::cout << "Configuration file could not be applied" << std::endl;
+		std::cout << "ERROR::PARSING::CONFIGURATION \"" << configurationFile.filepath << "\" -> '" << ex.what() << "'" << std::endl;
 		return -1;
 	}
 }

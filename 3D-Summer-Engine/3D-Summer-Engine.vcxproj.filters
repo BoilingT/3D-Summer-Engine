@@ -239,8 +239,5 @@
     <CopyFileToFolders Include="fluid_config.cfg">
       <Filter>cfg</Filter>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="fluid_config_default.cfg">
-      <Filter>cfg</Filter>
-    </CopyFileToFolders>
   </ItemGroup>
 </Project>

@@ -45,12 +45,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_1075DD6B58B94737A53D0F73D52E0583"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_130CD750E6474FFA8BBB8C884A146A83"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -82,12 +76,6 @@
         "Entry"
         {
         "MsmKey" = "8:_43556705869B49779C3A156D2E9AA9EA"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4AA70E78148240648665DEC6D7D77F58"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -226,6 +214,12 @@
         "Entry"
         {
         "MsmKey" = "8:_EA0528C75F21418B9AA012FA209D663E"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F1F89E1012C54CABA411E66A5A85593E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -528,26 +522,6 @@
             "TargetName" = "8:compute_divergence_shader.frag"
             "Tag" = "8:"
             "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4AA70E78148240648665DEC6D7D77F58"
-            {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\fluid_config_default.cfg"
-            "TargetName" = "8:fluid_config_default.cfg"
-            "Tag" = "8:"
-            "Folder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1241,7 +1215,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_25E180E5F7C446DFA98A12CC14DE95C3"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_826D0E4D75C747D09BD3755A92D20DFA"
             {
             "Name" = "8:Fluid Simulation"
             "Arguments" = "8:"
@@ -1249,13 +1223,13 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_1075DD6B58B94737A53D0F73D52E0583"
+            "Target" = "8:_F1F89E1012C54CABA411E66A5A85593E"
             "Folder" = "8:_14BD571110E34659A8C458E3345B8499"
             "WorkingFolder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
             "Icon" = "8:_A2F75078B94D492FBBDF399264475746"
             "Feature" = "8:"
             }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_C51C337BFB2A4276A41D651515409E83"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_CFC43CD80738409AAB3AF25B764AB8E0"
             {
             "Name" = "8:Fluid Simulation"
             "Arguments" = "8:"
@@ -1263,7 +1237,7 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_1075DD6B58B94737A53D0F73D52E0583"
+            "Target" = "8:_F1F89E1012C54CABA411E66A5A85593E"
             "Folder" = "8:_EF42981A457243CFBB437C673E62A5B1"
             "WorkingFolder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
             "Icon" = "8:_A2F75078B94D492FBBDF399264475746"
@@ -1668,9 +1642,9 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_1075DD6B58B94737A53D0F73D52E0583"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_F1F89E1012C54CABA411E66A5A85593E"
             {
-            "SourcePath" = "8:..\\x64\\Release\\3D-Summer-Engine.exe"
+            "SourcePath" = "8:..\\x64\\Debug\\3D-Summer-Engine.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"

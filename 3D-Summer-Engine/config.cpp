@@ -30,7 +30,7 @@ void Config::parseContents(std::string contents)
 	//Divide the file into lines
 	std::string newLineDelimiter = "\n";
 	std::vector<std::string> lines = split(contents, newLineDelimiter);
-	//Divide parts between equal sign (=)
+	//Divide parts between spaces
 	std::string delimiter = " ";
 	for (std::string line : lines) {
 		if (line.empty() || line == " " || line.length() <= 0 || line.find("//") != std::string::npos) {
@@ -44,8 +44,6 @@ void Config::parseContents(std::string contents)
 				i--;
 			}
 		}
-
-		
 		try
 		{
 			std::string key = parts[0];
