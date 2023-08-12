@@ -405,11 +405,14 @@ void FluidField::updateMouse(double* mouseX, double* mouseY, bool* left_mouse_do
 
 	if (abs(m_mouse.window_delta.x) > 0 || abs(m_mouse.window_delta.y) > 0)
 	{
-		if (m_mouse.left_mouse_down) {
-			splat(m_mouse.texcoord_pos, m_dye_radius, true, true);
+		if (m_mouse.right_mouse_down && m_mouse.left_mouse_down) {
+			splat(m_mouse.texcoord_pos, m_dye_radius, true, false);
 		}
 		else if (m_mouse.right_mouse_down) {
 			splat(m_mouse.texcoord_pos, m_dye_radius, false, true);
+		}
+		else if (m_mouse.left_mouse_down) {
+			splat(m_mouse.texcoord_pos, m_dye_radius, true, true);
 		}
 	}
 }
