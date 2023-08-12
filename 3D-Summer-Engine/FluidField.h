@@ -299,27 +299,24 @@ public:
 		TexFormat r(GL_R32F, GL_RED);			//Scalar field
 		glDisable(GL_BLEND);
 
+		float velocityResolution = m_resolution * m_velocity_scalar, dyeResolution = m_resolution * m_dye_scalar;
+
 		//Buffers that store the calculated results
-		// Dye
-		m_dye_buffer = new DoubleFramebuffer(m_resolution*m_dye_scalar, m_WIDTH, m_HEIGHT, rgba.internal, rgba.format, textureType, GL_LINEAR);
+		m_dye_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, rgba.internal, rgba.format, textureType, GL_LINEAR);
 		//m_dye_buffer->readBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
 		//m_dye_buffer->writeBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
-		// Velocity
-		m_velocity_buffer = new DoubleFramebuffer(m_resolution*m_velocity_scalar, m_WIDTH, m_HEIGHT, rg.internal, rg.format, textureType, GL_LINEAR);
-		// Curl
-		m_curl_buffer = new Framebuffer(m_resolution*m_velocity_scalar, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
-		// Divergence
-		m_divergence_buffer = new Framebuffer(m_resolution*m_velocity_scalar, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
-		// Pressure
-		m_pressure_buffer = new DoubleFramebuffer(m_resolution*m_velocity_scalar, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		m_velocity_buffer = new DoubleFramebuffer(velocityResolution, m_WIDTH, m_HEIGHT, rg.internal, rg.format, textureType, GL_LINEAR);
+		m_curl_buffer = new Framebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		m_divergence_buffer = new Framebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		m_pressure_buffer = new DoubleFramebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 		
 		//Experimental
 		// Boyancy and Convection
-		m_temperature_buffer = new DoubleFramebuffer(m_resolution * m_dye_scalar, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		m_temperature_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 		m_temperature_buffer->readBuffer()->setTextureSource(p_TEMPERATURE_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_NEAREST);
 		m_temperature_buffer->writeBuffer()->setTextureSource(p_TEMPERATURE_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_NEAREST);
 		// Smoke and Clouds
-		m_density_buffer = new DoubleFramebuffer(m_resolution * m_dye_scalar, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		m_density_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 
 		m_current_buffer = m_dye_buffer->readBuffer();
 
@@ -330,13 +327,9 @@ public:
 		m_dye_buffer->updateDimensions(m_mouse.width, m_mouse.height);
 		//m_dye_buffer->readBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
 		//m_dye_buffer->writeBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
-		// Velocity
 		m_velocity_buffer->updateDimensions(m_mouse.width, m_mouse.height);
-		// Curl
 		m_curl_buffer->updateDimensions(m_mouse.width, m_mouse.height);
-		// Divergence
 		m_divergence_buffer->updateDimensions(m_mouse.width, m_mouse.height);
-		// Pressure
 		m_pressure_buffer->updateDimensions(m_mouse.width, m_mouse.height);
 
 		//Experimental
