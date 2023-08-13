@@ -10,16 +10,34 @@ double Engine::g_lastY				 = 0;
 bool Engine::g_leftMouseDown		 = 0;
 bool Engine::g_rightMouseDown		 = 0;
 bool Engine::g_firstMouseEnter		 = 0;
-bool Engine::g_mouse_constrain		 = true;
+bool Engine::g_mouse_constrain		 = false;
 unsigned int Engine::g_running		 = false;
 
-void Engine::Init()
+double g_lastTime = glfwGetTime();
+double currentTime = glfwGetTime();
+int frames = 0;
+int fps = 0;
+double TPF = 0;
+float sleepTime = 0;
+int steps = 0;
+float simulationTime = 0.0f;
+float engineTime = 0.0;
+float savedTime = 0.0f;
+float timeRatio = 1.0f;
+float sum = 0.0f;
+
+WindowHandler* Engine::m_window;
+FluidField* Engine::m_fluid;
+
+Engine::Engine()
 {
+	std::cout << "INITIALIZING::ENGINE" << std::endl;
+
+	m_window = new WindowHandler(c_WIDTH, c_HEIGHT, c_WINDOW_NAME);
+	m_camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 	//Open window
-	if (m_window->init() == -1) {
-		return;
-	}
+	if (m_window->open() == -1) return;
 
 	//GLAD library loading
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -43,243 +61,38 @@ void Engine::Init()
 	glfwSetCursorPosCallback(m_window->getWindow(), MOUSE_CALLBACK);
 	//Key Events
 	glfwSetInputMode(m_window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	//Create The Fluid Simulation
+
 	m_fluid = new FluidField(c_WIDTH, c_HEIGHT, c_RESOLUTION);
+
+	std::cout << "SUCCESS::INITIALIZATION::ENGINE" << std::endl;
+	glfwSetWindowTitle(m_window->getWindow(), "Engine Initialized");
 }
-
-/*
-	Graphics Pipeline:
-		Vertex data -> Vertex Shader -> Shape Assembly (Opt) -> Geometry Shader -> Rasterization (Opt) -> Fragment Shader -> Tests and Blending (Opt)
-		Essentials: Vertex data -> Vertex Shader -> Geometry Shader -> Fragent Shader
-
-		Vertex Shader:
-			The vertex shader takes a single vertex as data input. Its main purpose is to transform 3D coordinates into different 3D coordinates.
-			It also allows for basic processing on the vertex attributes.
-
-		Shape Assembly:
-			The assembly stage uses the data from all vertices to create a primitve form and "assembles all the point(s) in the primitive shape given",
-			as for an example a triangle.
-
-		Geometry Shader:
-			The data collection from the assembly stage is transferred onto the geometry shader. Its job is to take a collection of vertices
-			that form a primitive form. It has the ability to use the primitive to generateFrom other shapes by making new vertices to form new or different
-			primitives.
-
-		Rasterization:
-			The data from the Geometry Shader is passed on to the Rasterization stage where it maps the resulting primitives
-			to the corresponding pixels on the screen. This results in fragments for the fragment shader to use. Before the fragment shaders run
-			fragments that are outside the screen are clipped and discarded which improves the performance.
-
-		Fragment Shader:
-			A Fragments Shader's main purpose is to calculate the final color of a pixel. During this stage is usally when all
-			the advanced OpenGL effects occur. The Fragment Shader usally contains data bout the 3D scene that it can use to calculate the final pixel color.
-
-		Tests and Blending
-			After all the color values have been determined the final object will then go through the "Alpha test" and "Blending stage". This stage checks the
-			depth values of the fragment to determine if a fragment is in front or behind another object and should thus be discarded accordingly.
-	*/
 
 void Engine::Run() {
 	std::cout << "STARTING::ENGINE" << std::endl;
-	glfwSetWindowTitle(m_window->getWindow(), "Starting Engine...");
-	//DONT LOOK AT THESE!!!
-	//I'm basically trying to calculate FPS and how fast the simulation should be running (Haven't succeded yet :( )
-	float g_lastTime = glfwGetTime();
-	float g_lastTime2 = g_lastTime;
-	int frames = 0;
-	int fps = 0;
-	double TPF = 0;
-	float averageDT = 0;
-	float dtTotal = 0;
-	float avarageFPS = 0;
-	float totalFPS = 0;
-	float maxDt = 0;
-	float lowDt = 0; 
-	float oldDt = 0;
-	float newDt = 0;
-	float PM = 0;
-	float PMTotal = 0;
-	float avgPM = 0;
-	float sleepTime = 0;
-	double currentTime = glfwGetTime();
-	int steps = 0;
+	glfwSetWindowTitle(m_window->getWindow(), "Starting Engine...");	
 	//This removes the FPS cap
 	glfwSwapInterval(0);
-
-	//Rect plane(glm::vec3(0.0f), glm::vec3(3.0f), glm::vec3(0.0f));
-	//glm::vec3 origin = glm::vec3(-c_WIDTH / 2.f, c_HEIGHT / 2.f, 0);
-
-	glm::vec3 origin = glm::vec3(0, 0, 0);
 	
 	std::cout << "ENTERING::RENDER::LOOP" << std::endl;
-	glfwSetWindowTitle(m_window->getWindow(), "Started rendering loop...");
+	glfwSetWindowTitle(m_window->getWindow(), "Fluid Simulation");
 
-	Engine::g_running = !glfwWindowShouldClose(m_window->getWindow());
+	Engine::g_running = true;
 	
-	float simulationTime = 0.0f;
-	float engineTime = 0.0;
-	float savedTime = 0.0f;
-	float timeRatio = 1.0f;
-	float sum = 0.0f;
 	//Rendering loop
 	while (!glfwWindowShouldClose(m_window->getWindow()))
 	{
-		//Keeping track of time
-		oldDt = g_deltaTime;
-		currentTime = glfwGetTime();
-		g_deltaTime = currentTime - g_lastTime - sleepTime/1000.0f;
-		g_lastTime = glfwGetTime();
-		newDt = g_deltaTime;
-		frames++;
-		dtTotal += g_deltaTime;
-		totalFPS += fps;
-
-		sleepTime = (1.0f / g_fps_limit - g_deltaTime) * 1000; //ms
-
-		//Avoiding negative numbers
-		if (sleepTime < 0 || g_fps_limit == 0)
-		{
-			sleepTime = 0;
-		}
-		//Some magic
-		if (newDt > oldDt)
-		{
-			maxDt = newDt;
-			PM = newDt - oldDt;
-		}
-		else if (newDt < oldDt) {
-			lowDt = newDt;
-			PM = oldDt - newDt;
-		}
-		//Calculating measurable results
-		PMTotal += PM;
-		averageDT = (double)dtTotal/(double)frames;
-		avarageFPS = (double)totalFPS / (double)frames;
-		avgPM = PMTotal / frames;
-
-		std::string title = "avg dT: " + std::to_string(averageDT * 1000.0f) + "ms maxDt: " + std::to_string(maxDt*1000.0f) + "ms lowDt: " + std::to_string(lowDt*1000.0f) + "ms PM: " + std::to_string(avgPM * 1000.0f);
-		if (currentTime - g_lastTime2 >= 1.f)
-		{
-			m_fluid->updateConfiguration();
-			//std::string title = "FPS: " + std::to_string(fps) + " dT: " + std::to_string(g_deltaTime * 1000.0f) + "ms avg dT: " + std::to_string(averageDT * 1000.0f) + "ms TPF: " + std::to_string(TPF);
-			//double TPF = 1000.0 / (double)frames;
-			//std::cout << TPF << "ms/frame" << std::endl;
-			TPF = 1000.0 / (double)frames;
-			fps = frames/(currentTime - g_lastTime2-sleepTime/1000.0f);
-			frames = 0;
-			PMTotal = 0;
-			totalFPS = 0;
-			dtTotal = 0;
-			//sleepTime = 1000.f / 60.0f -(currentTime - g_lastTime2) * 2.0f;
-			g_lastTime2 += 1.f;
-			glfwSetWindowTitle(m_window->getWindow(), std::to_string(TPF).c_str());
-			if (engineTime > 0)
-			{
-				timeRatio = simulationTime / engineTime;
-			}
-		}
-		if (Engine::g_running)
-		{
-			//std::cout << "Simulation: " << simulationTime << "s Engine: " << engineTime << "s Ratio: " << simulationTime/engineTime << "s Steps: " << steps << " Sum: " << sum << " Saved: " << savedTime * 1000 << "ms PC: " << currentTime - g_pc_time << "s" << std::endl;
-			//std::cout << title << std::endl;
-			//glfwSetWindowTitle(m_window->getWindow(), title.c_str());
-		}
-		if (simulationTime >= g_save_result_time && Engine::g_running)
-		{
-			//std::cout << "Simulation: " << simulationTime << "s Engine: " << engineTime << "s Ratio: " << simulationTime / engineTime << "s Steps: " << steps << " Sum: " << sum << " Saved: " << savedTime * 1000 << "ms PC: " << currentTime - g_pc_time << "s" << std::endl;
-			//std::cout << title << std::endl;
-			//glfwSetWindowTitle(m_window->getWindow(), title.c_str());
-			saveResults();
-		}
-
 		IO_EVENTS(m_window->getWindow());
 
-		//Rendering
-		
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		calculateDeltatime();
+		calculateSleeptime();
+		calculateFPS();
+
 		glClearColor(c_DEFAULT_CLEAR_COLOR[0], c_DEFAULT_CLEAR_COLOR[1], c_DEFAULT_CLEAR_COLOR[2], c_DEFAULT_CLEAR_COLOR[3]);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		//Transform Matrices
-		/*
-			Local Space -> (Model Matrix) -> World Space -> (View Matrix) -> View Space -> (Projection Matrix) -> Clip Space -> (Viewport Transform) -> Screen Space
-			Clip Space = Projection Matrix * View Matrix * Model Matrix * Local Vector
-			Projection: https://www.youtube.com/watch?v=U0_ONQQ5ZNM
-		*/
-
-		glm::mat4 modelM = glm::mat4(1.0f);
-		glm::mat4 viewM = glm::mat4(1.0f);
-		glm::mat4 projectionM = glm::mat4(1.0f);
-
-		//viewM = m_camera->lookAt(m_camera->forward());
-
-		//viewM = glm::lookAt(m_camera->getPos(), m_camera->getPos() + m_camera->forward(), m_camera->up());
-
-		//projectionM = glm::perspective(glm::radians(60.0f), (float) WIDTH / (float) HEIGHT, 0.1f, 100.0f);
-		//projectionM = glm::ortho(-(float)c_WIDTH / 2, (float)c_WIDTH / 2, -(float)c_HEIGHT / 2, (float)c_HEIGHT / 2, -1000.0f, 1000.0f);
-		////projectionM = glm::ortho(0.0f, (float)c_WIDTH, 0.0f, (float)c_HEIGHT, -1000.0f, 1000.0f);
-
-		double timeValue = glfwGetTime();
-		double val = sin(timeValue / 2);
-		
-		m_fluid->updateMouse(&g_lastX, &g_lastY, &g_leftMouseDown, &g_rightMouseDown);
-		double tpf = g_deltaTime + sleepTime / 1000.0f;
-
-		if (tpf < 0)
-		{
-			tpf = 0;
-			std::cout << "TPF < 0!" << std::endl;
-		}
-		//Step forward in time until it has accounted for the number of steps lost by lag (Is disabled, the simulation steps forward with constant timesteps)
-		//Experimenting with dynamic and constant timesteps
-		if (Engine::g_running)
-		{
-			if (c_precision_bound)
-			{
-				if (true) //The engine is running slower than the simulator
-				{
-					float ratio = (tpf) / c_precision;
-					steps = ratio;
-					float c = 1 + (ratio - steps)/steps;
-					////Simulate 10 s of evolvement
-					//float time = 60; //s
-					//float ratio = time / c_precision;
-					//steps = ratio;
-					//float c = 1 + (ratio - steps)/steps;
-
-					savedTime = 0;
-					for (unsigned int i = 0; i < steps; i++)
-					{
-						m_fluid->timeStep(c_precision);
-						simulationTime += c_precision;
-						if (i > 0)
-						{
-							savedTime += c_precision;
-						}
-						sum++;
-					}
-					//simulationTime += c_precision * c * steps;
-				}
-				else //The engine is running faster than the simulator
-				{
-					float ratio = tpf / c_precision;  //How much faster the simulation is than the engine
-					//Calulate how much faster the simulator is going measured in steps
-					//m_fluid->timeStep(c_precision);
-					m_fluid->timeStep(c_precision * ratio);
-					simulationTime += c_precision * ratio;
-					//simulationTime += tpf;
-				}
-			}
-			else //This is what is currently being used
-			{
-				//m_fluid->timeStep(c_precision);
-				simulationTime += c_precision;
-				m_fluid->timeStep(tpf);
-			}
-			engineTime += tpf;
-		}
-		//Bring the results to the screen!
-		m_fluid->Draw(origin);
+		physicsUpdate();
+		update();
 
 		glBindVertexArray(0);
 
@@ -301,38 +114,46 @@ void Engine::Run() {
 	return;
 }
 
-//This is some copy pasta from somewhere on stackoverflow
-void Engine::saveImage(const char* path, GLFWwindow* window)
+void Engine::calculateDeltatime()
 {
-	std::cout << "Writing file..." << std::endl;
-	int width											 = 0;
-	int height											 = 0;
-	glfwGetFramebufferSize(window, &width, &height);
-	int channelAmount									 = 3;
-	int stride											 = channelAmount * width;
-	stride												 += (stride % 4) ? (4 - stride % 4) : 0;
-	int bufferSize										 = stride * height;
-	std::vector<char> buffer(bufferSize);
-
-	glPixelStorei(GL_PACK_ALIGNMENT, 4);
-	glReadBuffer(GL_FRONT);
-	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer.data());
-	stbi_flip_vertically_on_write(true);
-	stbi_write_png(path, width, height, channelAmount, buffer.data(), stride);
-	std::cout << "File has been written at " << path << std::endl;
+	currentTime = glfwGetTime();
+	g_deltaTime = currentTime - g_lastTime;
+	g_lastTime = glfwGetTime();
 }
 
-void Engine::saveResults() {
-	if (g_running && g_save_result)
+void Engine::calculateSleeptime() {
+	
+	sleepTime = (1.0f / g_fps_limit - g_deltaTime + sleepTime / 1000.0f) * 1000; //ms
+
+	//Avoiding negative numbers
+	if (sleepTime < 0 || sleepTime == 0)
 	{
-		Engine::g_running = false;
-		//std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-hz" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound) + "-Z" + std::to_string((int)sum);
-		std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000));
-		std::string path = p_GENERATED_RESULTS + filename + ".png";
-		saveImage(path.c_str(), m_window->getWindow());
-		g_save_result = false;
-		//sum = 0;
+		sleepTime = 0;
 	}
+}
+
+void Engine::calculateFPS() {
+	fps = (int) (1000.f / g_deltaTime);
+}
+
+void Engine::update()
+{
+	m_fluid->updateMouse(&g_lastX, &g_lastY, &g_leftMouseDown, &g_rightMouseDown);
+	m_fluid->updateConfiguration();
+
+	m_fluid->Draw(glm::vec3(0, 0, 0));
+}
+
+void Engine::physicsUpdate() {
+	float tpf = g_deltaTime + sleepTime / 1000.0f;
+
+	if (tpf < 0)
+	{
+		tpf = 0;
+		std::cout << "TPF < 0!" << std::endl;
+	}
+
+	m_fluid->timeStep(g_deltaTime);
 }
 
 void Engine::IO_EVENTS(GLFWwindow* window) {
@@ -347,10 +168,6 @@ void Engine::IO_EVENTS(GLFWwindow* window) {
 		if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_RELEASE) {
 			saveImage("C:/Users/to9751/Pictures/Generated Images/Framebuffer.png", window);
 		}
-	}
-	if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS)
-	{
-		glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, 1920, 1080, 144);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
@@ -372,41 +189,6 @@ void Engine::IO_EVENTS(GLFWwindow* window) {
 	float time = glfwGetTime(); //Seconds
 	float passed_time = 0;
 
-	//Dye
-	if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
-	{
-		m_fluid->swapBuffer(1);
-	}
-	//Velocity
-	if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS)
-	{
-		m_fluid->swapBuffer(2);
-	}
-	//Divergence
-	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
-	{
-		m_fluid->swapBuffer(3);
-	}
-	//Pressure
-	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
-	{
-		m_fluid->swapBuffer(4);
-	}
-	//Curl
-	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
-	{
-		m_fluid->swapBuffer(5);
-	}
-	//Temperature
-	if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
-	{
-		m_fluid->swapBuffer(6);
-	}
-	//Density
-	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
-	{
-		m_fluid->swapBuffer(7);
-	}
 	//Step forward a single timestep
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && Engine::g_running == false)
 	{
@@ -471,6 +253,40 @@ void Engine::IO_EVENTS(GLFWwindow* window) {
 	*/
 }
 
+//This is some copy pasta from somewhere on stackoverflow
+void Engine::saveImage(const char* path, GLFWwindow* window)
+{
+	std::cout << "Writing file..." << std::endl;
+	int width = 0;
+	int height = 0;
+	glfwGetFramebufferSize(window, &width, &height);
+	int channelAmount = 3;
+	int stride = channelAmount * width;
+	stride += (stride % 4) ? (4 - stride % 4) : 0;
+	int bufferSize = stride * height;
+	std::vector<char> buffer(bufferSize);
+
+	glPixelStorei(GL_PACK_ALIGNMENT, 4);
+	glReadBuffer(GL_FRONT);
+	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer.data());
+	stbi_flip_vertically_on_write(true);
+	stbi_write_png(path, width, height, channelAmount, buffer.data(), stride);
+	std::cout << "File has been written at " << path << std::endl;
+}
+
+void Engine::saveResults() {
+	if (g_running && g_save_result)
+	{
+		Engine::g_running = false;
+		//std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-hz" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound) + "-Z" + std::to_string((int)sum);
+		std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000));
+		std::string path = p_GENERATED_RESULTS + filename + ".png";
+		saveImage(path.c_str(), m_window->getWindow());
+		g_save_result = false;
+		//sum = 0;
+	}
+}
+
 void Engine::MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos) {
 	if (g_mouse_constrain)
 	{
@@ -517,5 +333,49 @@ void Engine::KEY_CALLBACK(GLFWwindow* window, int key, int scancode, int action,
 	{
 		std::cout << "Running: " << g_running << std::endl;
 		Engine::g_running = !g_running;
+	}
+	if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS)
+	{
+		if (m_window->windowState == WindowHandler::WindowState::WINDOWED) {
+			m_window->setState(WindowHandler::WindowState::FULLSCREEN);
+		}
+		else if (m_window->windowState == WindowHandler::WindowState::FULLSCREEN) {
+			m_window->setState(WindowHandler::WindowState::WINDOWED);
+		}
+	}
+	//Dye
+	if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
+	{
+		m_fluid->swapBuffer(1);
+	}
+	//Velocity
+	else if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS)
+	{
+		m_fluid->swapBuffer(2);
+	}
+	//Divergence
+	else if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
+	{
+		m_fluid->swapBuffer(3);
+	}
+	//Pressure
+	else if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+	{
+		m_fluid->swapBuffer(4);
+	}
+	//Curl
+	else if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+	{
+		m_fluid->swapBuffer(5);
+	}
+	//Temperature
+	else if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+	{
+		m_fluid->swapBuffer(6);
+	}
+	//Density
+	else if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+	{
+		m_fluid->swapBuffer(7);
 	}
 }

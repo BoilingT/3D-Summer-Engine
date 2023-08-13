@@ -15,7 +15,6 @@ float calcSplat(vec2 pos, float r, vec2 coord, float ratio){
 }
 
 void applySplat(float splat, vec3 rgb, vec2 coord){
-	float ratio = 1.0f / (texelSize.x / texelSize.y);
 
 	vec3 base = texture2D(uTarget, coord).xyz;
 
@@ -33,7 +32,7 @@ void main(){
 	
 	float splat = 0.0f;
 	if(amount <= 1){
-		splat = calcSplat(point, radius, coord, ratio);
+		splat = calcSplat(point, radius, coord, 1.0f);
 	}else if(amount > 1){
 		for(int i = 0; i < amount; i++){
 			splat += calcSplat(vec2((1.0f) / amount * ((i + 1.0f)) - ((1.0f) / amount / 2.0f), point.y), radius, coord, ratio);

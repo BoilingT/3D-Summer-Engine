@@ -414,6 +414,7 @@ void FluidField::updateMouse(double* mouseX, double* mouseY, bool* left_mouse_do
 		else if (m_mouse.left_mouse_down) {
 			splat(m_mouse.texcoord_pos, m_dye_radius, true, true);
 		}
+		std::cout << "X: " << m_mouse.window_pos.x << " Y: " << m_mouse.window_pos.y << "tX: " << m_mouse.texcoord_pos.x << " tY: " << m_mouse.texcoord_pos.y << std::endl;
 	}
 }
 

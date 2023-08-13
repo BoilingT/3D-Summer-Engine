@@ -21,7 +21,7 @@
 
 class Engine
 {
-public:
+private:
 	//Mouse properties
 	static double g_lastX;
 	static double g_lastY;
@@ -33,15 +33,14 @@ public:
 	//Fluid simulation properties
 	static unsigned int g_running;
 
-private:
-	WindowHandler*		m_window;
+	static WindowHandler* m_window;
+	static FluidField*	m_fluid;
 	Camera*				m_camera;
-	FluidField*			m_fluid;
 	FileHandler			fileSystem;
 
 	//Window Properties
-	static const int c_WIDTH								 = 1920;
-	static const int c_HEIGHT								 = 1080;
+	static const int c_WIDTH								 = 900;
+	static const int c_HEIGHT								 = 900;
 	const char* c_WINDOW_NAME								 = "Summer Engine";
 	const float c_DEFAULT_CLEAR_COLOR[4]					 = { 0.0f, 0.0f, 0.0f, 1.0f };
 	const float c_CLEAR_COLOR[4]							 = { 0.28f, 0.41f, 0.61f, 1.0f };
@@ -63,7 +62,7 @@ private:
 	//Engine Properties
 	//Note: Higher fps will result in faster simulation speed (144 FPS is currently the "sweetspot")
 
-	float g_fps_limit										 = 300.0f;			// Monitor refreshrate: (x < 0), No limit: (x = 0)
+	float g_fps_limit										 = 144.0f;			// Monitor refreshrate: (x < 0), No limit: (x = 0)
 
 	//Fluid Simulation Properties
 	const int   c_RESOLUTION								 = 256;				// The amount of cells that the velocityfield will contain the fluid. Note: The visual resolution is 1.333333 times larger than this resolution.
@@ -73,17 +72,7 @@ private:
 
 public:
 
-	Engine()
-	{
-		std::cout << "INITIALIZING::ENGINE" << std::endl;
-
-		m_window = new WindowHandler(c_WIDTH, c_HEIGHT, c_WINDOW_NAME);
-		m_camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-		
-		Init();
-		std::cout << "SUCCESS::INITIALIZATION::ENGINE" << std::endl;
-		glfwSetWindowTitle(m_window->getWindow(), "Engine Initialized");
-	}
+	Engine();
 
 	~Engine() 
 	{
@@ -91,9 +80,7 @@ public:
 
 		delete m_fluid;
 		delete m_camera;
-		delete m_window;
 
-		m_window = NULL;
 		m_camera = NULL;
 		m_fluid = NULL;
 		std::cout << "DESTROYED::ENGINE" << std::endl;
@@ -103,11 +90,17 @@ public:
 	void Init();
 	//Start the rendering sequence
 	void Run();
+	void update();
+	void physicsUpdate();
 	
-	void saveImage(const char* path, GLFWwindow* window);
-	void saveResults();
 
 private:
+	void saveImage(const char* path, GLFWwindow* window);
+	void saveResults();
+	void calculateDeltatime();
+	void calculateSleeptime();
+	void calculateFPS();
+
 	static void FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow* window, int width, int height);			//Is called when the window is resized
 	static void MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos);					//Is called when mouse is being used
 	static void KEY_CALLBACK(GLFWwindow* window, int key, int scancode, int action, int mods);	//Is called when keyboard events occur

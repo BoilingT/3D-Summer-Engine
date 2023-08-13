@@ -57,6 +57,7 @@
     <ClInclude Include="WindowHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="infoForCreator.txt" />
     <Text Include="Shaders\compute_shader_backup.glsl">
       <FileType>Script</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
