@@ -103,6 +103,7 @@ private:
 	void calculateDeltatime();
 	void calculateSleeptime();
 	void calculateFPS();
+	void constrainMouse(GLFWwindow* window, double xPos, double yPos);
 
 	static void FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow* window, int width, int height);			//Is called when the window is resized
 	static void MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos);					//Is called when mouse is being used
