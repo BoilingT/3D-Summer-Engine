@@ -78,9 +78,9 @@ class FluidField
 			delete(fb2);
 		}
 
-		void updateDimensions(unsigned int width, unsigned int height) {
-			fb1->updateDimensions(width, height);
-			fb2->updateDimensions(width, height);
+		void setDimensions(unsigned int width, unsigned int height, float res) {
+			fb1->setDimensions(width, height, res);
+			fb2->setDimensions(width, height, res);
 		}
 
 		//Get the currently bound buffer which has the purpose of being read from.
@@ -293,6 +293,8 @@ public:
 		//This is the rectangle that is used for displaying the simulation
 		//The simulation is simply a texture drawn on this rectangle
 		m_fieldQuad				 = new Rect(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), m_texture->get());
+		
+		m_mouse.updateMousearea(m_WIDTH, m_HEIGHT);
 
 		GLenum textureType = GL_UNSIGNED_BYTE;	//Field type
 		TexFormat rgba(GL_RGBA32F, GL_RGBA);	//Quantity field
@@ -325,21 +327,14 @@ public:
 		std::cout << "SUCCESS::INITIALIZATION::FLUIDFIELD" << std::endl;
 	}
 
-	void updateViewport() {
-		m_dye_buffer->updateDimensions(m_mouse.width, m_mouse.height);
-		//m_dye_buffer->readBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
-		//m_dye_buffer->writeBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
-		m_velocity_buffer->updateDimensions(m_mouse.width, m_mouse.height);
-		m_curl_buffer->updateDimensions(m_mouse.width, m_mouse.height);
-		m_divergence_buffer->updateDimensions(m_mouse.width, m_mouse.height);
-		m_pressure_buffer->updateDimensions(m_mouse.width, m_mouse.height);
-
-		//Experimental
-		// Boyancy and Convection
-		m_temperature_buffer->updateDimensions(m_mouse.width, m_mouse.height);
-		
-		// Smoke and Clouds
-		m_density_buffer->updateDimensions(m_mouse.width, m_mouse.height);
+	void updateViewport(float width, float height) {
+		float velocityResolution = m_resolution * m_velocity_scalar, dyeResolution = m_resolution * m_dye_scalar;
+		m_mouse.updateMousearea(width, height);
+		m_dye_buffer->setDimensions(m_mouse.width, m_mouse.height, dyeResolution);
+		m_velocity_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
+		m_curl_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
+		m_divergence_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
+		m_pressure_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
 	}
 
 	~FluidField() {

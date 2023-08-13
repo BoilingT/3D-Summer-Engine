@@ -326,6 +326,7 @@ void Engine::MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos) {
 
 void Engine::FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
+	m_fluid->updateViewport(width, height);
 }
 
 void Engine::KEY_CALLBACK(GLFWwindow* window, int key, int scancode, int action, int mods) {

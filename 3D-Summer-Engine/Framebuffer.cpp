@@ -2,33 +2,16 @@
 
 #include "Framebuffer.h"
 
-Framebuffer::Framebuffer(float res, unsigned int w, unsigned int h, GLint internalFormat, GLenum format, GLenum type, GLint param) {
+Framebuffer::Framebuffer(float res, unsigned int w, unsigned int h, GLint _internalFormat, GLenum _format, GLenum _type, GLint _param) {
 	resolution = res;
 	width = w;
 	height = h;
+	internalFormat = _internalFormat;
+	format = _format;
+	type = _type;
+	param = _param;
 
-	float ratio = (float)width / (float)height;
-	if (ratio < 1.0f)
-	{
-		ratio = 1.0f / ratio;
-	}
-	float min = round(resolution);
-	float max = round(resolution * ratio);
-	if (w > h)
-	{
-		width = max;
-		height = min;
-	}
-	else {
-		width = min;
-		height = max;
-	}
-
-	//width = (float) w;
-	//height = (float) h;
-
-	texelSizeX = 1.f / width;
-	texelSizeY = 1.f / height;
+	calculateTexelsize(w, h, res);
 
 	glActiveTexture(GL_TEXTURE0);
 	glGenFramebuffers(1, &fbo);
@@ -63,17 +46,58 @@ Framebuffer::Framebuffer(float res, unsigned int w, unsigned int h, GLint intern
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Framebuffer::updateDimensions(unsigned int w, unsigned int h) {
+void Framebuffer::setDimensions(unsigned int w, unsigned int h, float res) {
+	resolution = res;
 	width = w;
 	height = h;
 
-	float ratio = (float)width / (float)height;
+	calculateTexelsize(w, h, res);
+
+	glDeleteFramebuffers(1, &fbo);
+	glDeleteTextures(1, &texture);
+
+	glActiveTexture(GL_TEXTURE0);
+	glGenFramebuffers(1, &fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+	glGenTextures(1, &texture);
+
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, param);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, param);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, 100);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, -100);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 100);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, NULL);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+	glViewport(0, 0, width, height);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	if (!status())
+	{
+		std::cout << "ERROR::BLIT::FRAMEBUFFER::STATUS::INCOMPLETE" << std::endl;
+		return;
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Framebuffer::calculateTexelsize(float w, float h, float res) {
+	float ratio = (float)w / (float)h;
 	if (ratio < 1.0f)
 	{
 		ratio = 1.0f / ratio;
 	}
-	float min = round(resolution);
-	float max = round(resolution * ratio);
+	float min = round(res);
+	float max = round(res * ratio);
 	if (w > h)
 	{
 		width = max;
