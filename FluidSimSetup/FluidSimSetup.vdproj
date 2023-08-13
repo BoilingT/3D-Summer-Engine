@@ -15,18 +15,6 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_0013BC6C5FEE45A0A91C6B44B57C0F11"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_03F7769E567F46D9813F3DDA0FF1337A"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_08B486E5855D4C3495CC2FAEDC45A076"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -39,13 +27,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_098F2B165E3F4C89B038C123ED548423"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_0DB832E75BD54B09A16B911E84BFF363"
+        "MsmKey" = "8:_0A65D67BCC714F91ACA78DD3BE6717A1"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -57,7 +39,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_182FCF1F8C504565892D2FE40EAF1E45"
+        "MsmKey" = "8:_137B35EB10944D049A901E67E69EA160"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_25BBF84F8A4C4B2E8832648BE8CA91FB"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -75,25 +63,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_2F26055AA7C24571B1F6285BE1DC60A4"
+        "MsmKey" = "8:_3CBF6400B92747C9B057E06D0C2791A4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_43556705869B49779C3A156D2E9AA9EA"
+        "MsmKey" = "8:_459E6998EA57420D88CAB3EB7CFBCDE5"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_4C5F8A9D89C7403E8DE8AF491FDDF4FD"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4FB15FCE97314BFFBDAB2A9D68961624"
+        "MsmKey" = "8:_4C8BBFEB4BAD4D48830326E479111001"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -105,19 +87,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_552ADCCB190743329A224F81743D9341"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_5E2DA9FDC16F44B69D0B8AAA961A163E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_62996CF7B60E4B2AA6236DC491912B5E"
+        "MsmKey" = "8:_614E2BAFEABA4AEE8B1AD438F62809FF"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -129,49 +105,73 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_71D50674C52F4102B20DC00C15230126"
+        "MsmKey" = "8:_65484416D7844E3A98567900C5520408"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_798182DC32C278C91B098ACB9AE8E16A"
-        "OwnerKey" = "8:_08B486E5855D4C3495CC2FAEDC45A076"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_814AEE9768E24422B9E03A424AAD8E38"
+        "MsmKey" = "8:_6CA816DF391F461BB3404C1BFB7825B6"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_88F4CB2ED7411732A830B9E736A486B4"
-        "OwnerKey" = "8:_08B486E5855D4C3495CC2FAEDC45A076"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A19895588D974EEEBA72884739040D5B"
+        "MsmKey" = "8:_6DBE94B0F33248A493E0764A7571FDA4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_A2F75078B94D492FBBDF399264475746"
+        "MsmKey" = "8:_6FCC86F67140404DBB049E99157DAA67"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_AF7909DE47B9480088921EA94AC303AA"
+        "MsmKey" = "8:_700174244DDD4C1E9730265EF9903CA3"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_B0885A12A8214ACEA88BAC6CFE334843"
+        "MsmKey" = "8:_794F06794D2449399613EBBCFBC152E7"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_81AF43BFBF2944F086D4621FAFADE406"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_905325D425D04EC5BF0EAAF7A4E8BE11"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_9D7570D2C837452CBD43655CD3A4CB8A"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_9E1DB66F97BB44A99DCD1FCE2AF3615F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A3AD550EFE224906B7D30AB2A3A0A590"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A8383044CCEE46B789B4A0CADE53D904"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -183,37 +183,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_BBCA8A3E83E5443B98A73B0EF793491F"
+        "MsmKey" = "8:_CE0BBD3D45FE4A2381E2BE2101DDAECF"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_C0F7DE7D9B544375B390ED6A6090C82F"
+        "MsmKey" = "8:_D379FC0BE2EE4F088A96D642B82120B0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_CD04F1670DDF4094976FA1F9DD3EDF1D"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_D25392C10F2C4020B52B3DE10A83CF32"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_D48CE9FE8A79407AA8CFBFE0DE951A85"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_D92AD721C19B4F38A07FA17B87837BD9"
+        "MsmKey" = "8:_D675862C291145EBAD23BCE2783F9D39"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -225,25 +207,25 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_E5E4AB3332A82252FF249FD98EDCC2B3"
-        "OwnerKey" = "8:_08B486E5855D4C3495CC2FAEDC45A076"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E6307390F07F4223BEF28C604A6D8357"
+        "MsmKey" = "8:_DC5FEA97E5D6475A857A1F797C4348AB"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_EA0528C75F21418B9AA012FA209D663E"
+        "MsmKey" = "8:_DFD9C6E2668F4D87B599D9D20CCBF8CF"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_F46EBF0B150D415684E7394511588F93"
+        "MsmKey" = "8:_F50348A825F74E82BA47C3292C99614B"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FC8054940CC24EAE8F154FE91860D1CF"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -334,46 +316,6 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0013BC6C5FEE45A0A91C6B44B57C0F11"
-            {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\compute_gradient_subtraction_shader.frag"
-            "TargetName" = "8:compute_gradient_subtraction_shader.frag"
-            "Tag" = "8:"
-            "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_03F7769E567F46D9813F3DDA0FF1337A"
-            {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\compute_force_shader.frag"
-            "TargetName" = "8:compute_force_shader.frag"
-            "Tag" = "8:"
-            "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_09206163938C4C469E81A2450869DC76"
             {
             "SourcePath" = "8:..\\..\\..\\..\\..\\..\\dep\\msvcp140.dll"
@@ -394,30 +336,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_098F2B165E3F4C89B038C123ED548423"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0A65D67BCC714F91ACA78DD3BE6717A1"
             {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\compute_jacobi_shader.frag"
-            "TargetName" = "8:compute_jacobi_shader.frag"
-            "Tag" = "8:"
-            "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0DB832E75BD54B09A16B911E84BFF363"
-            {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\object_fragment_shader.frag"
-            "TargetName" = "8:object_fragment_shader.frag"
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\shader_backup.glsl"
+            "TargetName" = "8:shader_backup.glsl"
             "Tag" = "8:"
             "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
             "Condition" = "8:"
@@ -454,10 +376,30 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_182FCF1F8C504565892D2FE40EAF1E45"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_137B35EB10944D049A901E67E69EA160"
             {
             "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\default_vertex_shader.vert"
             "TargetName" = "8:default_vertex_shader.vert"
+            "Tag" = "8:"
+            "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_25BBF84F8A4C4B2E8832648BE8CA91FB"
+            {
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\fragment_shader - kopia.frag"
+            "TargetName" = "8:fragment_shader - kopia.frag"
             "Tag" = "8:"
             "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
             "Condition" = "8:"
@@ -514,10 +456,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2F26055AA7C24571B1F6285BE1DC60A4"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3CBF6400B92747C9B057E06D0C2791A4"
             {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\compute_splat_shader.frag"
-            "TargetName" = "8:compute_splat_shader.frag"
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\divergence_shader.frag"
+            "TargetName" = "8:divergence_shader.frag"
             "Tag" = "8:"
             "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
             "Condition" = "8:"
@@ -534,10 +476,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_43556705869B49779C3A156D2E9AA9EA"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_459E6998EA57420D88CAB3EB7CFBCDE5"
             {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\compute_divergence_shader.frag"
-            "TargetName" = "8:compute_divergence_shader.frag"
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\advection_shader.frag"
+            "TargetName" = "8:advection_shader.frag"
             "Tag" = "8:"
             "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
             "Condition" = "8:"
@@ -554,30 +496,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4C5F8A9D89C7403E8DE8AF491FDDF4FD"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4C8BBFEB4BAD4D48830326E479111001"
             {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\fragment_shader.frag"
-            "TargetName" = "8:fragment_shader.frag"
-            "Tag" = "8:"
-            "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4FB15FCE97314BFFBDAB2A9D68961624"
-            {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\compute_temperature_shader.frag"
-            "TargetName" = "8:compute_temperature_shader.frag"
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\clear_shader.frag"
+            "TargetName" = "8:clear_shader.frag"
             "Tag" = "8:"
             "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
             "Condition" = "8:"
@@ -614,26 +536,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_552ADCCB190743329A224F81743D9341"
-            {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\compute_shader.glsl"
-            "TargetName" = "8:compute_shader.glsl"
-            "Tag" = "8:"
-            "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5E2DA9FDC16F44B69D0B8AAA961A163E"
             {
             "SourcePath" = "8:..\\..\\..\\..\\..\\..\\dep\\msvcp140d.dll"
@@ -654,10 +556,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_62996CF7B60E4B2AA6236DC491912B5E"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_614E2BAFEABA4AEE8B1AD438F62809FF"
             {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\compute_shader_backup.glsl"
-            "TargetName" = "8:compute_shader_backup.glsl"
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\force_shader.frag"
+            "TargetName" = "8:force_shader.frag"
             "Tag" = "8:"
             "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
             "Condition" = "8:"
@@ -694,10 +596,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_71D50674C52F4102B20DC00C15230126"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_65484416D7844E3A98567900C5520408"
             {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\fragment_shader - kopia.frag"
-            "TargetName" = "8:fragment_shader - kopia.frag"
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\vertex_shader - kopia.vert"
+            "TargetName" = "8:vertex_shader - kopia.vert"
             "Tag" = "8:"
             "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
             "Condition" = "8:"
@@ -714,30 +616,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_798182DC32C278C91B098ACB9AE8E16A"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6CA816DF391F461BB3404C1BFB7825B6"
             {
-            "SourcePath" = "8:MSVCP140D.dll"
-            "TargetName" = "8:MSVCP140D.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_814AEE9768E24422B9E03A424AAD8E38"
-            {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\compute_clear_shader.frag"
-            "TargetName" = "8:compute_clear_shader.frag"
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\vorticity_shader.frag"
+            "TargetName" = "8:vorticity_shader.frag"
             "Tag" = "8:"
             "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
             "Condition" = "8:"
@@ -754,30 +636,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_88F4CB2ED7411732A830B9E736A486B4"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6DBE94B0F33248A493E0764A7571FDA4"
             {
-            "SourcePath" = "8:ucrtbased.dll"
-            "TargetName" = "8:ucrtbased.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A19895588D974EEEBA72884739040D5B"
-            {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\vertex_shader.vert"
-            "TargetName" = "8:vertex_shader.vert"
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\integrate_shader.frag"
+            "TargetName" = "8:integrate_shader.frag"
             "Tag" = "8:"
             "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
             "Condition" = "8:"
@@ -794,10 +656,30 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A2F75078B94D492FBBDF399264475746"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6FCC86F67140404DBB049E99157DAA67"
             {
-            "SourcePath" = "8:..\\..\\..\\..\\..\\..\\..\\Pictures\\Icons\\letter-f (1).ico"
-            "TargetName" = "8:letter-f (1).ico"
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\gradient_subtraction_shader.frag"
+            "TargetName" = "8:gradient_subtraction_shader.frag"
+            "Tag" = "8:"
+            "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_700174244DDD4C1E9730265EF9903CA3"
+            {
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Images\\Icon\\letter-f.ico"
+            "TargetName" = "8:letter-f.ico"
             "Tag" = "8:"
             "Folder" = "8:_B9682DCD96624F16A8464B8299F4836B"
             "Condition" = "8:"
@@ -814,10 +696,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AF7909DE47B9480088921EA94AC303AA"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_794F06794D2449399613EBBCFBC152E7"
             {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\compute_bounds_shader.frag"
-            "TargetName" = "8:compute_bounds_shader.frag"
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\object_fragment_shader.frag"
+            "TargetName" = "8:object_fragment_shader.frag"
             "Tag" = "8:"
             "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
             "Condition" = "8:"
@@ -834,10 +716,110 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B0885A12A8214ACEA88BAC6CFE334843"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_81AF43BFBF2944F086D4621FAFADE406"
             {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\compute_advection_shader.frag"
-            "TargetName" = "8:compute_advection_shader.frag"
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\default_fragment_shader.frag"
+            "TargetName" = "8:default_fragment_shader.frag"
+            "Tag" = "8:"
+            "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_905325D425D04EC5BF0EAAF7A4E8BE11"
+            {
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\jacobi_shader.frag"
+            "TargetName" = "8:jacobi_shader.frag"
+            "Tag" = "8:"
+            "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9D7570D2C837452CBD43655CD3A4CB8A"
+            {
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\curl_shader.frag"
+            "TargetName" = "8:curl_shader.frag"
+            "Tag" = "8:"
+            "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9E1DB66F97BB44A99DCD1FCE2AF3615F"
+            {
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\visualise_grid_fragment_shader.frag"
+            "TargetName" = "8:visualise_grid_fragment_shader.frag"
+            "Tag" = "8:"
+            "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A3AD550EFE224906B7D30AB2A3A0A590"
+            {
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\shader.glsl"
+            "TargetName" = "8:shader.glsl"
+            "Tag" = "8:"
+            "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A8383044CCEE46B789B4A0CADE53D904"
+            {
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\object_vertex_shader.vert"
+            "TargetName" = "8:object_vertex_shader.vert"
             "Tag" = "8:"
             "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
             "Condition" = "8:"
@@ -874,10 +856,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BBCA8A3E83E5443B98A73B0EF793491F"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CE0BBD3D45FE4A2381E2BE2101DDAECF"
             {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\vertex_shader - kopia.vert"
-            "TargetName" = "8:vertex_shader - kopia.vert"
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\splat_shader.frag"
+            "TargetName" = "8:splat_shader.frag"
             "Tag" = "8:"
             "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
             "Condition" = "8:"
@@ -894,10 +876,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C0F7DE7D9B544375B390ED6A6090C82F"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D379FC0BE2EE4F088A96D642B82120B0"
             {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\default_fragment_shader.frag"
-            "TargetName" = "8:default_fragment_shader.frag"
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\visualise_grid_vertex_shader.vert"
+            "TargetName" = "8:visualise_grid_vertex_shader.vert"
             "Tag" = "8:"
             "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
             "Condition" = "8:"
@@ -914,70 +896,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CD04F1670DDF4094976FA1F9DD3EDF1D"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D675862C291145EBAD23BCE2783F9D39"
             {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\object_vertex_shader.vert"
-            "TargetName" = "8:object_vertex_shader.vert"
-            "Tag" = "8:"
-            "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D25392C10F2C4020B52B3DE10A83CF32"
-            {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\compute_integrate_shader.frag"
-            "TargetName" = "8:compute_integrate_shader.frag"
-            "Tag" = "8:"
-            "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D48CE9FE8A79407AA8CFBFE0DE951A85"
-            {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\visualise_grid_fragment_shader.frag"
-            "TargetName" = "8:visualise_grid_fragment_shader.frag"
-            "Tag" = "8:"
-            "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D92AD721C19B4F38A07FA17B87837BD9"
-            {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\compute_density_shader.frag"
-            "TargetName" = "8:compute_density_shader.frag"
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\temperature_shader.frag"
+            "TargetName" = "8:temperature_shader.frag"
             "Tag" = "8:"
             "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
             "Condition" = "8:"
@@ -1014,30 +936,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E5E4AB3332A82252FF249FD98EDCC2B3"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DC5FEA97E5D6475A857A1F797C4348AB"
             {
-            "SourcePath" = "8:VCRUNTIME140D.dll"
-            "TargetName" = "8:VCRUNTIME140D.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E6307390F07F4223BEF28C604A6D8357"
-            {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\visualise_grid_vertex_shader.vert"
-            "TargetName" = "8:visualise_grid_vertex_shader.vert"
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\density_shader.frag"
+            "TargetName" = "8:density_shader.frag"
             "Tag" = "8:"
             "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
             "Condition" = "8:"
@@ -1054,10 +956,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EA0528C75F21418B9AA012FA209D663E"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DFD9C6E2668F4D87B599D9D20CCBF8CF"
             {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\compute_vorticity_shader.frag"
-            "TargetName" = "8:compute_vorticity_shader.frag"
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\vertex_shader.vert"
+            "TargetName" = "8:vertex_shader.vert"
             "Tag" = "8:"
             "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
             "Condition" = "8:"
@@ -1074,10 +976,30 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F46EBF0B150D415684E7394511588F93"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F50348A825F74E82BA47C3292C99614B"
             {
-            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\compute_curl_shader.frag"
-            "TargetName" = "8:compute_curl_shader.frag"
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\bounds_shader.frag"
+            "TargetName" = "8:bounds_shader.frag"
+            "Tag" = "8:"
+            "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FC8054940CC24EAE8F154FE91860D1CF"
+            {
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\fragment_shader.frag"
+            "TargetName" = "8:fragment_shader.frag"
             "Tag" = "8:"
             "Folder" = "8:_25D7A51D6CE24A5E9720FE6A9C25B362"
             "Condition" = "8:"
@@ -1113,7 +1035,7 @@
                     "{9EF0B969-E518-4E46-987F-47570745A589}:_25D7A51D6CE24A5E9720FE6A9C25B362"
                     {
                     "Name" = "8:Shaders"
-                    "AlwaysCreate" = "11:FALSE"
+                    "AlwaysCreate" = "11:TRUE"
                     "Condition" = "8:"
                     "Transitive" = "11:FALSE"
                     "Property" = "8:_D258242627A141E2A2B5D6DE8B1DC700"
@@ -1124,7 +1046,7 @@
                     "{9EF0B969-E518-4E46-987F-47570745A589}:_B9682DCD96624F16A8464B8299F4836B"
                     {
                     "Name" = "8:Icon"
-                    "AlwaysCreate" = "11:FALSE"
+                    "AlwaysCreate" = "11:TRUE"
                     "Condition" = "8:"
                     "Transitive" = "11:FALSE"
                     "Property" = "8:_1B6F5AC9094045118B75DB7CA05C2FEF"
@@ -1173,7 +1095,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:FluidSimulation"
         "ProductCode" = "8:{C30D1E91-4254-408C-996B-424468326315}"
-        "PackageCode" = "8:{377AEF33-0B51-4B2E-B2C5-D58D31856D97}"
+        "PackageCode" = "8:{49DFFEBB-1BA8-4AA1-99F1-3AC4D2C3E69C}"
         "UpgradeCode" = "8:{D030A42E-C51F-4F62-A1AA-A2838A3F71AF}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -1304,7 +1226,7 @@
             "Target" = "8:_08B486E5855D4C3495CC2FAEDC45A076"
             "Folder" = "8:_EF42981A457243CFBB437C673E62A5B1"
             "WorkingFolder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
-            "Icon" = "8:_A2F75078B94D492FBBDF399264475746"
+            "Icon" = "8:_700174244DDD4C1E9730265EF9903CA3"
             "Feature" = "8:"
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_E8ECBF197E374E60B3E33E58B517B6AE"
@@ -1318,7 +1240,7 @@
             "Target" = "8:_08B486E5855D4C3495CC2FAEDC45A076"
             "Folder" = "8:_14BD571110E34659A8C458E3345B8499"
             "WorkingFolder" = "8:_13C0B595FCFA42BCB419EC94D5CB3B00"
-            "Icon" = "8:_A2F75078B94D492FBBDF399264475746"
+            "Icon" = "8:_700174244DDD4C1E9730265EF9903CA3"
             "Feature" = "8:"
             }
         }
@@ -1447,8 +1369,8 @@
                             "Type" = "3:3"
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1202"
+                            "Setting" = "3:2"
+                            "Value" = "8:"
                             "DefaultValue" = "8:#1202"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1460,8 +1382,8 @@
                             "Type" = "3:3"
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1203"
+                            "Setting" = "3:2"
+                            "Value" = "8:The (administrative) installer will guide you through the steps required to install [ProductName] on your computer."
                             "DefaultValue" = "8:#1203"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1585,8 +1507,8 @@
                             "Type" = "3:3"
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1202"
+                            "Setting" = "3:2"
+                            "Value" = "8:"
                             "DefaultValue" = "8:#1202"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1634,7 +1556,7 @@
                             "ContextData" = "8:1;True=1;False=0"
                             "Attributes" = "3:0"
                             "Setting" = "3:0"
-                            "Value" = "3:1"
+                            "Value" = "3:0"
                             "DefaultValue" = "3:1"
                             "UsePlugInResources" = "11:TRUE"
                             }

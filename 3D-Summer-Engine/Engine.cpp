@@ -39,6 +39,23 @@ Engine::Engine()
 	//Open window
 	if (m_window->open() == -1) return;
 
+	int w, h, channels;
+	unsigned char* data = stbi_load(p_APPLICATION_ICON, &w, &h, &channels, 0);
+	if (data != NULL) {
+
+		GLFWimage* icon = new GLFWimage();
+		icon->height = h;
+		icon->width = w;
+		icon->pixels = data;
+		glfwSetWindowIcon(m_window->getWindow(), 1, icon);
+		delete(icon);
+		icon = nullptr;
+	}
+	else {
+		std::cout << "Could not set window icon" << std::endl;
+	}
+	stbi_image_free(data);
+
 	//GLAD library loading
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{

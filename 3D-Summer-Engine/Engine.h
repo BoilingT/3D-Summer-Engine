@@ -52,6 +52,8 @@ private:
 	const char* p_CONTAINER_IMAGE							 = "Images/LearnOpenGL/container.jpg";
 	const char* p_AWESOMEFACE_IMAGE							 = "Images/LearnOpenGL/awesomeface.png";
 	const char* p_GENERATED_RESULTS							 = "Images/Generated Results/";
+	const char* p_APPLICATION_ICON							 = "./Images/Icon/letter-f.png";
+
 	
 	//Engine variables
 	float g_deltaTime										 = 0.0f;			//Time between each rendered frame
