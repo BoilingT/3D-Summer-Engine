@@ -215,6 +215,13 @@ void Engine::IO_EVENTS(GLFWwindow* window) {
 	g_leftMouseDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
 	g_rightMouseDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
 
+	if (g_leftMouseDown || g_rightMouseDown)
+	{
+		double mouseX, mouseY;
+		glfwGetCursorPos(window, &mouseX, &mouseY);
+		constrainMouse(window, mouseX, mouseY);
+	}
+
 	//Step forward a single timestep
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && Engine::g_running == false)
 	{
@@ -313,26 +320,30 @@ void Engine::saveResults() {
 	}
 }
 
+void Engine::constrainMouse(GLFWwindow* window, double xPos, double yPos) {
+	double margin = 2.f;
+	if (xPos <= margin)
+	{
+		glfwSetCursorPos(window, margin + 1, yPos);
+	}
+	else if (xPos >= c_WIDTH - margin)
+	{
+		glfwSetCursorPos(window, c_WIDTH - margin + 1, yPos);
+	}
+	if (yPos <= margin)
+	{
+		glfwSetCursorPos(window, xPos, margin + 1);
+	}
+	else if (yPos >= c_HEIGHT - margin)
+	{
+		glfwSetCursorPos(window, xPos, c_HEIGHT - margin + 1);
+	}
+}
+
 void Engine::MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos) {
 	if (g_mouse_constrain)
 	{
-		double margin = 2.f;
-		if (xPos <= margin)
-		{
-			glfwSetCursorPos(window, margin + 1, yPos);
-		}
-		else if (xPos >= c_WIDTH - margin)
-		{
-			glfwSetCursorPos(window, c_WIDTH - margin + 1, yPos);
-		}
-		if (yPos <= margin)
-		{
-			glfwSetCursorPos(window, xPos, margin + 1);
-		}
-		else if (yPos >= c_HEIGHT - margin)
-		{
-			glfwSetCursorPos(window, xPos, c_HEIGHT - margin + 1);
-		}
+		
 	}
 	if (g_firstMouseEnter)
 	{
