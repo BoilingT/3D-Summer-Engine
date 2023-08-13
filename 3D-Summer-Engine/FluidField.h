@@ -294,8 +294,6 @@ public:
 		//The simulation is simply a texture drawn on this rectangle
 		m_fieldQuad				 = new Rect(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), m_texture->get());
 		
-		m_mouse.updateMousearea(m_WIDTH, m_HEIGHT);
-
 		GLenum textureType = GL_UNSIGNED_BYTE;	//Field type
 		TexFormat rgba(GL_RGBA32F, GL_RGBA);	//Quantity field
 		TexFormat rg(GL_RG32F, GL_RG);			//Vector field
@@ -330,11 +328,11 @@ public:
 	void updateViewport(float width, float height) {
 		float velocityResolution = m_resolution * m_velocity_scalar, dyeResolution = m_resolution * m_dye_scalar;
 		m_mouse.updateMousearea(width, height);
-		m_dye_buffer->setDimensions(m_mouse.width, m_mouse.height, dyeResolution);
-		m_velocity_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
-		m_curl_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
-		m_divergence_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
-		m_pressure_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
+		//m_dye_buffer->setDimensions(m_mouse.width, m_mouse.height, dyeResolution);
+		//m_velocity_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
+		//m_curl_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
+		//m_divergence_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
+		//m_pressure_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
 	}
 
 	~FluidField() {

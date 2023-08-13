@@ -363,8 +363,9 @@ void FluidField::splat(glm::vec2 pos, float r, bool dye, bool velocity) {
 	glUniform2f(m_splat_shader.uniforms["point"], pos.x, pos.y);
 	glUniform3f(uColorLoc, m_mouse.texcoord_delta.x * m_dye_force, m_mouse.texcoord_delta.y * m_dye_force, 0.0f);
 	
-	float ratio = m_mouse.width / m_mouse.height * 0.5f;
-	glUniform1f(m_splat_shader.uniforms["radius"], ratio > 1 ? r * ratio : r);
+	//float ratio = m_mouse.width / m_mouse.height * 0.5f;
+	//glUniform1f(m_splat_shader.uniforms["radius"], ratio > 1 ? r * ratio : r);
+	glUniform1f(m_splat_shader.uniforms["radius"], r);
 	glUniform2f(uTexLoc, m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
 	if (velocity)
 	{
@@ -415,6 +416,9 @@ void FluidField::updateMouse(double* mouseX, double* mouseY, bool* left_mouse_do
 			splat(m_mouse.texcoord_pos, m_dye_radius, true, true);
 		}
 		//std::cout << "X: " << m_mouse.window_pos.x << " Y: " << m_mouse.window_pos.y << "tX: " << m_mouse.texcoord_pos.x << " tY: " << m_mouse.texcoord_pos.y << std::endl;
+	}
+	else if(m_mouse.left_mouse_down){
+		splat(m_mouse.texcoord_pos, m_dye_radius, true, false);
 	}
 }
 

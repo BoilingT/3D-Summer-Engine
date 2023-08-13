@@ -94,6 +94,7 @@ public:
 	void Run();
 	void update();
 	void physicsUpdate();
+	static void Pause();
 	
 
 private:
@@ -106,6 +107,8 @@ private:
 	static void FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow* window, int width, int height);			//Is called when the window is resized
 	static void MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos);					//Is called when mouse is being used
 	static void KEY_CALLBACK(GLFWwindow* window, int key, int scancode, int action, int mods);	//Is called when keyboard events occur
+	static void WINDOW_ICONIFY_CALLBACK(GLFWwindow* window, int iconified);						//Is called when the window is "minimized"
+	static void WINDOW_FOCUS_CALLBACK(GLFWwindow* window, int focused);							//Is called when the window is "minimized"
 	void IO_EVENTS(GLFWwindow* window);															//Handles input and output events
 };
 

@@ -21,14 +21,13 @@ int WindowHandler::setState(WindowState state) {
 
 	if (state == WindowState::WINDOWED) {
 
-		glfwSetWindowMonitor(window, NULL, 0, 0, WIDTH, HEIGHT, mode->refreshRate);
+		glfwSetWindowMonitor(window, NULL, 0, 0, WIDTH, HEIGHT, GLFW_DONT_CARE);
 		glfwMaximizeWindow(window);
-		windowState = WindowState::WINDOWED;
 	}
 	else if (state == WindowState::FULLSCREEN) {
 		glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
-		windowState = WindowState::FULLSCREEN;
 	}
+	windowState = state;
 
 	return 0;
 }

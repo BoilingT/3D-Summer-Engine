@@ -105,6 +105,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_64DAFDF447224B829D3EAF5D0E5930AC"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_65484416D7844E3A98567900C5520408"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -596,6 +602,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_64DAFDF447224B829D3EAF5D0E5930AC"
+            {
+            "SourcePath" = "8:..\\3D-Summer-Engine\\Images\\Icon\\letter-f.png"
+            "TargetName" = "8:letter-f.png"
+            "Tag" = "8:"
+            "Folder" = "8:_A982FFA567254C8689EAB2638E861F4A"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_65484416D7844E3A98567900C5520408"
             {
             "SourcePath" = "8:..\\3D-Summer-Engine\\Shaders\\vertex_shader - kopia.vert"
@@ -681,7 +707,7 @@
             "SourcePath" = "8:..\\3D-Summer-Engine\\Images\\Icon\\letter-f.ico"
             "TargetName" = "8:letter-f.ico"
             "Tag" = "8:"
-            "Folder" = "8:_B9682DCD96624F16A8464B8299F4836B"
+            "Folder" = "8:_A982FFA567254C8689EAB2638E861F4A"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1043,15 +1069,26 @@
                         {
                         }
                     }
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_B9682DCD96624F16A8464B8299F4836B"
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_DF688771D4DE43548867330D12BB48B0"
                     {
-                    "Name" = "8:Icon"
+                    "Name" = "8:Images"
                     "AlwaysCreate" = "11:TRUE"
                     "Condition" = "8:"
                     "Transitive" = "11:FALSE"
-                    "Property" = "8:_1B6F5AC9094045118B75DB7CA05C2FEF"
+                    "Property" = "8:_F8E20049A6684FECAD5122BC4689BAFB"
                         "Folders"
                         {
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_A982FFA567254C8689EAB2638E861F4A"
+                            {
+                            "Name" = "8:Icon"
+                            "AlwaysCreate" = "11:TRUE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:FALSE"
+                            "Property" = "8:_1B6F5AC9094045118B75DB7CA05C2FEF"
+                                "Folders"
+                                {
+                                }
+                            }
                         }
                     }
                 }
@@ -1095,7 +1132,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:FluidSimulation"
         "ProductCode" = "8:{C30D1E91-4254-408C-996B-424468326315}"
-        "PackageCode" = "8:{49DFFEBB-1BA8-4AA1-99F1-3AC4D2C3E69C}"
+        "PackageCode" = "8:{983CDEE3-6F40-4DFE-91D6-2EB60590794D}"
         "UpgradeCode" = "8:{D030A42E-C51F-4F62-A1AA-A2838A3F71AF}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"

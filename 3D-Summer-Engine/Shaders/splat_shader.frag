@@ -11,7 +11,7 @@ uniform int amount;
 float calcSplat(vec2 pos, float r, vec2 coord, float ratio){
 	vec2 p = coord - pos;
 	p*=ratio;
-	return exp(-dot(p, p) / (r/100.0f));
+	return exp(-dot(p, p) / (r/30.0f));
 }
 
 void applySplat(float splat, vec3 rgb, vec2 coord){
@@ -32,7 +32,7 @@ void main(){
 	
 	float splat = 0.0f;
 	if(amount <= 1){
-		splat = calcSplat(point, radius, coord, 1.0f);
+		splat = calcSplat(point, radius, coord, ratio);
 	}else if(amount > 1){
 		for(int i = 0; i < amount; i++){
 			splat += calcSplat(vec2((1.0f) / amount * ((i + 1.0f)) - ((1.0f) / amount / 2.0f), point.y), radius, coord, ratio);

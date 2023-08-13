@@ -10,7 +10,7 @@ double Engine::g_lastY				 = 0;
 bool Engine::g_leftMouseDown		 = 0;
 bool Engine::g_rightMouseDown		 = 0;
 bool Engine::g_firstMouseEnter		 = 0;
-bool Engine::g_mouse_constrain		 = false;
+bool Engine::g_mouse_constrain		 = true;
 unsigned int Engine::g_running		 = false;
 
 double g_lastTime = glfwGetTime();
@@ -73,10 +73,11 @@ Engine::Engine()
 	glViewport(0, 0, c_WIDTH, c_HEIGHT);
 	//Resize the viewport when the window size is changed
 	glfwSetFramebufferSizeCallback(m_window->getWindow(), FRAME_BUFFER_SIZE_CALLBACK);
+	glfwSetWindowIconifyCallback(m_window->getWindow(), WINDOW_ICONIFY_CALLBACK);
+	glfwSetWindowFocusCallback(m_window->getWindow(), WINDOW_FOCUS_CALLBACK);
 	glfwSetKeyCallback(m_window->getWindow(), KEY_CALLBACK);
-	//Mouse Events
 	glfwSetCursorPosCallback(m_window->getWindow(), MOUSE_CALLBACK);
-	//Key Events
+
 	glfwSetInputMode(m_window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
 	m_fluid = new FluidField(c_WIDTH, c_HEIGHT, c_RESOLUTION);
@@ -87,7 +88,9 @@ Engine::Engine()
 
 void Engine::Run() {
 	std::cout << "STARTING::ENGINE" << std::endl;
-	glfwSetWindowTitle(m_window->getWindow(), "Starting Engine...");	
+	glfwSetWindowTitle(m_window->getWindow(), "Starting Engine...");
+
+	glfwMaximizeWindow(m_window->getWindow());
 	//This removes the FPS cap
 	glfwSwapInterval(0);
 	
@@ -108,7 +111,10 @@ void Engine::Run() {
 		glClearColor(c_DEFAULT_CLEAR_COLOR[0], c_DEFAULT_CLEAR_COLOR[1], c_DEFAULT_CLEAR_COLOR[2], c_DEFAULT_CLEAR_COLOR[3]);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		physicsUpdate();
+		if (Engine::g_running)
+		{
+			physicsUpdate();
+		}
 		update();
 
 		glBindVertexArray(0);
@@ -205,6 +211,9 @@ void Engine::IO_EVENTS(GLFWwindow* window) {
 	const float cameraSensitivity = m_camera->sensitivity * g_deltaTime;
 	float time = glfwGetTime(); //Seconds
 	float passed_time = 0;
+
+	g_leftMouseDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
+	g_rightMouseDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
 
 	//Step forward a single timestep
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && Engine::g_running == false)
@@ -307,21 +316,22 @@ void Engine::saveResults() {
 void Engine::MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos) {
 	if (g_mouse_constrain)
 	{
-		if (xPos <= 10.0)
+		double margin = 2.f;
+		if (xPos <= margin)
 		{
-			glfwSetCursorPos(window, 11.0, yPos);
+			glfwSetCursorPos(window, margin + 1, yPos);
 		}
-		else if (xPos >= c_WIDTH - 10.0)
+		else if (xPos >= c_WIDTH - margin)
 		{
-			glfwSetCursorPos(window, c_WIDTH - 11.0, yPos);
+			glfwSetCursorPos(window, c_WIDTH - margin + 1, yPos);
 		}
-		if (yPos <= 10.0)
+		if (yPos <= margin)
 		{
-			glfwSetCursorPos(window, xPos, 11.0);
+			glfwSetCursorPos(window, xPos, margin + 1);
 		}
-		else if (yPos >= c_HEIGHT - 10.0)
+		else if (yPos >= c_HEIGHT - margin)
 		{
-			glfwSetCursorPos(window, xPos, c_HEIGHT - 11.0);
+			glfwSetCursorPos(window, xPos, c_HEIGHT - margin + 1);
 		}
 	}
 	if (g_firstMouseEnter)
@@ -335,24 +345,41 @@ void Engine::MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos) {
 	yTravel = yPos - g_lastY;
 	g_lastX = xPos;
 	g_lastY = yPos;
-	g_leftMouseDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
-	g_rightMouseDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
 	//const float sensitivity = m_camera->sensitivity / 100.f;
 	//m_camera->processMouseMovement(yTravel * -sensitivity, xTravel * -sensitivity);
 }
 
+void Engine::Pause() {
+	Engine::g_running = !Engine::g_running;
+	std::cout << "Running: " << Engine::g_running << std::endl;
+}
+
 void Engine::FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow* window, int width, int height) {
+	if (width <= 0 || height <= 0 || glfwGetWindowAttrib(window, GLFW_ICONIFIED)) return;
+	std::cout << "Width: " << width << " Height: " << height << std::endl;
 	glViewport(0, 0, width, height);
 	m_fluid->updateViewport(width, height);
+}
+
+void Engine::WINDOW_ICONIFY_CALLBACK(GLFWwindow* window, int iconified) {
+	if (Engine::g_running && iconified) glfwRequestWindowAttention(window);
+}
+
+void Engine::WINDOW_FOCUS_CALLBACK(GLFWwindow* window, int focused) {
+	if (focused) {
+		//m_window->setState(WindowHandler::WindowState::FULLSCREEN);
+	}
+	else if(!focused) {
+		m_window->setState(WindowHandler::WindowState::WINDOWED);
+	}
 }
 
 void Engine::KEY_CALLBACK(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if ((key == GLFW_KEY_PAUSE || key == GLFW_KEY_0) && action == GLFW_PRESS)
 	{
-		std::cout << "Running: " << g_running << std::endl;
-		Engine::g_running = !g_running;
+		Engine::Pause();
 	}
-	if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
 	{
 		if (m_window->windowState == WindowHandler::WindowState::WINDOWED) {
 			m_window->setState(WindowHandler::WindowState::FULLSCREEN);
