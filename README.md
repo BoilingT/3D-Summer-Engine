@@ -16,6 +16,34 @@ GLAD 3.3 core
 
 GLM
 
+# Info
+
+## Configuration File
+
+A configuration file is located where the program is installed. These can be changed to achieve different results. You can enable and disable certain effects and also simulation steps which allows for experimentation. What the settings do is explained inside the configuration file. Be carefull however! There are no limitations to how large values you can set which can greatly affect the performance of your computer and the program itself.
+
+## Modes (Keybindings)
+
+# There are four views that you can switch between.
+
+## By pressing *Y* the default view will be shown.
+This field displays where dye has been applied.
+![image](https://github.com/BoilingT/3D-Summer-Engine/assets/34101043/08440735-a9ca-49b5-8ef1-f7777d6c2ad0)
+
+## By pressing *U* the velocity field will be shown.
+This field displays the current velocity field shown with different colors that indicate the magnitude of the velocities in certain directions.
+![image](https://github.com/BoilingT/3D-Summer-Engine/assets/34101043/e5bdac5f-d5aa-4222-b994-b069bb2f9bd6)
+
+## By pressing *Y* the divergence field will be shown.
+This field represents how much the fluid diverges from each cell in the grid.
+![image](https://github.com/BoilingT/3D-Summer-Engine/assets/34101043/f819d57b-b04b-4a33-91c3-94b530de1702)
+
+## By pressing *Y* the pressure field will be shown.
+This field displays the pressure in each cell relative to the surrounding cells.
+![image](https://github.com/BoilingT/3D-Summer-Engine/assets/34101043/4e4c98a7-ce0c-4dbd-8ec5-308a14c96468)
+
+### If you are having trouble it could depend on that the application doesn't have access to where it is installed. A possible solution is to run as *administrator*.
+
 ## Have Fun!
 
 # Screenshots
@@ -27,6 +55,6 @@ By pressing the key 'O' you can view the difference in pressure
 By pressing the key 'I' you can get a simple view that shows how the fluid is moving and how it behaves
 ![image](https://github.com/BoilingT/3D-Summer-Engine/assets/34101043/408001be-5a2a-4d2d-971d-840bbc743396)
 
-### Credits
+### Icon Credits
 Application Icon created by riajulislam:
 https://www.flaticon.com/free-icons/letter-f 
