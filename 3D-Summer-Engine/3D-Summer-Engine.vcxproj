@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="config.cpp" />
+    <ClCompile Include="Config.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="fileHandler.cpp" />
@@ -37,7 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="config.h" />
+    <ClInclude Include="Config.h" />
     <ClInclude Include="Compute.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Engine.h" />
@@ -57,7 +57,8 @@
     <ClInclude Include="WindowHandler.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Shaders\compute_shader_backup.glsl">
+    <Text Include="infoForCreator.txt" />
+    <Text Include="Shaders\shader_backup.glsl">
       <FileType>Script</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -101,49 +102,49 @@
     <Image Include="Images\LearnOpenGl\wall.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Shaders\compute_shader.glsl">
+    <Text Include="Shaders\shader.glsl">
       <FileType>Script</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="Shaders\compute_bounds_shader.frag">
+    <Text Include="Shaders\bounds_shader.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <FileType>Script</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="Shaders\compute_clear_shader.frag">
+    <Text Include="Shaders\clear_shader.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <FileType>Script</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="Shaders\compute_divergence_shader.frag">
+    <Text Include="Shaders\divergence_shader.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <FileType>Script</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="Shaders\compute_force_shader.frag">
+    <Text Include="Shaders\force_shader.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <FileType>Script</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="Shaders\compute_gradient_subtraction_shader.frag">
+    <Text Include="Shaders\gradient_subtraction_shader.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <FileType>Script</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="Shaders\compute_jacobi_shader.frag">
+    <Text Include="Shaders\jacobi_shader.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <FileType>Script</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="Shaders\compute_splat_shader.frag">
+    <Text Include="Shaders\splat_shader.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <FileType>Script</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -163,32 +164,32 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Shaders\compute_advection_shader.frag">
+    <Text Include="Shaders\advection_shader.frag">
       <FileType>Script</FileType>
       <DeploymentContent>true</DeploymentContent>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </Text>
-    <Text Include="Shaders\compute_curl_shader.frag">
+    <Text Include="Shaders\curl_shader.frag">
       <FileType>Script</FileType>
       <DeploymentContent>true</DeploymentContent>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </Text>
-    <Text Include="Shaders\compute_density_shader.frag">
+    <Text Include="Shaders\density_shader.frag">
       <FileType>Script</FileType>
       <DeploymentContent>true</DeploymentContent>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </Text>
-    <Text Include="Shaders\compute_integrate_shader.frag">
+    <Text Include="Shaders\integrate_shader.frag">
       <FileType>Script</FileType>
       <DeploymentContent>true</DeploymentContent>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </Text>
-    <Text Include="Shaders\compute_temperature_shader.frag">
+    <Text Include="Shaders\temperature_shader.frag">
       <FileType>Script</FileType>
       <DeploymentContent>true</DeploymentContent>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </Text>
-    <Text Include="Shaders\compute_vorticity_shader.frag">
+    <Text Include="Shaders\vorticity_shader.frag">
       <FileType>Script</FileType>
       <DeploymentContent>true</DeploymentContent>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -206,11 +207,6 @@
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="fluid_config.cfg">
-      <FileType>Document</FileType>
-    </CopyFileToFolders>
-  </ItemGroup>
-  <ItemGroup>
-    <CopyFileToFolders Include="fluid_config_default.cfg">
       <FileType>Document</FileType>
     </CopyFileToFolders>
   </ItemGroup>

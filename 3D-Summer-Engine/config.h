@@ -7,14 +7,17 @@
 class Config
 {
 	FileHandler file;
-	std::string filepath;
 	std::string contents;
-public:
+	std::string filepath;
 	std::map<std::string, std::string> values;
+public:
 
 	Config(std::string _filepath);
 	void updateValues();
-	bool isFile();
+	bool fileExists();
+	std::string getValue(std::string key);
+	std::string getPath();
+	int size();
 
 private:
 	// Fill the map with values from a config

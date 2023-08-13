@@ -17,7 +17,8 @@
 class FluidField
 {
 	struct Mouse {
-		bool down = false;
+		bool left_mouse_down = false;
+		bool right_mouse_down = false;
 		double height, width;
 
 		glm::vec2 texcoord_travel	 = glm::vec2(0.0f);
@@ -40,7 +41,7 @@ class FluidField
 			height = _height;
 		}
 
-		void update(double mouseX, double mouseY, bool mouse_is_down) {
+		void update(double mouseX, double mouseY, bool left_mouse_is_down, bool right_mouse_is_down) {
 			window_delta			 = glm::vec2(mouseX, mouseY) - prev_window_pos;
 			prev_window_pos			 = window_pos;
 			window_pos				 = glm::vec2(mouseX, mouseY);
@@ -50,9 +51,10 @@ class FluidField
 			prev_texcoord_pos		 = texcoord_pos;
 			texcoord_pos			 = glm::vec2(mouseX / width, 1-mouseY / height);
 			texcoord_travel			 += texcoord_travel;
-			down					 = mouse_is_down;
+			left_mouse_down			 = left_mouse_is_down;
+			right_mouse_down		 = right_mouse_is_down;
 
-			if (!mouse_is_down)
+			if (!left_mouse_is_down && !right_mouse_is_down)
 			{
 				texcoord_travel		 = glm::vec2(0.0f);
 				window_travel		 = glm::vec2(0.0f);
@@ -63,8 +65,8 @@ class FluidField
 	struct DoubleFramebuffer
 	{
 	private:
-		Framebuffer* fb1;	//Read
-		Framebuffer* fb2;	//Write
+		Framebuffer* fb1;
+		Framebuffer* fb2;
 	public:
 		DoubleFramebuffer(float res, unsigned int width, unsigned int height, GLint internalFormat, GLenum format, GLenum type, GLint param) {
 			fb1 = new Framebuffer(res, width, height, internalFormat, format, type, param);
@@ -76,9 +78,9 @@ class FluidField
 			delete(fb2);
 		}
 
-		void updateDimensions(unsigned int width, unsigned int height) {
-			fb1->updateDimensions(width, height);
-			fb2->updateDimensions(width, height);
+		void setDimensions(unsigned int width, unsigned int height, float res) {
+			fb1->setDimensions(width, height, res);
+			fb2->setDimensions(width, height, res);
 		}
 
 		//Get the currently bound buffer which has the purpose of being read from.
@@ -119,22 +121,20 @@ class FluidField
 
 private:
 	const char* p_CONFIG_FILE							 = "./fluid_config.cfg";
-	const char* p_DEFAULT_CONFIG_FILE					 = "./fluid_config_default.cfg";
-
-	const char* p_COMPUTE_SHADER						 = "./Shaders/compute_shader_backup.glsl";
-	const char* p_advection_shader						 = "./Shaders/compute_advection_shader.frag";
-	const char* p_jacobi_shader							 = "./Shaders/compute_jacobi_shader.frag";
-	const char* p_force_shader							 = "./Shaders/compute_force_shader.frag";
-	const char* p_divergence_shader						 = "./Shaders/compute_divergence_shader.frag";
-	const char* p_clear_shader							 = "./Shaders/compute_clear_shader.frag";
-	const char* p_integrate_shader						 = "./Shaders/compute_integrate_shader.frag";
-	const char* p_gradient_subtraction_shader			 = "./Shaders/compute_gradient_subtraction_shader.frag";
-	const char* p_vorticity_shader						 = "./Shaders/compute_vorticity_shader.frag";
-	const char* p_curl_shader							 = "./Shaders/compute_curl_shader.frag";
-	const char* p_temperature_shader					 = "./Shaders/compute_temperature_shader.frag";
-	const char* p_density_shader						 = "./Shaders/compute_density_shader.frag";
-	const char* p_bounds_shader							 = "./Shaders/compute_bounds_shader.frag";
-	const char* p_splat_shader							 = "./Shaders/compute_splat_shader.frag";
+	const char* p_COMPUTE_SHADER						 = "./Shaders/shader_backup.glsl";
+	const char* p_advection_shader						 = "./Shaders/advection_shader.frag";
+	const char* p_jacobi_shader							 = "./Shaders/jacobi_shader.frag";
+	const char* p_force_shader							 = "./Shaders/force_shader.frag";
+	const char* p_divergence_shader						 = "./Shaders/divergence_shader.frag";
+	const char* p_clear_shader							 = "./Shaders/clear_shader.frag";
+	const char* p_integrate_shader						 = "./Shaders/integrate_shader.frag";
+	const char* p_gradient_subtraction_shader			 = "./Shaders/gradient_subtraction_shader.frag";
+	const char* p_vorticity_shader						 = "./Shaders/vorticity_shader.frag";
+	const char* p_curl_shader							 = "./Shaders/curl_shader.frag";
+	const char* p_temperature_shader					 = "./Shaders/temperature_shader.frag";
+	const char* p_density_shader						 = "./Shaders/density_shader.frag";
+	const char* p_bounds_shader							 = "./Shaders/bounds_shader.frag";
+	const char* p_splat_shader							 = "./Shaders/splat_shader.frag";
 
 	const char* p_VISUALISE_GRID_VERTEX_SHADER			 = "./Shaders/visualise_grid_vertex_shader.vert";
 	const char* p_VISUALISE_GRID_FRAGMENT_SHADER		 = "./Shaders/visualise_grid_fragment_shader.frag";
@@ -146,14 +146,14 @@ private:
 	const char* p_TEMPERATURE_TEXTURE					 = "./Images/Generated Images/temp.png";
 
 	//Config files
-	Config fluid_config_file;
-	Config default_fluid_config_file;
+	Config fluid_config;
 
 	//Keys
 	struct FluidConfigKeys {
 		const std::string dye_scalar = "dye_resolution_scalar";
 		const std::string velocity_scalar = "velocity_resolution_scalar";
 		const std::string dye_color = "dye_color";
+		const std::string dye_brightness = "dye_brightness";
 		const std::string dye_color_acc_dependent = "dye_color_acc_dependent";
 		const std::string dye_force = "dye_force";
 		const std::string dye_radius = "dye_radius";
@@ -212,9 +212,10 @@ private:
 	const int	 m_resolution;
 	const int	 m_fieldWidth;
 
-	float	 m_dye_scalar							 = 512*2.0f/768.0f; //This makes the dye resolution always larger than the velocity resolution, this achieves better details
+	float	 m_dye_scalar							 = 1.0; //This makes the dye resolution always larger than the velocity resolution, this achieves better details
 	float	 m_velocity_scalar						 = 1.0f;
-	float	 m_dye_color[3]							 = { 1.0f, 0.2f, 0.0f };
+	float	 m_dye_color[3]							 = { 0.0f, 0.1f, 1.0f };
+	float	 m_dye_brightness						 = 0.5f;
 	bool	 m_dye_color_acc_dependent				 = 0;			// If color should depend on mouse acceleration
 	float	 m_dye_force							 = 6000.0f;		// Force used to create velocities
 	float	 m_dye_radius							 = 0.35f;		// Radius of the applicable dye and velocites
@@ -261,8 +262,7 @@ public:
 		rectangle(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)),
 		line(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f),
 
-		fluid_config_file(p_CONFIG_FILE),
-		default_fluid_config_file(p_DEFAULT_CONFIG_FILE),
+		fluid_config(p_CONFIG_FILE),
 
 		m_object_shader(p_OBJECT_VERTEX_SHADER, p_OBJECT_FRAGMENT_SHADER),
 		m_advection_shader(p_VERTEX_SHADER, p_advection_shader),
@@ -279,85 +279,60 @@ public:
 		m_bounds_shader(p_VERTEX_SHADER, p_bounds_shader),
 		m_splat_shader(p_VERTEX_SHADER, p_splat_shader)
 	{
+		std::cout << "APPLYING::CONFIGURATIONS" << std::endl;
+
+		if (fluid_config.fileExists()) applyConfiguration(fluid_config);
+
 		std::cout << "INITIALIZING::FLUIDFIELD" << std::endl;
 		
 		m_primary_shader		 = new Shader(p_VERTEX_SHADER, p_FRAGMENT_SHADER);
 		m_visualise_grid_shader	 = new Shader(p_VISUALISE_GRID_VERTEX_SHADER, p_VISUALISE_GRID_FRAGMENT_SHADER);
 		m_texture				 = new Texture2D(p_TEXTURE);
 		m_texture_buffer		 = new Texture2D();
+
 		//This is the rectangle that is used for displaying the simulation
 		//The simulation is simply a texture drawn on this rectangle
-		m_fieldQuad				 = new Rect(
-									glm::vec3(0.0f), 
-									glm::vec3(0.0f), 
-									glm::vec3(0.0f), 
-									m_texture->get());
-
+		m_fieldQuad				 = new Rect(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), m_texture->get());
+		
 		GLenum textureType = GL_UNSIGNED_BYTE;	//Field type
 		TexFormat rgba(GL_RGBA32F, GL_RGBA);	//Quantity field
 		TexFormat rg(GL_RG32F, GL_RG);			//Vector field
 		TexFormat r(GL_R32F, GL_RED);			//Scalar field
 		glDisable(GL_BLEND);
 
+		float velocityResolution = m_resolution * m_velocity_scalar, dyeResolution = m_resolution * m_dye_scalar;
+
 		//Buffers that store the calculated results
-		// Dye
-		m_dye_buffer = new DoubleFramebuffer(m_resolution*m_dye_scalar, m_WIDTH, m_HEIGHT, rgba.internal, rgba.format, textureType, GL_LINEAR);
+		m_dye_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, rgba.internal, rgba.format, textureType, GL_LINEAR);
 		//m_dye_buffer->readBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
 		//m_dye_buffer->writeBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
-		// Velocity
-		m_velocity_buffer = new DoubleFramebuffer(m_resolution*m_velocity_scalar, m_WIDTH, m_HEIGHT, rg.internal, rg.format, textureType, GL_LINEAR);
-		// Curl
-		m_curl_buffer = new Framebuffer(m_resolution*m_velocity_scalar, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
-		// Divergence
-		m_divergence_buffer = new Framebuffer(m_resolution*m_velocity_scalar, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
-		// Pressure
-		m_pressure_buffer = new DoubleFramebuffer(m_resolution*m_velocity_scalar, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		m_velocity_buffer = new DoubleFramebuffer(velocityResolution, m_WIDTH, m_HEIGHT, rg.internal, rg.format, textureType, GL_LINEAR);
+		m_curl_buffer = new Framebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		m_divergence_buffer = new Framebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		m_pressure_buffer = new DoubleFramebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 		
 		//Experimental
 		// Boyancy and Convection
-		m_temperature_buffer = new DoubleFramebuffer(m_resolution * m_dye_scalar, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		m_temperature_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 		m_temperature_buffer->readBuffer()->setTextureSource(p_TEMPERATURE_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_NEAREST);
 		m_temperature_buffer->writeBuffer()->setTextureSource(p_TEMPERATURE_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_NEAREST);
+		
 		// Smoke and Clouds
-		m_density_buffer = new DoubleFramebuffer(m_resolution * m_dye_scalar, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		m_density_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 
 		m_current_buffer = m_dye_buffer->readBuffer();
-
-		std::cout << "APPLYING::CONFIGURATIONS" << std::endl;
-		//If default config file is found
-		if (default_fluid_config_file.isFile()) {
-			applyConfiguration(default_fluid_config_file);
-		}
-		else {
-			//create default file
-			//applyConfiguration(default_fluid_config_file);
-		}
-		//If config file is found
-		if (fluid_config_file.isFile()) {
-			applyConfiguration(fluid_config_file);
-		}
 
 		std::cout << "SUCCESS::INITIALIZATION::FLUIDFIELD" << std::endl;
 	}
 
-	void updateViewport() {
-		m_dye_buffer->updateDimensions(m_mouse.width, m_mouse.height);
-		//m_dye_buffer->readBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
-		//m_dye_buffer->writeBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
-		// Velocity
-		m_velocity_buffer->updateDimensions(m_mouse.width, m_mouse.height);
-		// Curl
-		m_curl_buffer->updateDimensions(m_mouse.width, m_mouse.height);
-		// Divergence
-		m_divergence_buffer->updateDimensions(m_mouse.width, m_mouse.height);
-		// Pressure
-		m_pressure_buffer->updateDimensions(m_mouse.width, m_mouse.height);
-
-		//Experimental
-		// Boyancy and Convection
-		m_temperature_buffer->updateDimensions(m_mouse.width, m_mouse.height);
-		// Smoke and Clouds
-		m_density_buffer->updateDimensions(m_mouse.width, m_mouse.height);
+	void updateViewport(float width, float height) {
+		float velocityResolution = m_resolution * m_velocity_scalar, dyeResolution = m_resolution * m_dye_scalar;
+		m_mouse.updateMousearea(width, height);
+		//m_dye_buffer->setDimensions(m_mouse.width, m_mouse.height, dyeResolution);
+		//m_velocity_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
+		//m_curl_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
+		//m_divergence_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
+		//m_pressure_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
 	}
 
 	~FluidField() {
@@ -379,14 +354,15 @@ public:
 	//Draw the fluid
 	void Draw(glm::vec3 origin); //Should be used with a template?
 	//Set mouse position and button properties
-	void updateMouse(double* mouseX, double* mouseY, bool* mouse_down);
+	void updateMouse(double* mouseX, double* mouseY, bool* left_mouse_down, bool* right_mouse_down);
 	//Move forward in time, update values
 	void timeStep(float dt); 
+	void setCurrentBuffer(Framebuffer* buffer);
 	void swapBuffer(int i);
 
 	//Clear everything and start from the beginning
 	void reset(); //TODO
-	void applyConfiguration(Config& configurationFile);
+	int applyConfiguration(Config& configurationFile);
 	void updateConfiguration();
 
 private:

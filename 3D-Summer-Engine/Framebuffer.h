@@ -6,6 +6,9 @@
 
 class Framebuffer
 {
+private:
+	GLint internalFormat, param;
+	GLenum format, type;
 public:
 	unsigned int fbo;
 	unsigned int texture;
@@ -20,9 +23,12 @@ public:
 		std::cout << "DESTROYED::FRAMEBUFFER" << std::endl;
 	}
 
-	void updateDimensions(unsigned int width, unsigned int height);
+	void setDimensions(unsigned int width, unsigned int height, float resolution);
 	void bind();
 	int setTexture(unsigned int id);
 	void setTextureSource(const char* path, int width, int height, GLint internalFormat, GLenum format, GLenum type, GLint param);
 	int status();
+
+private:
+	void calculateTexelsize(float width, float height, float resolution);
 };

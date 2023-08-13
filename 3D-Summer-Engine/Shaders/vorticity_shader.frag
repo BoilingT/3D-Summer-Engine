@@ -1,5 +1,5 @@
 #version 430
-
+in vec2 vUv;
 out vec4 outColor;
 
 uniform sampler2D u; //Velocities
@@ -10,18 +10,13 @@ uniform float dt;
 
 //Use the velocities to create force
 vec4 vorticityConfinement(vec2 coord, sampler2D curl){
-	
-	vec2 coordL = (coord - vec2(1, 0));
-	vec2 coordR = (coord + vec2(1, 0));
-	vec2 coordB = (coord - vec2(0, 1));
-	vec2 coordT = (coord + vec2(0, 1));
 
 	//Curl
-	float cL = texture2D(curl, (coord - vec2(1, 0)) * texelSize).x;
-	float cR = texture2D(curl, (coord + vec2(1, 0)) * texelSize).x;
-	float cT = texture2D(curl, (coord + vec2(0, 1)) * texelSize).x;
-	float cB = texture2D(curl, (coord - vec2(0, 1)) * texelSize).x;
-	float c = texture2D(curl, coord * texelSize).x;
+	float cL = texture2D(curl, (coord - vec2(1, 0) * texelSize)).x;
+	float cR = texture2D(curl, (coord + vec2(1, 0) * texelSize)).x;
+	float cT = texture2D(curl, (coord + vec2(0, 1) * texelSize)).x;
+	float cB = texture2D(curl, (coord - vec2(0, 1) * texelSize)).x;
+	float c = texture2D(curl, coord).x;
 
 	//if (coordL.x * texelSize.x < 0.0f) { cL = -1; }
     //if (coordR.x * texelSize.x > 1.0f) { cR = -1; }
@@ -51,7 +46,7 @@ vec4 vorticityConfinement(vec2 coord, sampler2D curl){
 	float magSqr = max(EPSILON, dot(force, force));
 	force = force * sqrt(1.0f / magSqr);
 	force *= scale * c * vec2(1, -1);
-	vec2 velocity = texture(u, coord * texelSize).xy;
+	vec2 velocity = texture(u, coord).xy;
 	velocity = velocity + dt * force;
 
 	//------------------------------------------------------------------------------
@@ -68,7 +63,7 @@ vec4 vorticityConfinement(vec2 coord, sampler2D curl){
 }
 
 void main(){
-	vec2 coords = gl_FragCoord.xy;
+	vec2 coords = vUv;
 
 	vec4 result = vorticityConfinement(coords, v);
 	//vec4 result = texture2D(u, coords * texelSize);

@@ -69,7 +69,7 @@
     <ClCompile Include="Framebuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="config.cpp">
+    <ClCompile Include="Config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -128,7 +128,7 @@
     <ClInclude Include="Framebuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="config.h">
+    <ClInclude Include="Config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -165,49 +165,49 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Shaders\compute_advection_shader.frag">
+    <Text Include="Shaders\advection_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\compute_bounds_shader.frag">
+    <Text Include="Shaders\bounds_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\compute_clear_shader.frag">
+    <Text Include="Shaders\clear_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\compute_curl_shader.frag">
+    <Text Include="Shaders\curl_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\compute_density_shader.frag">
+    <Text Include="Shaders\density_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\compute_divergence_shader.frag">
+    <Text Include="Shaders\divergence_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\compute_force_shader.frag">
+    <Text Include="Shaders\force_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\compute_gradient_subtraction_shader.frag">
+    <Text Include="Shaders\gradient_subtraction_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\compute_integrate_shader.frag">
+    <Text Include="Shaders\integrate_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\compute_jacobi_shader.frag">
+    <Text Include="Shaders\jacobi_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\compute_shader.glsl">
+    <Text Include="Shaders\shader.glsl">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\compute_shader_backup.glsl">
+    <Text Include="Shaders\shader_backup.glsl">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\compute_splat_shader.frag">
+    <Text Include="Shaders\splat_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\compute_temperature_shader.frag">
+    <Text Include="Shaders\temperature_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\compute_vorticity_shader.frag">
+    <Text Include="Shaders\vorticity_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
     <Text Include="Shaders\default_fragment_shader.frag">
@@ -234,12 +234,10 @@
     <Text Include="Shaders\visualise_grid_vertex_shader.vert">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
+    <Text Include="infoForCreator.txt" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="fluid_config.cfg">
-      <Filter>cfg</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="fluid_config_default.cfg">
       <Filter>cfg</Filter>
     </CopyFileToFolders>
   </ItemGroup>

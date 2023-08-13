@@ -1,7 +1,9 @@
 #include "config.h"
 
-Config::Config(std::string _filepath) {
+Config::Config(std::string _filepath)
+{
 	filepath = _filepath;
+	file.readFile(filepath, contents);
 	parseContents(contents);
 }
 
@@ -12,9 +14,25 @@ void Config::updateValues()
 	parseContents(contents);
 }
 
-bool Config::isFile()
+bool Config::fileExists()
 {
-	return file.isFile(filepath);
+	return file.fileExists(filepath);
+}
+
+std::string Config::getValue(std::string key)
+{
+	if (key.length() <= 0 || values.find(key) == values.end()) return std::string();
+	return values[key];
+}
+
+std::string Config::getPath()
+{
+	return filepath;
+}
+
+int Config::size()
+{
+	return values.size();
 }
 
 //Load the map with keys and values from the contents of a file
@@ -29,10 +47,10 @@ void Config::parseContents(std::string contents)
 	//Divide the file into lines
 	std::string newLineDelimiter = "\n";
 	std::vector<std::string> lines = split(contents, newLineDelimiter);
-	//Divide parts between equal sign (=)
+	//Divide parts between spaces
 	std::string delimiter = " ";
 	for (std::string line : lines) {
-		if (line.empty() || line == " " || line.length() <= 0) {
+		if (line.empty() || line == " " || line.length() <= 0 || line.find("//") != std::string::npos) {
 			continue;
 		}
 		std::vector<std::string> parts = split(line, delimiter);
@@ -43,12 +61,17 @@ void Config::parseContents(std::string contents)
 				i--;
 			}
 		}
+		try
+		{
+			std::string key = parts[0];
+			std::string value = parts[1];
 
-		std::string key = parts[0];
-		std::string value = parts[1];
-
-		values[key] = value;
-		//std::cout << key << " = " << value << std::endl;
+			values[key] = value;
+		}
+		catch (const std::exception&)
+		{
+			std::cout << "Line inside config file could not be read: \n\"" << line << "\"" << std::endl;
+		}
 	}
 
 }

@@ -1,4 +1,5 @@
 #version 430
+in vec2 vUv;
 out vec4 fragColor;
 uniform vec2 texelSize;
 uniform sampler2D uTexture;
@@ -7,21 +8,15 @@ uniform float time;
 
 void main () {
 	vec2 coords = gl_FragCoord.xy;
-	vec2 margin = vec2(texelSize.x*600, texelSize.y*200) * 0.59f;
-	vec4 u = texture2D(uTexture, coords*texelSize);
+	vec2 margin = vec2(texelSize.x*400, texelSize.y*100) * 0;
+	vec4 u = texture2D(uTexture, vUv);
 
-	vec2 vL = (coords - vec2(1, 0));
-	vec2 vR = (coords + vec2(1, 0));
-	vec2 vB = (coords - vec2(0, 1));
-	vec2 vT = (coords + vec2(0, 1));
-
-	
 	//if((coords.y * texelSize.y < 1.0f && coords.y * texelSize.y > 0.5f) || (coords.y * texelSize.y < 0.5f && coords.y * texelSize.y > 0.0f)){ //Floor
 	//}else{
 	//	fragColor = u;
 	//}
 
-	float size = 2000.0f;
+	float size = 3.0f / texelSize.x;
 	
 	vec2 pos = vec2(0.5f, 0.6f) / texelSize;
 
