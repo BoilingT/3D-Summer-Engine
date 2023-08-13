@@ -24,8 +24,6 @@ A configuration file is located where the program is installed. These can be cha
 
 ## Modes (Keybindings)
 
-# There are four views that you can switch between.
-
 ## By pressing *Y* the default view will be shown.
 This field displays where dye has been applied.
 ![image](https://github.com/BoilingT/3D-Summer-Engine/assets/34101043/08440735-a9ca-49b5-8ef1-f7777d6c2ad0)
