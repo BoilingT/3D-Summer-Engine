@@ -33,37 +33,37 @@ public:
 
 	Rect()
 	{
-		transform.pos = glm::vec3(0.0f);
-		transform.dim = glm::vec3(1.0f);
-		transform.rot = glm::vec3(0.0f);
-		SetupMesh(planeVertices, sizeof(planeVertices), indices, sizeof(indices));
+		transform.pos = glm::vec3( 0.0f );
+		transform.dim = glm::vec3( 1.0f );
+		transform.rot = glm::vec3( 0.0f );
+		SetupMesh( planeVertices, sizeof( planeVertices ), indices, sizeof( indices ) );
 	}
 
-	Rect(glm::vec3 pos, glm::vec3 dim, glm::vec3 rot)
+	Rect( glm::vec3 pos, glm::vec3 dim, glm::vec3 rot )
 	{
 		transform.pos = pos;
 		transform.dim = dim;
 		transform.rot = rot;
-		SetupMesh(planeVertices, sizeof(planeVertices), indices, sizeof(indices));
+		SetupMesh( planeVertices, sizeof( planeVertices ), indices, sizeof( indices ) );
 	}
 
-	Rect(glm::vec3 pos, glm::vec3 dim, glm::vec3 rot, GLuint *texture2D)
+	Rect( glm::vec3 pos, glm::vec3 dim, glm::vec3 rot, GLuint *texture2D )
 	{
 		transform.pos = pos;
 		transform.dim = dim;
 		transform.rot = rot;
 		texture = texture2D;
-		SetupMesh(planeVertices, sizeof(planeVertices), indices, sizeof(indices));
+		SetupMesh( planeVertices, sizeof( planeVertices ), indices, sizeof( indices ) );
 	}
 
-	void setTexture(GLuint *texture2D)
+	void setTexture( GLuint *texture2D )
 	{
 		texture = texture2D;
 	}
 
 	void updateMesh()
 	{
-		SetupMesh(planeVertices, sizeof(planeVertices), indices, sizeof(indices));
+		SetupMesh( planeVertices, sizeof( planeVertices ), indices, sizeof( indices ) );
 	}
 };
 

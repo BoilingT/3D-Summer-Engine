@@ -11,31 +11,31 @@ private:
 	Shader *m_computeShader;
 	unsigned int m_out_texture;
 
-	void createTexture(glm::vec2 size)
+	void createTexture( glm::vec2 size )
 	{
 //Generate and activate textures
-		glGenTextures(1, &m_out_texture);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, m_out_texture);
+		glGenTextures( 1, &m_out_texture );
+		glActiveTexture( GL_TEXTURE0 );
+		glBindTexture( GL_TEXTURE_2D, m_out_texture );
 
 		//Set paramaters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
 
 		//Create empty 2D textures
 		//glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, size.x, size.y, 0, GL_RED, GL_FLOAT, NULL);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, (GLuint) m_workSize.x, (GLuint) m_workSize.y, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-		glBindImageTexture(0, m_out_texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
+		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA32F, (GLuint) m_workSize.x, (GLuint) m_workSize.y, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL );
+		glBindImageTexture( 0, m_out_texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F );
 	}
 public:
-	Compute(const char *path, glm::vec2 size)
+	Compute( const char *path, glm::vec2 size )
 	{
-		m_computeShader = new Shader(path, GL_COMPUTE_SHADER);
+		m_computeShader = new Shader( path, GL_COMPUTE_SHADER );
 		m_ID = m_computeShader->getID();
 		m_workSize = size;
-		createTexture(size);
+		createTexture( size );
 	}
 
 	~Compute()
@@ -48,27 +48,27 @@ public:
 	void use()
 	{
 		m_computeShader->use();
-		glActiveTexture(GL_TEXTURE0);
+		glActiveTexture( GL_TEXTURE0 );
 	}
 
 	//Start the compute shader with the given work group size
 	void dispatch()
 	{
-		glDispatchCompute((GLuint) m_workSize.x, (GLuint) m_workSize.y, 1);
+		glDispatchCompute( (GLuint) m_workSize.x, (GLuint) m_workSize.y, 1 );
 	}
 
 	//Wait until the shader program is done processing
 	void wait()
 	{
-		glMemoryBarrier(GL_ALL_BARRIER_BITS);
+		glMemoryBarrier( GL_ALL_BARRIER_BITS );
 	}
 
 	//Set compute shader values
-	void setValues(unsigned char *values)
+	void setValues( unsigned char *values )
 	{
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
 		//glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, m_workSize.x, m_workSize.y, 0, GL_RED, GL_FLOAT, values);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, (GLuint) m_workSize.x, (GLuint) m_workSize.y, 0, GL_RGB, GL_UNSIGNED_BYTE, values);
+		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA32F, (GLuint) m_workSize.x, (GLuint) m_workSize.y, 0, GL_RGB, GL_UNSIGNED_BYTE, values );
 	}
 
 	std::vector<unsigned char> get_values()
@@ -78,8 +78,8 @@ public:
 //glGetTexImage(GL_TEXTURE_2D, 0, GL_RED, GL_FLOAT, compute_data.data());
 //return compute_data;
 		unsigned int collection_size = (unsigned int) m_workSize.x * (unsigned int) m_workSize.y;
-		std::vector<unsigned char> compute_data(collection_size);
-		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA32F, GL_UNSIGNED_BYTE, compute_data.data());
+		std::vector<unsigned char> compute_data( collection_size );
+		glGetTexImage( GL_TEXTURE_2D, 0, GL_RGBA32F, GL_UNSIGNED_BYTE, compute_data.data() );
 		return compute_data;
 
 	}

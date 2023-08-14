@@ -11,9 +11,9 @@ private:
 	unsigned char *m_data;
 public:
 	Texture2D();
-	Texture2D(const char *filepath);
-	Texture2D(unsigned char *data, int width, int height);
-	~Texture2D() { stbi_image_free(m_data); }
+	Texture2D( const char *filepath );
+	Texture2D( unsigned char *data, int width, int height );
+	~Texture2D() { stbi_image_free( m_data ); }
 
 	GLuint *get();
 	unsigned char *data();
@@ -22,10 +22,10 @@ public:
 	int nrChannels();
 
 	void use();
-	void generateFrom(const char *filepath);
+	void generateFrom( const char *filepath );
 private:
 	void setParameters();
-	void generateTexture(unsigned char *data, int width, int height);
+	void generateTexture( unsigned char *data, int width, int height );
 
 };
 

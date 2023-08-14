@@ -33,22 +33,22 @@ Engine::Engine()
 {
 	std::cout << "INITIALIZING::ENGINE" << std::endl;
 
-	m_window = new WindowHandler(c_WIDTH, c_HEIGHT, c_WINDOW_NAME);
-	m_camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+	m_window = new WindowHandler( c_WIDTH, c_HEIGHT, c_WINDOW_NAME );
+	m_camera = new Camera( glm::vec3( 0.0f, 0.0f, 3.0f ) );
 
 	//Open window
-	if (m_window->open() == -1) return;
+	if ( m_window->open() == -1 ) return;
 
 	int w, h, channels;
-	unsigned char *data = stbi_load(p_APPLICATION_ICON, &w, &h, &channels, 0);
-	if (data != NULL)
+	unsigned char *data = stbi_load( p_APPLICATION_ICON, &w, &h, &channels, 0 );
+	if ( data != NULL )
 	{
 
 		GLFWimage *icon = new GLFWimage();
 		icon->height = h;
 		icon->width = w;
 		icon->pixels = data;
-		glfwSetWindowIcon(m_window->getWindow(), 1, icon);
+		glfwSetWindowIcon( m_window->getWindow(), 1, icon );
 		delete( icon );
 		icon = nullptr;
 	}
@@ -56,84 +56,84 @@ Engine::Engine()
 	{
 		std::cout << "Could not set window icon" << std::endl;
 	}
-	stbi_image_free(data);
+	stbi_image_free( data );
 
 	//GLAD library loading
-	if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
+	if ( !gladLoadGLLoader( (GLADloadproc) glfwGetProcAddress ) )
 	{
 		std::cout << "ERROR :: Unable to initialize GLAD";
 		return;
 	}
 
 	g_pc_time = glfwGetTime();
-	if (g_fps_limit < 0)
+	if ( g_fps_limit < 0 )
 	{
-		const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		const GLFWvidmode *mode = glfwGetVideoMode( glfwGetPrimaryMonitor() );
 		g_fps_limit = mode->refreshRate;
 	}
 	//Set the viewport size
-	glViewport(0, 0, c_WIDTH, c_HEIGHT);
+	glViewport( 0, 0, c_WIDTH, c_HEIGHT );
 	//Resize the viewport when the window size is changed
-	glfwSetFramebufferSizeCallback(m_window->getWindow(), FRAME_BUFFER_SIZE_CALLBACK);
-	glfwSetWindowIconifyCallback(m_window->getWindow(), WINDOW_ICONIFY_CALLBACK);
-	glfwSetWindowFocusCallback(m_window->getWindow(), WINDOW_FOCUS_CALLBACK);
-	glfwSetKeyCallback(m_window->getWindow(), KEY_CALLBACK);
-	glfwSetCursorPosCallback(m_window->getWindow(), MOUSE_CALLBACK);
+	glfwSetFramebufferSizeCallback( m_window->getWindow(), FRAME_BUFFER_SIZE_CALLBACK );
+	glfwSetWindowIconifyCallback( m_window->getWindow(), WINDOW_ICONIFY_CALLBACK );
+	glfwSetWindowFocusCallback( m_window->getWindow(), WINDOW_FOCUS_CALLBACK );
+	glfwSetKeyCallback( m_window->getWindow(), KEY_CALLBACK );
+	glfwSetCursorPosCallback( m_window->getWindow(), MOUSE_CALLBACK );
 
-	glfwSetInputMode(m_window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	glfwSetInputMode( m_window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL );
 
-	m_fluid = new FluidField(c_WIDTH, c_HEIGHT, c_RESOLUTION);
+	m_fluid = new FluidField( c_WIDTH, c_HEIGHT, c_RESOLUTION );
 
 	std::cout << "SUCCESS::INITIALIZATION::ENGINE" << std::endl;
-	glfwSetWindowTitle(m_window->getWindow(), "Engine Initialized");
+	glfwSetWindowTitle( m_window->getWindow(), "Engine Initialized" );
 }
 
 void Engine::Run()
 {
 	std::cout << "STARTING::ENGINE" << std::endl;
-	glfwSetWindowTitle(m_window->getWindow(), "Starting Engine...");
+	glfwSetWindowTitle( m_window->getWindow(), "Starting Engine..." );
 
-	glfwMaximizeWindow(m_window->getWindow());
+	glfwMaximizeWindow( m_window->getWindow() );
 	//This removes the FPS cap
-	glfwSwapInterval(0);
+	glfwSwapInterval( 0 );
 
 	std::cout << "ENTERING::RENDER::LOOP" << std::endl;
-	glfwSetWindowTitle(m_window->getWindow(), "Fluid Simulation");
+	glfwSetWindowTitle( m_window->getWindow(), "Fluid Simulation" );
 
 	Engine::g_running = true;
 
 	//Rendering loop
-	while (!glfwWindowShouldClose(m_window->getWindow()))
+	while ( !glfwWindowShouldClose( m_window->getWindow() ) )
 	{
-		IO_EVENTS(m_window->getWindow());
+		IO_EVENTS( m_window->getWindow() );
 
 		calculateDeltatime();
 		calculateSleeptime();
 		calculateFPS();
 
-		glClearColor(c_DEFAULT_CLEAR_COLOR[0], c_DEFAULT_CLEAR_COLOR[1], c_DEFAULT_CLEAR_COLOR[2], c_DEFAULT_CLEAR_COLOR[3]);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClearColor( c_DEFAULT_CLEAR_COLOR[0], c_DEFAULT_CLEAR_COLOR[1], c_DEFAULT_CLEAR_COLOR[2], c_DEFAULT_CLEAR_COLOR[3] );
+		glClear( GL_COLOR_BUFFER_BIT );
 
-		if (Engine::g_running)
+		if ( Engine::g_running )
 		{
 			physicsUpdate();
 		}
 		update();
 
-		glBindVertexArray(0);
+		glBindVertexArray( 0 );
 
 		/*Double buffer
 			When rendering, the front buffer contains the final output of an image and is rendered to the screen.
 			While it is being drawn to the screen a back buffer is being drawn behind the scenes in order to reduce flickering issues.
 		*/
 		//Swap color buffer in order to render new images
-		glfwSwapBuffers(m_window->getWindow());
+		glfwSwapBuffers( m_window->getWindow() );
 		//Check if any events have been triggered
 		glfwPollEvents();
 
-		if (sleepTime > 0)
+		if ( sleepTime > 0 )
 		{
-			std::this_thread::sleep_for(std::chrono::milliseconds((long) ( sleepTime )));
+			std::this_thread::sleep_for( std::chrono::milliseconds( (long) ( sleepTime ) ) );
 		}
 	}
 	std::cout << "EXITED::RENDER::LOOP" << std::endl;
@@ -153,7 +153,7 @@ void Engine::calculateSleeptime()
 	sleepTime = ( 1.0f / g_fps_limit - g_deltaTime + sleepTime / 1000.0f ) * 1000; //ms
 
 	//Avoiding negative numbers
-	if (sleepTime < 0 || sleepTime == 0)
+	if ( sleepTime < 0 || sleepTime == 0 )
 	{
 		sleepTime = 0;
 	}
@@ -166,52 +166,52 @@ void Engine::calculateFPS()
 
 void Engine::update()
 {
-	m_fluid->updateMouse(&g_lastX, &g_lastY, &g_leftMouseDown, &g_rightMouseDown);
+	m_fluid->updateMouse( &g_lastX, &g_lastY, &g_leftMouseDown, &g_rightMouseDown );
 	m_fluid->updateConfiguration();
 
-	m_fluid->Draw(glm::vec3(0, 0, 0));
+	m_fluid->Draw( glm::vec3( 0, 0, 0 ) );
 }
 
 void Engine::physicsUpdate()
 {
 	float tpf = g_deltaTime + sleepTime / 1000.0f;
 
-	if (tpf < 0)
+	if ( tpf < 0 )
 	{
 		tpf = 0;
 		std::cout << "TPF < 0!" << std::endl;
 	}
 
-	m_fluid->timeStep(g_deltaTime);
+	m_fluid->timeStep( g_deltaTime );
 }
 
-void Engine::IO_EVENTS(GLFWwindow *window)
+void Engine::IO_EVENTS( GLFWwindow *window )
 {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	if ( glfwGetKey( window, GLFW_KEY_ESCAPE ) == GLFW_PRESS )
 	{
 		std::cout << "TERMINATING::APPLICATION" << std::endl;
-		glfwSetWindowTitle(m_window->getWindow(), "Terminating...");
-		glfwSetWindowShouldClose(window, true);
+		glfwSetWindowTitle( m_window->getWindow(), "Terminating..." );
+		glfwSetWindowShouldClose( window, true );
 	}
-	if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS)
+	if ( glfwGetKey( window, GLFW_KEY_F5 ) == GLFW_PRESS )
 	{
-		if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_RELEASE)
+		if ( glfwGetKey( window, GLFW_KEY_F11 ) == GLFW_RELEASE )
 		{
-			saveImage("C:/Users/to9751/Pictures/Generated Images/Framebuffer.png", window);
+			saveImage( "C:/Users/to9751/Pictures/Generated Images/Framebuffer.png", window );
 		}
 	}
 
-	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+	if ( glfwGetKey( window, GLFW_KEY_1 ) == GLFW_PRESS )
 	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 	}
-	else if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+	else if ( glfwGetKey( window, GLFW_KEY_2 ) == GLFW_PRESS )
 	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 	}
-	else if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+	else if ( glfwGetKey( window, GLFW_KEY_3 ) == GLFW_PRESS )
 	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+		glPolygonMode( GL_FRONT_AND_BACK, GL_POINT );
 	}
 
 	float cameraSpeed = 2.5f;
@@ -220,26 +220,26 @@ void Engine::IO_EVENTS(GLFWwindow *window)
 	float time = glfwGetTime(); //Seconds
 	float passed_time = 0;
 
-	g_leftMouseDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
-	g_rightMouseDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
+	g_leftMouseDown = glfwGetMouseButton( window, GLFW_MOUSE_BUTTON_LEFT ) == GLFW_PRESS;
+	g_rightMouseDown = glfwGetMouseButton( window, GLFW_MOUSE_BUTTON_RIGHT ) == GLFW_PRESS;
 
-	if (g_leftMouseDown || g_rightMouseDown)
+	if ( g_leftMouseDown || g_rightMouseDown )
 	{
 		double mouseX, mouseY;
-		glfwGetCursorPos(window, &mouseX, &mouseY);
-		constrainMouse(window, mouseX, mouseY);
+		glfwGetCursorPos( window, &mouseX, &mouseY );
+		constrainMouse( window, mouseX, mouseY );
 	}
 
 	//Step forward a single timestep
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && Engine::g_running == false)
+	if ( glfwGetKey( window, GLFW_KEY_SPACE ) == GLFW_PRESS && Engine::g_running == false )
 	{
-		m_fluid->timeStep(c_precision);
+		m_fluid->timeStep( c_precision );
 	}
-	if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
+	if ( glfwGetKey( window, GLFW_KEY_G ) == GLFW_PRESS )
 	{
 		m_fluid->updateConfiguration();
 	}
-	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
+	if ( glfwGetKey( window, GLFW_KEY_M ) == GLFW_PRESS )
 	{
 		m_fluid->reset();
 	}
@@ -297,68 +297,68 @@ void Engine::IO_EVENTS(GLFWwindow *window)
 }
 
 //This is some copy pasta from somewhere on stackoverflow
-void Engine::saveImage(const char *path, GLFWwindow *window)
+void Engine::saveImage( const char *path, GLFWwindow *window )
 {
 	std::cout << "Writing file..." << std::endl;
 	int width = 0;
 	int height = 0;
-	glfwGetFramebufferSize(window, &width, &height);
+	glfwGetFramebufferSize( window, &width, &height );
 	int channelAmount = 3;
 	int stride = channelAmount * width;
 	stride += ( stride % 4 ) ? ( 4 - stride % 4 ) : 0;
 	int bufferSize = stride * height;
-	std::vector<char> buffer(bufferSize);
+	std::vector<char> buffer( bufferSize );
 
-	glPixelStorei(GL_PACK_ALIGNMENT, 4);
-	glReadBuffer(GL_FRONT);
-	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer.data());
-	stbi_flip_vertically_on_write(true);
-	stbi_write_png(path, width, height, channelAmount, buffer.data(), stride);
+	glPixelStorei( GL_PACK_ALIGNMENT, 4 );
+	glReadBuffer( GL_FRONT );
+	glReadPixels( 0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer.data() );
+	stbi_flip_vertically_on_write( true );
+	stbi_write_png( path, width, height, channelAmount, buffer.data(), stride );
 	std::cout << "File has been written at " << path << std::endl;
 }
 
 void Engine::saveResults()
 {
-	if (g_running && g_save_result)
+	if ( g_running && g_save_result )
 	{
 		Engine::g_running = false;
 		//std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-hz" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound) + "-Z" + std::to_string((int)sum);
-		std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int) ( c_precision * 1000 )) + "-dt" + std::to_string((int) ( g_deltaTime * 1000 ));
+		std::string filename = "-Res" + std::to_string( c_RESOLUTION ) + "-dx" + std::to_string( (int) ( c_precision * 1000 ) ) + "-dt" + std::to_string( (int) ( g_deltaTime * 1000 ) );
 		std::string path = p_GENERATED_RESULTS + filename + ".png";
-		saveImage(path.c_str(), m_window->getWindow());
+		saveImage( path.c_str(), m_window->getWindow() );
 		g_save_result = false;
 		//sum = 0;
 	}
 }
 
-void Engine::constrainMouse(GLFWwindow *window, double xPos, double yPos)
+void Engine::constrainMouse( GLFWwindow *window, double xPos, double yPos )
 {
 	double margin = 2.f;
-	if (xPos <= margin)
+	if ( xPos <= margin )
 	{
-		glfwSetCursorPos(window, margin + 1, yPos);
+		glfwSetCursorPos( window, margin + 1, yPos );
 	}
-	else if (xPos >= c_WIDTH - margin)
+	else if ( xPos >= c_WIDTH - margin )
 	{
-		glfwSetCursorPos(window, c_WIDTH - margin + 1, yPos);
+		glfwSetCursorPos( window, c_WIDTH - margin + 1, yPos );
 	}
-	if (yPos <= margin)
+	if ( yPos <= margin )
 	{
-		glfwSetCursorPos(window, xPos, margin + 1);
+		glfwSetCursorPos( window, xPos, margin + 1 );
 	}
-	else if (yPos >= c_HEIGHT - margin)
+	else if ( yPos >= c_HEIGHT - margin )
 	{
-		glfwSetCursorPos(window, xPos, c_HEIGHT - margin + 1);
+		glfwSetCursorPos( window, xPos, c_HEIGHT - margin + 1 );
 	}
 }
 
-void Engine::MOUSE_CALLBACK(GLFWwindow *window, double xPos, double yPos)
+void Engine::MOUSE_CALLBACK( GLFWwindow *window, double xPos, double yPos )
 {
-	if (g_mouse_constrain)
+	if ( g_mouse_constrain )
 	{
 
 	}
-	if (g_firstMouseEnter)
+	if ( g_firstMouseEnter )
 	{
 		g_lastX = xPos;
 		g_lastY = yPos;
@@ -379,81 +379,81 @@ void Engine::Pause()
 	std::cout << "Running: " << Engine::g_running << std::endl;
 }
 
-void Engine::FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow *window, int width, int height)
+void Engine::FRAME_BUFFER_SIZE_CALLBACK( GLFWwindow *window, int width, int height )
 {
-	if (width <= 0 || height <= 0 || glfwGetWindowAttrib(window, GLFW_ICONIFIED)) return;
+	if ( width <= 0 || height <= 0 || glfwGetWindowAttrib( window, GLFW_ICONIFIED ) ) return;
 	std::cout << "Width: " << width << " Height: " << height << std::endl;
-	glViewport(0, 0, width, height);
-	m_fluid->updateViewport(width, height);
+	glViewport( 0, 0, width, height );
+	m_fluid->updateViewport( width, height );
 }
 
-void Engine::WINDOW_ICONIFY_CALLBACK(GLFWwindow *window, int iconified)
+void Engine::WINDOW_ICONIFY_CALLBACK( GLFWwindow *window, int iconified )
 {
-	if (Engine::g_running && iconified) glfwRequestWindowAttention(window);
+	if ( Engine::g_running && iconified ) glfwRequestWindowAttention( window );
 }
 
-void Engine::WINDOW_FOCUS_CALLBACK(GLFWwindow *window, int focused)
+void Engine::WINDOW_FOCUS_CALLBACK( GLFWwindow *window, int focused )
 {
-	if (focused)
+	if ( focused )
 	{
 //m_window->setState(WindowHandler::WindowState::FULLSCREEN);
 	}
-	else if (!focused)
+	else if ( !focused )
 	{
-		m_window->setState(WindowHandler::WindowState::WINDOWED);
+		m_window->setState( WindowHandler::WindowState::WINDOWED );
 	}
 }
 
-void Engine::KEY_CALLBACK(GLFWwindow *window, int key, int scancode, int action, int mods)
+void Engine::KEY_CALLBACK( GLFWwindow *window, int key, int scancode, int action, int mods )
 {
-	if (( key == GLFW_KEY_PAUSE || key == GLFW_KEY_0 ) && action == GLFW_PRESS)
+	if ( ( key == GLFW_KEY_PAUSE || key == GLFW_KEY_0 ) && action == GLFW_PRESS )
 	{
 		Engine::Pause();
 	}
-	if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
+	if ( glfwGetKey( window, GLFW_KEY_ENTER ) == GLFW_PRESS && glfwGetKey( window, GLFW_KEY_LEFT_ALT ) == GLFW_PRESS )
 	{
-		if (m_window->windowState == WindowHandler::WindowState::WINDOWED)
+		if ( m_window->windowState == WindowHandler::WindowState::WINDOWED )
 		{
-			m_window->setState(WindowHandler::WindowState::FULLSCREEN);
+			m_window->setState( WindowHandler::WindowState::FULLSCREEN );
 		}
-		else if (m_window->windowState == WindowHandler::WindowState::FULLSCREEN)
+		else if ( m_window->windowState == WindowHandler::WindowState::FULLSCREEN )
 		{
-			m_window->setState(WindowHandler::WindowState::WINDOWED);
+			m_window->setState( WindowHandler::WindowState::WINDOWED );
 		}
 	}
 	//Dye
-	if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
+	if ( glfwGetKey( window, GLFW_KEY_Y ) == GLFW_PRESS )
 	{
-		m_fluid->swapBuffer(1);
+		m_fluid->swapBuffer( 1 );
 	}
 	//Velocity
-	else if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS)
+	else if ( glfwGetKey( window, GLFW_KEY_U ) == GLFW_PRESS )
 	{
-		m_fluid->swapBuffer(2);
+		m_fluid->swapBuffer( 2 );
 	}
 	//Divergence
-	else if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
+	else if ( glfwGetKey( window, GLFW_KEY_I ) == GLFW_PRESS )
 	{
-		m_fluid->swapBuffer(3);
+		m_fluid->swapBuffer( 3 );
 	}
 	//Pressure
-	else if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+	else if ( glfwGetKey( window, GLFW_KEY_O ) == GLFW_PRESS )
 	{
-		m_fluid->swapBuffer(4);
+		m_fluid->swapBuffer( 4 );
 	}
 	//Curl
-	else if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+	else if ( glfwGetKey( window, GLFW_KEY_P ) == GLFW_PRESS )
 	{
-		m_fluid->swapBuffer(5);
+		m_fluid->swapBuffer( 5 );
 	}
 	//Temperature
-	else if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+	else if ( glfwGetKey( window, GLFW_KEY_T ) == GLFW_PRESS )
 	{
-		m_fluid->swapBuffer(6);
+		m_fluid->swapBuffer( 6 );
 	}
 	//Density
-	else if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+	else if ( glfwGetKey( window, GLFW_KEY_R ) == GLFW_PRESS )
 	{
-		m_fluid->swapBuffer(7);
+		m_fluid->swapBuffer( 7 );
 	}
 }

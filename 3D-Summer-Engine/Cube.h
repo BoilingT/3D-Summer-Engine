@@ -59,11 +59,11 @@ private:
 
 public:
 
-	Cube(glm::vec3 pos, glm::vec3 dim, glm::vec3 rot)
+	Cube( glm::vec3 pos, glm::vec3 dim, glm::vec3 rot )
 	{
 		transform.pos = pos;
 		transform.dim = dim;
 		transform.rot = rot;
-		SetupMesh(cubeVertices, sizeof(cubeVertices), NULL, NULL);
+		SetupMesh( cubeVertices, sizeof( cubeVertices ), NULL, NULL );
 	}
 };
