@@ -1,5 +1,4 @@
-#include "stb_image.h"
-
+#include <stb/stb_image.h>
 #include "Framebuffer.h"
 
 Framebuffer::Framebuffer(float res, unsigned int w, unsigned int h, GLint _internalFormat, GLenum _format, GLenum _type, GLint _param)

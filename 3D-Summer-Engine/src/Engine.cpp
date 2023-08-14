@@ -1,9 +1,9 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "Engine.h"
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include <stb/stb_image.h>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
+#include <stb/stb_image_write.h>
 
 double Engine::g_lastX				 = 0;
 double Engine::g_lastY				 = 0;

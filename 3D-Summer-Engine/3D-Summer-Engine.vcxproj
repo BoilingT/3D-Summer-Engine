@@ -19,42 +19,42 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Config.cpp" />
-    <ClCompile Include="Cube.cpp" />
-    <ClCompile Include="Engine.cpp" />
-    <ClCompile Include="fileHandler.cpp" />
-    <ClCompile Include="FluidField.cpp" />
-    <ClCompile Include="Framebuffer.cpp" />
-    <ClCompile Include="glad.c" />
-    <ClCompile Include="Line.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Object.cpp" />
-    <ClCompile Include="Texture2D.cpp" />
-    <ClCompile Include="WindowHandler.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\Config.cpp" />
+    <ClCompile Include="src\Cube.cpp" />
+    <ClCompile Include="src\Engine.cpp" />
+    <ClCompile Include="src\fileHandler.cpp" />
+    <ClCompile Include="src\FluidField.cpp" />
+    <ClCompile Include="src\Framebuffer.cpp" />
+    <ClCompile Include="libs\glad.c" />
+    <ClCompile Include="src\Line.cpp" />
+    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Mesh.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\Object.cpp" />
+    <ClCompile Include="src\Texture2D.cpp" />
+    <ClCompile Include="src\WindowHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Config.h" />
-    <ClInclude Include="Compute.h" />
-    <ClInclude Include="Cube.h" />
-    <ClInclude Include="Engine.h" />
-    <ClInclude Include="fileHandler.h" />
-    <ClInclude Include="FluidField.h" />
-    <ClInclude Include="Framebuffer.h" />
-    <ClInclude Include="Line.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="Rect.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="Object.h" />
-    <ClInclude Include="glm_includes.h" />
-    <ClInclude Include="object_includes.h" />
-    <ClInclude Include="stb_image.h" />
-    <ClInclude Include="stb_image_write.h" />
-    <ClInclude Include="Texture2D.h" />
-    <ClInclude Include="WindowHandler.h" />
+    <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\Config.h" />
+    <ClInclude Include="src\Compute.h" />
+    <ClInclude Include="src\Cube.h" />
+    <ClInclude Include="src\Engine.h" />
+    <ClInclude Include="src\fileHandler.h" />
+    <ClInclude Include="src\FluidField.h" />
+    <ClInclude Include="src\Framebuffer.h" />
+    <ClInclude Include="src\Line.h" />
+    <ClInclude Include="src\Mesh.h" />
+    <ClInclude Include="src\Rect.h" />
+    <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\Object.h" />
+    <ClInclude Include="src\glm_includes.h" />
+    <ClInclude Include="src\object_includes.h" />
+    <ClInclude Include="libs\stb_image.h" />
+    <ClInclude Include="libs\stb_image_write.h" />
+    <ClInclude Include="src\Texture2D.h" />
+    <ClInclude Include="src\WindowHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="infoForCreator.txt" />
@@ -210,6 +210,9 @@
       <FileType>Document</FileType>
     </CopyFileToFolders>
   </ItemGroup>
+  <ItemGroup>
+    <Library Include="libs\glfw3.lib" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -270,8 +273,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>C:\OpenGL\glfw\glfw-3.3.8\res\Libs;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\OpenGL\glfw\glfw-3.3.8\res\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)libs;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
