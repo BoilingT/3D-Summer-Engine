@@ -6,7 +6,8 @@ Texture2D::Texture2D()
 	m_texture = 0;
 }
 
-Texture2D::Texture2D(const char* filepath) {
+Texture2D::Texture2D(const char *filepath)
+{
 	stbi_set_flip_vertically_on_load(true);
 	m_data = 0;
 	m_texture = 0;
@@ -17,7 +18,8 @@ Texture2D::Texture2D(const char* filepath) {
 	generateTexture(m_data, m_width, m_height);
 }
 
-Texture2D::Texture2D(unsigned char* data, int width, int height){
+Texture2D::Texture2D(unsigned char *data, int width, int height)
+{
 	m_data = 0;
 	m_texture = 0;
 	glGenTextures(1, &m_texture);
@@ -25,11 +27,12 @@ Texture2D::Texture2D(unsigned char* data, int width, int height){
 	generateTexture(data, width, height);
 }
 
-void Texture2D::use() {
+void Texture2D::use()
+{
 	glBindTexture(GL_TEXTURE_2D, m_texture);
 }
 
-void Texture2D::generateFrom(const char* filepath)
+void Texture2D::generateFrom(const char *filepath)
 {
 	m_data = stbi_load(filepath, &m_width, &m_height, &m_nrChannels, 0);
 }
@@ -43,7 +46,7 @@ void Texture2D::setParameters()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
-void Texture2D::generateTexture(unsigned char* data, int width, int height)
+void Texture2D::generateTexture(unsigned char *data, int width, int height)
 {
 	if (data)
 	{
@@ -57,12 +60,12 @@ void Texture2D::generateTexture(unsigned char* data, int width, int height)
 	}
 }
 
-GLuint* Texture2D::get()
+GLuint *Texture2D::get()
 {
 	return &m_texture;
 }
 
-unsigned char* Texture2D::data()
+unsigned char *Texture2D::data()
 {
 	return m_data;
 }

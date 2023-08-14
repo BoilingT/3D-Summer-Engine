@@ -11,9 +11,9 @@ class FileHandler
 {
 public:
 	bool writeFile(std::string fileName, std::string content);
-	bool readFile(std::string fileName, std::string & content);
-	bool removeFile(const char * fileName);
-	bool createDir(const char* path);
+	bool readFile(std::string fileName, std::string &content);
+	bool removeFile(const char *fileName);
+	bool createDir(const char *path);
 	bool fileExists(std::string fileName);
 
 

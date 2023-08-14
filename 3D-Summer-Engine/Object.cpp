@@ -1,6 +1,7 @@
 #include "Object.h"
 
-void Object::SetupMesh(float* vertices, int vSize, unsigned int* indices, int iSize) {
+void Object::SetupMesh(float *vertices, int vSize, unsigned int *indices, int iSize)
+{
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
@@ -20,13 +21,13 @@ void Object::SetupMesh(float* vertices, int vSize, unsigned int* indices, int iS
 	glBufferData(GL_ARRAY_BUFFER, vSize, vertices, GL_DYNAMIC_DRAW);
 	//Send indices data
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
- 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, iSize, indices, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, iSize, indices, GL_DYNAMIC_DRAW);
 
 	//Vertex position
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void *) 0);
 	glEnableVertexAttribArray(0);
 	//Enable texture coordinates data
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void *) ( 3 * sizeof(float) ));
 	glEnableVertexAttribArray(1);
 	//glEnableVertexAttribArray(2);
 	/*
@@ -40,7 +41,8 @@ void Object::SetupMesh(float* vertices, int vSize, unsigned int* indices, int iS
 	glBindVertexArray(0);
 }
 
-void Object::SetupMesh(float* vertices, int vSize) {
+void Object::SetupMesh(float *vertices, int vSize)
+{
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
@@ -61,7 +63,7 @@ void Object::SetupMesh(float* vertices, int vSize) {
 	verticesSize = vSize;
 
 	//Vertex position
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void *) 0);
 	glEnableVertexAttribArray(0);
 
 	/*
@@ -75,7 +77,8 @@ void Object::SetupMesh(float* vertices, int vSize) {
 	glBindVertexArray(0);
 }
 
-void Object::DrawInstanced(Shader& shader, glm::vec2* values, int count) {
+void Object::DrawInstanced(Shader &shader, glm::vec2 *values, int count)
+{
 	shader.use();
 	glBindTexture(GL_TEXTURE_2D, texture ? *texture : 0);
 	glBindVertexArray(VAO);
@@ -86,7 +89,7 @@ void Object::DrawInstanced(Shader& shader, glm::vec2* values, int count) {
 
 	glEnableVertexAttribArray(1);
 	glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)(0));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void *) ( 0 ));
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glVertexAttribDivisor(1, 1);
 
@@ -102,7 +105,7 @@ void Object::DrawInstanced(Shader& shader, glm::vec2* values, int count) {
 	shader.setMat4f("model", modelM);
 	if (verticesSize / sizeof(float) / 3 <= 2)
 	{
-		glDrawArraysInstanced(GL_LINES, 0, (verticesSize / sizeof(float)), count);
+		glDrawArraysInstanced(GL_LINES, 0, ( verticesSize / sizeof(float) ), count);
 	}
 	else if (indicesSize > 0)
 	{
@@ -110,13 +113,14 @@ void Object::DrawInstanced(Shader& shader, glm::vec2* values, int count) {
 	}
 	else
 	{
-		glDrawArraysInstanced(GL_TRIANGLES, 0, (verticesSize / sizeof(float)), count);
+		glDrawArraysInstanced(GL_TRIANGLES, 0, ( verticesSize / sizeof(float) ), count);
 	}
 	glDeleteBuffers(1, &instanceVBO);
 	glBindVertexArray(0);
 }
 
-void Object::Draw(Shader& shader) {
+void Object::Draw(Shader &shader)
+{
 	shader.use();
 	//Draw mesh
 	//glBindTexture(GL_TEXTURE_2D, texture != nullptr && texture > 0? *texture : 0);
@@ -131,7 +135,7 @@ void Object::Draw(Shader& shader) {
 	shader.setMat4f("model", modelM);
 	if (verticesSize / sizeof(float) / 3.0f <= 2.0f)
 	{
-		glDrawArrays(GL_LINES, 0, (verticesSize / sizeof(float)));
+		glDrawArrays(GL_LINES, 0, ( verticesSize / sizeof(float) ));
 	}
 	else if (indicesSize > 0)
 	{
@@ -139,7 +143,7 @@ void Object::Draw(Shader& shader) {
 	}
 	else
 	{
-		glDrawArrays(GL_TRIANGLES, 0, (verticesSize / sizeof(float)));
+		glDrawArrays(GL_TRIANGLES, 0, ( verticesSize / sizeof(float) ));
 	}
 	glBindVertexArray(0);
 }

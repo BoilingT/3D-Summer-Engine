@@ -7,19 +7,20 @@ class WindowHandler
 private:
 	const int WIDTH;
 	const int HEIGHT;
-	const char* WINDOW_NAME;
-	const GLFWvidmode* mode;
-	GLFWwindow* window;
-	GLFWmonitor* monitor;
+	const char *WINDOW_NAME;
+	const GLFWvidmode *mode;
+	GLFWwindow *window;
+	GLFWmonitor *monitor;
 public:
 	enum class WindowState { WINDOWED, FULLSCREEN };
 
 	WindowState windowState;
 
-	WindowHandler(int width, int height, const char* window_name) : WIDTH(width), HEIGHT(height), WINDOW_NAME(window_name) {
+	WindowHandler(int width, int height, const char *window_name) : WIDTH(width), HEIGHT(height), WINDOW_NAME(window_name)
+	{
 		window = nullptr;
 		std::cout << "INITIALIZING::WINDOW" << std::endl;
-		
+
 		glfwInit();
 
 		windowState = WindowState::WINDOWED;
@@ -39,23 +40,28 @@ public:
 	int setState(WindowState state);
 	int open();
 
-	~WindowHandler() {
+	~WindowHandler()
+	{
 		std::cout << "DESTROYED::WINDOW" << std::endl;
 	}
 
-	int getWidth() {
+	int getWidth()
+	{
 		return WIDTH;
 	}
 
-	int getHeight() {
+	int getHeight()
+	{
 		return HEIGHT;
 	}
 
-	const char* getWindowName() {
+	const char *getWindowName()
+	{
 		return WINDOW_NAME;
 	}
 
-	GLFWwindow* getWindow() {
+	GLFWwindow *getWindow()
+	{
 		return window;
 	}
 };

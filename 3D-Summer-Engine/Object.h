@@ -6,7 +6,8 @@
 
 #include "Shader.h"
 
-struct Transform {
+struct Transform
+{
 	glm::vec3 pos;
 	glm::vec3 dim;
 	glm::vec3 rot;
@@ -17,19 +18,20 @@ class Object
 private:
 	int verticesSize;
 	int indicesSize;
-	unsigned int* indicesPtr;
+	unsigned int *indicesPtr;
 	unsigned int VBO, instanceVBO, VAO, EBO;
 public:
 
 	Transform transform;
-	GLuint* texture;
+	GLuint *texture;
 
-	void SetupMesh(float* vertices, int vSize);
-	void SetupMesh(float* vertices, int vSize, unsigned int* indices, int iSize);
-	void Draw(Shader& shader);
-	void DrawInstanced(Shader& shader, glm::vec2* values, int count);
+	void SetupMesh(float *vertices, int vSize);
+	void SetupMesh(float *vertices, int vSize, unsigned int *indices, int iSize);
+	void Draw(Shader &shader);
+	void DrawInstanced(Shader &shader, glm::vec2 *values, int count);
 
-	~Object() {
+	~Object()
+	{
 		glDeleteVertexArrays(1, &VAO);
 		glDeleteBuffers(1, &VBO);
 		glDeleteBuffers(1, &instanceVBO);
