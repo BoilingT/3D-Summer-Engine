@@ -5,7 +5,7 @@ Camera::Camera()
 	updateRelativeCoordinates();
 }
 
-Camera::Camera(const glm::vec3 pos)
+Camera::Camera( const glm::vec3 pos )
 {
 	cameraPos = pos;
 
@@ -18,40 +18,40 @@ void Camera::updateRelativeCoordinates()
 cameraRight = glm::normalize(glm::cross(upDir, cameraDir));
 cameraUp = glm::cross(cameraDir, cameraRight);*/
 
-	if (cameraRot.x > 89.0f)
+	if ( cameraRot.x > 89.0f )
 		cameraRot.x = 89.0f;
-	if (cameraRot.x < -89.0f)
+	if ( cameraRot.x < -89.0f )
 		cameraRot.x = -89.0f;
-	if (cameraRot.y > 360.0f)
+	if ( cameraRot.y > 360.0f )
 	{
 		//cameraRot.y = cameraRot.y - ((int) cameraRot.y % 360) * 360;
 		cameraRot.y = 0.0f;
 	}
-	if (cameraRot.y < 0.0f)
+	if ( cameraRot.y < 0.0f )
 	{
 		cameraRot.y = 360.0f;
 		//cameraRot.y = cameraRot.y - ((int)cameraRot.y % 360) * 360;
 	}
 
 	//Yaw
-	cameraDirection.x = cos(glm::radians(cameraRot.y)) * cos(glm::radians(cameraRot.x));
-	cameraDirection.z = -1 * sin(glm::radians(cameraRot.y)) * cos(glm::radians(cameraRot.x));
+	cameraDirection.x = cos( glm::radians( cameraRot.y ) ) * cos( glm::radians( cameraRot.x ) );
+	cameraDirection.z = -1 * sin( glm::radians( cameraRot.y ) ) * cos( glm::radians( cameraRot.x ) );
 	//Pitch
-	cameraDirection.y = sin(glm::radians(cameraRot.x));
-	cameraRight = glm::normalize(glm::cross(cameraDirection, cameraUp));
-	cameraForward = glm::normalize(cameraDirection);
+	cameraDirection.y = sin( glm::radians( cameraRot.x ) );
+	cameraRight = glm::normalize( glm::cross( cameraDirection, cameraUp ) );
+	cameraForward = glm::normalize( cameraDirection );
 
-	cameraRight = glm::normalize(glm::cross(upDir, cameraDirection));
-	cameraUp = glm::cross(cameraDirection, cameraRight);
+	cameraRight = glm::normalize( glm::cross( upDir, cameraDirection ) );
+	cameraUp = glm::cross( cameraDirection, cameraRight );
 }
 
-void Camera::setPos(const glm::vec3 pos)
+void Camera::setPos( const glm::vec3 pos )
 {
 	cameraPos = pos;
 	updateRelativeCoordinates();
 }
 
-void Camera::setRot(const glm::vec3 rot)
+void Camera::setRot( const glm::vec3 rot )
 {
 	cameraRot = rot;
 }
@@ -86,14 +86,14 @@ glm::vec3 Camera::forward()
 	return cameraForward;
 }
 
-glm::mat4 Camera::lookAt(glm::vec3 target)
+glm::mat4 Camera::lookAt( glm::vec3 target )
 {
 //Calculate cameraDirection
-	glm::vec3 zaxis = glm::normalize(-target);
+	glm::vec3 zaxis = glm::normalize( -target );
 	//Get positive right axis vector
-	glm::vec3 xaxis = glm::normalize(glm::cross(glm::normalize(upDir), zaxis));
+	glm::vec3 xaxis = glm::normalize( glm::cross( glm::normalize( upDir ), zaxis ) );
 	//Calculate camera up vector
-	glm::vec3 yaxis = glm::cross(zaxis, xaxis);
+	glm::vec3 yaxis = glm::cross( zaxis, xaxis );
 
 	glm::mat4 lookAtRotation = glm::mat4(
 		xaxis.x, xaxis.y, xaxis.z, 0.0f,
@@ -109,64 +109,64 @@ glm::mat4 Camera::lookAt(glm::vec3 target)
 		0.0f, 0.0f, 0.0f, 1.0f
 	);
 
-	return glm::transpose(lookAtRotation) * glm::transpose(lookAtTranslation);
+	return glm::transpose( lookAtRotation ) * glm::transpose( lookAtTranslation );
 }
 
-void Camera::processKeyboardInput(Camera_Movement dir, float dt)
+void Camera::processKeyboardInput( Camera_Movement dir, float dt )
 {
 
-	if (dir == Camera_Movement::FORWARD)
+	if ( dir == Camera_Movement::FORWARD )
 	{
-		translate(forward() * speed * dt);
+		translate( forward() * speed * dt );
 	}
-	if (dir == Camera_Movement::BACKWARD)
+	if ( dir == Camera_Movement::BACKWARD )
 	{
-		translate(forward() * -speed * dt);
+		translate( forward() * -speed * dt );
 	}
-	if (dir == Camera_Movement::RIGHT)
+	if ( dir == Camera_Movement::RIGHT )
 	{
-		translate(right() * -speed * dt);
+		translate( right() * -speed * dt );
 	}
-	if (dir == Camera_Movement::LEFT)
+	if ( dir == Camera_Movement::LEFT )
 	{
-		translate(right() * speed * dt);
+		translate( right() * speed * dt );
 	}
-	if (dir == Camera_Movement::UP)
+	if ( dir == Camera_Movement::UP )
 	{
-		translate(glm::vec3(0.0f, 1.0f, 0.0f) * speed * dt);
+		translate( glm::vec3( 0.0f, 1.0f, 0.0f ) * speed * dt );
 	}
-	if (dir == Camera_Movement::DOWN)
+	if ( dir == Camera_Movement::DOWN )
 	{
-		translate(glm::vec3(0.0f, 1.0f, 0.0f) * -speed * dt);
+		translate( glm::vec3( 0.0f, 1.0f, 0.0f ) * -speed * dt );
 	}
 }
 
-void Camera::processMouseScroll(float fovOffset)
+void Camera::processMouseScroll( float fovOffset )
 {
 	fov -= fovOffset;
-	if (fov < 1.0f)
+	if ( fov < 1.0f )
 	{
 		fov = 1.0f;
 	}
-	if (fov > 45.0f)
+	if ( fov > 45.0f )
 	{
 		fov = 45.0f;
 	}
 }
 
-void Camera::processMouseMovement(float xTravel, float yTravel)
+void Camera::processMouseMovement( float xTravel, float yTravel )
 {
-	rotate(glm::vec3(xTravel, yTravel, 0.0f));
+	rotate( glm::vec3( xTravel, yTravel, 0.0f ) );
 }
 
-void Camera::translate(const glm::vec3 translation)
+void Camera::translate( const glm::vec3 translation )
 {
 	cameraPos = cameraPos + translation;
 	updateRelativeCoordinates();
 	std::cout << "Position: { " << cameraPos.x << ", " << cameraPos.y << ", " << cameraPos.z << " }" << std::endl;
 }
 
-void Camera::rotate(const glm::vec3 rotation)
+void Camera::rotate( const glm::vec3 rotation )
 {
 	cameraRot = cameraRot + rotation;
 	updateRelativeCoordinates();

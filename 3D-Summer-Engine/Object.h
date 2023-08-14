@@ -25,17 +25,17 @@ public:
 	Transform transform;
 	GLuint *texture;
 
-	void SetupMesh(float *vertices, int vSize);
-	void SetupMesh(float *vertices, int vSize, unsigned int *indices, int iSize);
-	void Draw(Shader &shader);
-	void DrawInstanced(Shader &shader, glm::vec2 *values, int count);
+	void SetupMesh( float *vertices, int vSize );
+	void SetupMesh( float *vertices, int vSize, unsigned int *indices, int iSize );
+	void Draw( Shader &shader );
+	void DrawInstanced( Shader &shader, glm::vec2 *values, int count );
 
 	~Object()
 	{
-		glDeleteVertexArrays(1, &VAO);
-		glDeleteBuffers(1, &VBO);
-		glDeleteBuffers(1, &instanceVBO);
-		glDeleteBuffers(1, &EBO);
+		glDeleteVertexArrays( 1, &VAO );
+		glDeleteBuffers( 1, &VBO );
+		glDeleteBuffers( 1, &instanceVBO );
+		glDeleteBuffers( 1, &EBO );
 		VAO = NULL;
 		VBO = NULL;
 		EBO = NULL;
