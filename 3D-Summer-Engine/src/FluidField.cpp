@@ -32,7 +32,7 @@ void FluidField::Draw(glm::vec3 origin)
 }
 
 //Draw to specified framebuffer with specified shader
-void FluidField::blit(Framebuffer *target, Shader *shader)
+void FluidField::blit(Framebuffer* target, Shader* shader)
 {
 //glm::mat4 modelM = glm::mat4(1.0f);
 //glm::mat4 viewM = glm::mat4(1.0f);
@@ -51,7 +51,7 @@ void FluidField::blit(Framebuffer *target, Shader *shader)
 	//Bind framebuffer
 	if (target == nullptr || target->fbo == NULL)
 	{
-		glViewport(0, 0, m_mouse.width, m_mouse.height);
+		glViewport(0, 0, m_mouse.width, (GLsizei) m_mouse.height);
 		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 	}
 	else
@@ -79,7 +79,7 @@ void FluidField::blit(Framebuffer *target, Shader *shader)
 }
 
 //Is not being used
-void FluidField::boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer *target, Shader &shader)
+void FluidField::boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer* target, Shader& shader)
 {
 	line.width(10.0f);
 	glm::mat4 projectionM = glm::mat4(1.0f);
@@ -129,7 +129,7 @@ void FluidField::timeStep(float dt)
 }
 
 //Is not being used
-void FluidField::boundary(float dt, float scale, float offset, DoubleFramebuffer *target)
+/*void FluidField::boundary(float dt, float scale, float offset, DoubleFramebuffer* target)
 {
 	m_bounds_shader.use();
 	int uLoc = m_bounds_shader.uniforms["u"];
@@ -144,7 +144,7 @@ void FluidField::boundary(float dt, float scale, float offset, DoubleFramebuffer
 	glUniform1f(scaleLoc, scale);
 
 	boundaryContainer(1, 1, 1, 1, target->writeBuffer(), m_bounds_shader);
-}
+}*/
 
 //Isn't being used
 void FluidField::boundaries(float dt)
@@ -156,7 +156,7 @@ void FluidField::boundaries(float dt)
 }
 
 //Add a value to an entire framebuffer
-void FluidField::bufferIntegrate(DoubleFramebuffer *target, glm::vec4 values)
+void FluidField::bufferIntegrate(DoubleFramebuffer* target, glm::vec4 values)
 {
 	m_integrate_shader.use();
 	glUniform4f(m_integrate_shader.uniforms["value"], values.x, values.y, values.z, values.w);
@@ -226,8 +226,8 @@ void FluidField::diffuse(float dt)
 	{
 		m_jacobi_iteration_shader.use();
 		// Velocity
-		float alpha = 1.0f / ( dt * m_viscosity ); //Alpha = pow(x, 2)/t
-		float rBeta = 1.0f / ( 4.0f + alpha );	 //rBeta = 1/(4+Alpha)
+		float alpha = 1.0f / (dt * m_viscosity); //Alpha = pow(x, 2)/t
+		float rBeta = 1.0f / (4.0f + alpha);	 //rBeta = 1/(4+Alpha)
 		glUniform1f(m_jacobi_iteration_shader.uniforms["alpha"], alpha);
 		glUniform1f(m_jacobi_iteration_shader.uniforms["rBeta"], rBeta);
 		glUniform2f(m_jacobi_iteration_shader.uniforms["texelSize"], m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
@@ -260,7 +260,7 @@ void FluidField::addForces(float dt)
 	float r = m_splat_radius / 10.0f;
 
 	splat(glm::vec2(0.5f, 0.9f), r, m_splats, true, false);
-	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -150.82f, 0.0f, 0.0f) * dt);
+	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -150.82f, 0.0f, 0.0f) * (float) dt);
 	//temperature(dt);
 }
 
@@ -312,7 +312,7 @@ void FluidField::divergence(float dt)
 	blit(m_divergence_buffer, &m_divergence_shader);
 }
 
-void FluidField::clearBuffer(DoubleFramebuffer *target, float value)
+void FluidField::clearBuffer(DoubleFramebuffer* target, float value)
 {
 	m_clear_shader.use();
 	glUniform1f(m_clear_shader.uniforms["value"], value);
@@ -322,7 +322,7 @@ void FluidField::clearBuffer(DoubleFramebuffer *target, float value)
 	target->swap();
 }
 
-void FluidField::clearBuffer(Framebuffer *target, float value)
+void FluidField::clearBuffer(Framebuffer* target, float value)
 {
 	m_clear_shader.use();
 	glUniform1f(m_clear_shader.uniforms["value"], value);
@@ -404,7 +404,7 @@ void FluidField::splat(glm::vec2 pos, float r, bool dye, bool velocity)
 		color = glm::vec3(m_splat_color[0], m_splat_color[1], m_splat_color[2]);
 		color *= m_splat_brightness;
 	}
-	glUniform3f(uColorLoc, abs(color.r), abs(color.g), abs(color.b + ( color.r + color.g ) / 5.0f) * 0.3f);
+	glUniform3f(uColorLoc, abs(color.r), abs(color.g), abs(color.b + (color.r + color.g) / 5.0f) * 0.3f);
 	if (dye)
 	{
 		blit(m_dye_buffer->writeBuffer(), &m_splat_shader);
@@ -419,7 +419,7 @@ void FluidField::splat(glm::vec2 pos, float r, bool dye, bool velocity)
 	}
 }
 
-void FluidField::updateMouse(double *mouseX, double *mouseY, bool *left_mouse_down, bool *right_mouse_down)
+void FluidField::updateMouse(double* mouseX, double* mouseY, bool* left_mouse_down, bool* right_mouse_down)
 {
 	m_mouse.update(*mouseX, *mouseY, *left_mouse_down, *right_mouse_down);
 
@@ -445,7 +445,7 @@ void FluidField::updateMouse(double *mouseX, double *mouseY, bool *left_mouse_do
 	}
 }
 
-void FluidField::setCurrentBuffer(Framebuffer *buffer)
+void FluidField::setCurrentBuffer(Framebuffer* buffer)
 {
 	if (m_current_buffer == buffer) return;
 	m_current_buffer = buffer;
@@ -511,7 +511,7 @@ void FluidField::reset()
 	clearBuffer(m_curl_buffer, 0.0);
 }
 
-int FluidField::applyConfiguration(Config &configurationFile)
+int FluidField::applyConfiguration(Config& configurationFile)
 {
 	if (configurationFile.size() <= 0)
 	{
@@ -545,7 +545,7 @@ int FluidField::applyConfiguration(Config &configurationFile)
 
 		return 0;
 	}
-	catch (const std::exception &ex)
+	catch (const std::exception& ex)
 	{
 		std::cout << "ERROR::PARSING::CONFIGURATION \"" << configurationFile.getPath() << "\" -> '" << ex.what() << "'" << std::endl;
 		return -1;

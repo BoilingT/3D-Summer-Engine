@@ -1,6 +1,6 @@
 #include "Shader.h"
 
-Shader::Shader(const char *vertexPath, const char *fragmentPath)
+Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
 	unsigned int vShader, fShader;
 	int success;
@@ -14,8 +14,8 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath)
 	//std::cout << "Vertex Shader:\n" << vShaderContent << "\nEND OF FILE" << std::endl;
 	//std::cout << "Fragment Shader:\n" << fShaderContent << "\nEND OF FILE" << std::endl;
 
-	const char *vShaderSource = vShaderContent.c_str();
-	const char *fShaderSource = fShaderContent.c_str();
+	const char* vShaderSource = vShaderContent.c_str();
+	const char* fShaderSource = fShaderContent.c_str();
 
 	//Create each shader
 	vShader = glCreateShader(GL_VERTEX_SHADER);
@@ -63,20 +63,19 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath)
 	getUniforms();
 }
 
-Shader::Shader(const char *shaderPath, GLenum type)
+Shader::Shader(const char* shaderPath, GLenum type)
 {
 	unsigned int shader;
 	int success;
 	char compileInfo[512];
 	std::string shaderContent;
-
 	//Read shader files
 	fileHandler.readFile(shaderPath, shaderContent);
 
 	//std::cout << "Vertex Shader:\n" << vShaderContent << "\nEND OF FILE" << std::endl;
 	//std::cout << "Fragment Shader:\n" << fShaderContent << "\nEND OF FILE" << std::endl;
 
-	const char *shaderSource = shaderContent.c_str();
+	const char* shaderSource = shaderContent.c_str();
 
 	//Create each shader
 	shader = glCreateShader(type);
@@ -91,7 +90,6 @@ Shader::Shader(const char *shaderPath, GLenum type)
 	{
 		glGetShaderInfoLog(shader, sizeof(compileInfo), NULL, compileInfo);
 		std::cout << "ERROR::SHADER::COMPILATION::FAILED\n" << "SHADER:: " << shaderPath << "\n" << compileInfo << std::endl;
-		return;
 	}
 
 	//Create and link Shader Program
@@ -131,12 +129,12 @@ void Shader::generateTexture(unsigned int TEXTURE_WIDTH, unsigned int TEXTURE_HE
 	glBindImageTexture(0, m_compute_texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA32F);
 }
 
-void Shader::setValues(float *values, int width, int height)
+void Shader::setValues(float* values, int width, int height)
 {
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, values);
 }
 
-unsigned int *Shader::getTexture()
+unsigned int* Shader::getTexture()
 {
 	return &m_compute_texture;
 }
@@ -153,9 +151,9 @@ void Shader::getUniforms()
 	int count = 0;
 	glGetProgramiv(ID, GL_ACTIVE_UNIFORMS, &count);
 	//uniforms.resize(count);
-	for (unsigned int i = 0; i < count; i++)
+	for (int i = 0; i < count; i++)
 	{
-		glGetActiveUniform(ID, (GLuint) i, bufSize, &length, &size, &type, name);
+		glGetActiveUniform(ID, i, bufSize, &length, &size, &type, name);
 		int location = glGetUniformLocation(ID, name);
 		uniforms[name] = location;
 	}

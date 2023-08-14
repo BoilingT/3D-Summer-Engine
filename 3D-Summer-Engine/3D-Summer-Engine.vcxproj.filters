@@ -247,4 +247,7 @@
       <Filter>cfg</Filter>
     </CopyFileToFolders>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\Visual Studio 2019 Formatting\.editorconfig" />
+  </ItemGroup>
 </Project>
