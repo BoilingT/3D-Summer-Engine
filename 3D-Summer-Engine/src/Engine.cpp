@@ -74,7 +74,7 @@ Engine::Engine()
 	//Set the viewport size
 	glViewport(0, 0, c_WIDTH, c_HEIGHT);
 	//Resize the viewport when the window size is changed
-	glfwSetFramebufferSizeCallback(m_window->getWindow(), FRAME_BUFFER_SIZE_CALLBACK);
+	glfwSetFramebufferSizeCallback(m_window->getWindow(), FRAMEBUFFER_RESIZE_CALLBACK);
 	glfwSetWindowIconifyCallback(m_window->getWindow(), WINDOW_ICONIFY_CALLBACK);
 	glfwSetWindowFocusCallback(m_window->getWindow(), WINDOW_FOCUS_CALLBACK);
 	glfwSetKeyCallback(m_window->getWindow(), KEY_CALLBACK);
@@ -379,7 +379,7 @@ void Engine::Pause()
 	std::cout << "Running: " << Engine::g_running << std::endl;
 }
 
-void Engine::FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow *window, int width, int height)
+void Engine::FRAMEBUFFER_RESIZE_CALLBACK(GLFWwindow *window, int width, int height)
 {
 	if (width <= 0 || height <= 0 || glfwGetWindowAttrib(window, GLFW_ICONIFIED)) return;
 	std::cout << "Width: " << width << " Height: " << height << std::endl;

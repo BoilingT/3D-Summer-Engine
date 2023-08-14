@@ -257,7 +257,7 @@ void FluidField::diffuse(float dt)
 void FluidField::addForces(float dt)
 {
 	m_integrate_shader.use();
-	float r = m_dye_radius / 10.0f;
+	float r = m_splat_radius / 10.0f;
 
 	splat(glm::vec2(0.5f, 0.9f), r, m_splats, true, false);
 	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -150.82f, 0.0f, 0.0f) * dt);
@@ -378,7 +378,7 @@ void FluidField::splat(glm::vec2 pos, float r, bool dye, bool velocity)
 
 	glUniform1i(m_splat_shader.uniforms["uTarget"], m_velocity_buffer->readBuffer()->setTexture(0));
 	glUniform2f(m_splat_shader.uniforms["point"], pos.x, pos.y);
-	glUniform3f(uColorLoc, m_mouse.texcoord_delta.x * m_dye_force, m_mouse.texcoord_delta.y * m_dye_force, 0.0f);
+	glUniform3f(uColorLoc, m_mouse.texcoord_delta.x * m_splat_force, m_mouse.texcoord_delta.y * m_splat_force, 0.0f);
 
 	//float ratio = m_mouse.width / m_mouse.height * 0.5f;
 	//glUniform1f(m_splat_shader.uniforms["radius"], ratio > 1 ? r * ratio : r);
@@ -394,15 +394,15 @@ void FluidField::splat(glm::vec2 pos, float r, bool dye, bool velocity)
 	glUniform2f(uTexLoc, m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
 
 	glm::vec3 color = glm::vec3(0.0f);
-	if (m_dye_color_acc_dependent)
+	if (m_splat_color_acc_dependent)
 	{
-		color = glm::normalize(glm::vec3(m_mouse.texcoord_delta.x * m_dye_force, m_mouse.texcoord_delta.y * m_dye_force, 0.2f));
-		color *= m_dye_brightness;
+		color = glm::normalize(glm::vec3(m_mouse.texcoord_delta.x * m_splat_force, m_mouse.texcoord_delta.y * m_splat_force, 0.2f));
+		color *= m_splat_brightness;
 	}
 	else
 	{
-		color = glm::vec3(m_dye_color[0], m_dye_color[1], m_dye_color[2]);
-		color *= m_dye_brightness;
+		color = glm::vec3(m_splat_color[0], m_splat_color[1], m_splat_color[2]);
+		color *= m_splat_brightness;
 	}
 	glUniform3f(uColorLoc, abs(color.r), abs(color.g), abs(color.b + ( color.r + color.g ) / 5.0f) * 0.3f);
 	if (dye)
@@ -427,21 +427,21 @@ void FluidField::updateMouse(double *mouseX, double *mouseY, bool *left_mouse_do
 	{
 		if (m_mouse.right_mouse_down && m_mouse.left_mouse_down)
 		{
-			splat(m_mouse.texcoord_pos, m_dye_radius, true, false);
+			splat(m_mouse.texcoord_pos, m_splat_radius, true, false);
 		}
 		else if (m_mouse.right_mouse_down)
 		{
-			splat(m_mouse.texcoord_pos, m_dye_radius, false, true);
+			splat(m_mouse.texcoord_pos, m_splat_radius, false, true);
 		}
 		else if (m_mouse.left_mouse_down)
 		{
-			splat(m_mouse.texcoord_pos, m_dye_radius, true, true);
+			splat(m_mouse.texcoord_pos, m_splat_radius, true, true);
 		}
 		//std::cout << "X: " << m_mouse.window_pos.x << " Y: " << m_mouse.window_pos.y << "tX: " << m_mouse.texcoord_pos.x << " tY: " << m_mouse.texcoord_pos.y << std::endl;
 	}
 	else if (m_mouse.left_mouse_down)
 	{
-		splat(m_mouse.texcoord_pos, m_dye_radius, true, false);
+		splat(m_mouse.texcoord_pos, m_splat_radius, true, false);
 	}
 }
 
@@ -520,13 +520,13 @@ int FluidField::applyConfiguration(Config &configurationFile)
 	}
 	try
 	{
-		m_dye_scalar = std::stof(configurationFile.getValue(FLUID.dye_scalar));
-		m_velocity_scalar = std::stof(configurationFile.getValue(FLUID.velocity_scalar));
-		//m_dye_color = std::stof(configurationFile.getValue(FLUID.dye_color));
-		m_dye_brightness = std::stof(configurationFile.getValue(FLUID.dye_brightness));
-		m_dye_color_acc_dependent = configurationFile.getValue(FLUID.dye_color_acc_dependent) == "1";
-		m_dye_force = std::stof(configurationFile.getValue(FLUID.dye_force));
-		m_dye_radius = std::stof(configurationFile.getValue(FLUID.dye_radius));
+		m_dye_resolution_scalar = std::stof(configurationFile.getValue(FLUID.dye_scalar));
+		m_velocity_resolution_scalar = std::stof(configurationFile.getValue(FLUID.velocity_scalar));
+		//m_splat_color = std::stof(configurationFile.getValue(FLUID.dye_color));
+		m_splat_brightness = std::stof(configurationFile.getValue(FLUID.dye_brightness));
+		m_splat_color_acc_dependent = configurationFile.getValue(FLUID.dye_color_acc_dependent) == "1";
+		m_splat_force = std::stof(configurationFile.getValue(FLUID.dye_force));
+		m_splat_radius = std::stof(configurationFile.getValue(FLUID.dye_radius));
 		m_dye_dissipation = std::stof(configurationFile.getValue(FLUID.dye_dissipation));
 		m_velocity_dissipation = std::stof(configurationFile.getValue(FLUID.velocity_dissipation));
 		m_diffuseIterations = std::stoi(configurationFile.getValue(FLUID.diffuseIterations));

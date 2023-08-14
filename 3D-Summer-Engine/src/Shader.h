@@ -3,7 +3,7 @@
 #include <string>
 #include <glad/glad.h>
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include "glm_includes.h"
 #include "fileHandler.h"
 
@@ -15,7 +15,7 @@ private:
 	FileHandler fileHandler;
 
 public:
-	std::map<std::string, char> uniforms;
+	std::unordered_map<std::string, char> uniforms;
 	//Read, Compile, Link
 	Shader(const char *vertexPath, const char *fragmentPath);
 	Shader(const char *shaderPath, GLenum type);

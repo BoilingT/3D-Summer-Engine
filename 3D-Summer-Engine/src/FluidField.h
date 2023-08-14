@@ -225,21 +225,21 @@ private:
 	const int	 m_resolution;
 	const int	 m_fieldWidth;
 
-	float	 m_dye_scalar							 = 1.0; //This makes the dye resolution always larger than the velocity resolution, this achieves better details
-	float	 m_velocity_scalar						 = 1.0f;
-	float	 m_dye_color[3]							 = { 0.0f, 0.1f, 1.0f };
-	float	 m_dye_brightness						 = 0.5f;
-	bool	 m_dye_color_acc_dependent				 = 0;			// If color should depend on mouse acceleration
-	float	 m_dye_force							 = 6000.0f;		// Force used to create velocities
-	float	 m_dye_radius							 = 0.35f;		// Radius of the applicable dye and velocites
+	float	 m_velocity_resolution_scalar			 = 1.0f;
+	float	 m_dye_resolution_scalar				 = 1.0f;
+	bool	 m_splat_color_acc_dependent			 = false;
+	float	 m_splat_brightness						 = 0.5f;
+	float	 m_splat_color[3]						 = { 0.0f, 0.1f, 1.0f };
+	float	 m_splat_force							 = 6000.0f;
+	float	 m_splat_radius							 = 0.35f;
 	float	 m_dye_dissipation						 = 0.2f;		// The rate at which the dye clears from the screen
 	float	 m_velocity_dissipation					 = 0.1f;		// The rate at which the velocities reduces to zero
 	int		 m_diffuseIterations					 = 30;			// Number of iterations used to calculate proper diffusion of the applied dye or velocities
-	float	 m_viscosity							 = 0.0f;		// Drag factor of the fluid
+	float	 m_viscosity							 = 0.0f;		// Internal friction of the fluid
 	int		 m_pressureIterations					 = 60;			// Number of iterations used to calculate more precise pressure fields
-	float	 m_pressure_dissipation					 = 0.9f;		// TODO: Explain it... What I thought it was (but it is supposedly wrong!): The rate at which the pressure field is cleared
-	float	 m_vortitcity_scalar					 = 30;			// Vorticity scalar
-	float	 m_timestep_scalar						 = 1.00f;		// Factor deciding the magnitude of timesteps for each frame.
+	float	 m_pressure_dissipation					 = 0.9f;		// How fast the pressure field dissipates
+	float	 m_vortitcity_scalar					 = 30.0f;		// Scale the magnitude of force that will be used when applying curling velocities
+	float	 m_timestep_scalar						 = 1.0f;		// Unit of time which the simulation will use when advancing forward.
 
 	int		 m_splats								 = 11;
 	bool	 m_advect								 = 1;
@@ -313,7 +313,7 @@ public:
 		TexFormat r(GL_R32F, GL_RED);			//Scalar field
 		glDisable(GL_BLEND);
 
-		float velocityResolution = m_resolution * m_velocity_scalar, dyeResolution = m_resolution * m_dye_scalar;
+		float velocityResolution = m_resolution * m_velocity_resolution_scalar, dyeResolution = m_resolution * m_dye_resolution_scalar;
 
 		//Buffers that store the calculated results
 		m_dye_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, rgba.internal, rgba.format, textureType, GL_LINEAR);
@@ -340,7 +340,7 @@ public:
 
 	void updateViewport(float width, float height)
 	{
-		float velocityResolution = m_resolution * m_velocity_scalar, dyeResolution = m_resolution * m_dye_scalar;
+		float velocityResolution = m_resolution * m_velocity_resolution_scalar, dyeResolution = m_resolution * m_dye_resolution_scalar;
 		m_mouse.updateMousearea(width, height);
 		//m_dye_buffer->setDimensions(m_mouse.width, m_mouse.height, dyeResolution);
 		//m_velocity_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);

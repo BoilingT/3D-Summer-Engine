@@ -88,9 +88,6 @@ public:
 		std::cout << "DESTROYED::ENGINE" << std::endl;
 	}
 
-	//Initialize the window and its components
-	void Init();
-	//Start the rendering sequence
 	void Run();
 	void update();
 	void physicsUpdate();
@@ -105,7 +102,7 @@ private:
 	void calculateFPS();
 	void constrainMouse(GLFWwindow *window, double xPos, double yPos);
 
-	static void FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow *window, int width, int height);			//Is called when the window is resized
+	static void FRAMEBUFFER_RESIZE_CALLBACK(GLFWwindow *window, int width, int height);			//Is called when the window is resized
 	static void MOUSE_CALLBACK(GLFWwindow *window, double xPos, double yPos);					//Is called when mouse is being used
 	static void KEY_CALLBACK(GLFWwindow *window, int key, int scancode, int action, int mods);	//Is called when keyboard events occur
 	static void WINDOW_ICONIFY_CALLBACK(GLFWwindow *window, int iconified);						//Is called when the window is "minimized"
