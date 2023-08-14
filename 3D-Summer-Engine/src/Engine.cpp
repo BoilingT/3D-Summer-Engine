@@ -11,7 +11,7 @@ bool Engine::g_leftMouseDown		 = 0;
 bool Engine::g_rightMouseDown		 = 0;
 bool Engine::g_firstMouseEnter		 = 0;
 bool Engine::g_mouse_constrain		 = true;
-unsigned int Engine::g_running		 = false;
+bool Engine::g_running				 = false;
 
 double g_lastTime = glfwGetTime();
 double currentTime = glfwGetTime();

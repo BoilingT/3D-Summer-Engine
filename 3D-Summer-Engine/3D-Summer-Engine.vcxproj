@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="libs\glad.c" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\Cube.cpp" />
@@ -26,7 +27,6 @@
     <ClCompile Include="src\fileHandler.cpp" />
     <ClCompile Include="src\FluidField.cpp" />
     <ClCompile Include="src\Framebuffer.cpp" />
-    <ClCompile Include="libs\glad.c" />
     <ClCompile Include="src\Line.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
@@ -36,6 +36,8 @@
     <ClCompile Include="src\WindowHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\STB\stb_image.h" />
+    <ClInclude Include="include\STB\stb_image_write.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Config.h" />
     <ClInclude Include="src\Compute.h" />
@@ -209,9 +211,6 @@
     <CopyFileToFolders Include="fluid_config.cfg">
       <FileType>Document</FileType>
     </CopyFileToFolders>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="libs\glfw3.lib" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

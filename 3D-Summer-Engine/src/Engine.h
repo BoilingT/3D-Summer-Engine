@@ -31,7 +31,7 @@ private:
 	static bool g_mouse_constrain;
 
 	//Fluid simulation properties
-	static unsigned int g_running;
+	static bool g_running;
 
 	static WindowHandler *m_window;
 	static FluidField *m_fluid;
