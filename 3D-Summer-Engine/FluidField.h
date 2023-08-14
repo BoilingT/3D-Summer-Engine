@@ -22,46 +22,46 @@ class FluidField
 		bool right_mouse_down = false;
 		double height, width;
 
-		glm::vec2 texcoord_travel	 = glm::vec2( 0.0f );
-		glm::vec2 texcoord_pos		 = glm::vec2( 0.0f );
-		glm::vec2 prev_texcoord_pos	 = glm::vec2( 0.0f );
-		glm::vec2 texcoord_delta	 = glm::vec2( 0.0f );
+		glm::vec2 texcoord_travel	 = glm::vec2(0.0f);
+		glm::vec2 texcoord_pos		 = glm::vec2(0.0f);
+		glm::vec2 prev_texcoord_pos	 = glm::vec2(0.0f);
+		glm::vec2 texcoord_delta	 = glm::vec2(0.0f);
 
-		glm::vec2 window_travel		 = glm::vec2( 0.0f );
-		glm::vec2 window_pos		 = glm::vec2( 0.0f );
-		glm::vec2 prev_window_pos	 = glm::vec2( 0.0f );
-		glm::vec2 window_delta		 = glm::vec2( 0.0f );
+		glm::vec2 window_travel		 = glm::vec2(0.0f);
+		glm::vec2 window_pos		 = glm::vec2(0.0f);
+		glm::vec2 prev_window_pos	 = glm::vec2(0.0f);
+		glm::vec2 window_delta		 = glm::vec2(0.0f);
 
-		Mouse( double _width, double _height )
+		Mouse(double _width, double _height)
 		{
 			width = _width;
 			height = _height;
 		}
 
-		void updateMousearea( double _width, double _height )
+		void updateMousearea(double _width, double _height)
 		{
 			width = _width;
 			height = _height;
 		}
 
-		void update( double mouseX, double mouseY, bool left_mouse_is_down, bool right_mouse_is_down )
+		void update(double mouseX, double mouseY, bool left_mouse_is_down, bool right_mouse_is_down)
 		{
-			window_delta			 = glm::vec2( mouseX, mouseY ) - prev_window_pos;
+			window_delta			 = glm::vec2(mouseX, mouseY) - prev_window_pos;
 			prev_window_pos			 = window_pos;
-			window_pos				 = glm::vec2( mouseX, mouseY );
+			window_pos				 = glm::vec2(mouseX, mouseY);
 			window_travel			 += window_travel;
 
 			texcoord_delta			 = texcoord_pos - prev_texcoord_pos;
 			prev_texcoord_pos		 = texcoord_pos;
-			texcoord_pos			 = glm::vec2( mouseX / width, 1 - mouseY / height );
+			texcoord_pos			 = glm::vec2(mouseX / width, 1 - mouseY / height);
 			texcoord_travel			 += texcoord_travel;
 			left_mouse_down			 = left_mouse_is_down;
 			right_mouse_down		 = right_mouse_is_down;
 
 			if ( !left_mouse_is_down && !right_mouse_is_down )
 			{
-				texcoord_travel		 = glm::vec2( 0.0f );
-				window_travel		 = glm::vec2( 0.0f );
+				texcoord_travel		 = glm::vec2(0.0f);
+				window_travel		 = glm::vec2(0.0f);
 			}
 		}
 	};
@@ -72,10 +72,10 @@ class FluidField
 		Framebuffer *fb1;
 		Framebuffer *fb2;
 	public:
-		DoubleFramebuffer( float res, unsigned int width, unsigned int height, GLint internalFormat, GLenum format, GLenum type, GLint param )
+		DoubleFramebuffer(float res, unsigned int width, unsigned int height, GLint internalFormat, GLenum format, GLenum type, GLint param)
 		{
-			fb1 = new Framebuffer( res, width, height, internalFormat, format, type, param );
-			fb2 = new Framebuffer( res, width, height, internalFormat, format, type, param );
+			fb1 = new Framebuffer(res, width, height, internalFormat, format, type, param);
+			fb2 = new Framebuffer(res, width, height, internalFormat, format, type, param);
 		}
 
 		~DoubleFramebuffer()
@@ -84,10 +84,10 @@ class FluidField
 			delete( fb2 );
 		}
 
-		void setDimensions( unsigned int width, unsigned int height, float res )
+		void setDimensions(unsigned int width, unsigned int height, float res)
 		{
-			fb1->setDimensions( width, height, res );
-			fb2->setDimensions( width, height, res );
+			fb1->setDimensions(width, height, res);
+			fb2->setDimensions(width, height, res);
 		}
 
 		//Get the currently bound buffer which has the purpose of being read from.
@@ -97,7 +97,7 @@ class FluidField
 		}
 
 		//Set the currently bound buffer for reading to another specified buffer
-		void readBuffer( Framebuffer *buffer )
+		void readBuffer(Framebuffer *buffer)
 		{
 			fb1 = buffer;
 		}
@@ -109,7 +109,7 @@ class FluidField
 		}
 
 		//Set the currently bound writing for reading to another specified buffer
-		void writeBuffer( Framebuffer *buffer )
+		void writeBuffer(Framebuffer *buffer)
 		{
 			fb2 = buffer;
 		}
@@ -127,7 +127,7 @@ class FluidField
 	{
 		const GLint internal; //Type of data to be stored
 		const GLenum format; //Source data type
-		TexFormat( GLint internalFormat, GLenum format ) : internal( internalFormat ), format( format ) {}
+		TexFormat(GLint internalFormat, GLenum format) : internal(internalFormat), format(format) {}
 	};
 
 
@@ -266,82 +266,82 @@ private:
 	Mouse  m_mouse;
 
 public:
-	FluidField( const float WIDTH, const float HEIGHT, const int resolution ) :
-		m_resolution( resolution ),
-		m_fieldWidth( (int) sqrt( resolution ) ),
-		m_WIDTH( WIDTH ),
-		m_HEIGHT( HEIGHT ),
-		m_mouse( WIDTH, HEIGHT ),
-		rectangle( glm::vec3( 0.0f ), glm::vec3( 1.0f ), glm::vec3( 0.0f ) ),
-		line( glm::vec3( 0.0f, 0.0f, 0.0f ), glm::vec3( 0.0f, 0.0f, 0.0f ), 1.0f ),
+	FluidField(const float WIDTH, const float HEIGHT, const int resolution) :
+		m_resolution(resolution),
+		m_fieldWidth((int) sqrt(resolution)),
+		m_WIDTH(WIDTH),
+		m_HEIGHT(HEIGHT),
+		m_mouse(WIDTH, HEIGHT),
+		rectangle(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)),
+		line(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f),
 
-		fluid_config( p_CONFIG_FILE ),
+		fluid_config(p_CONFIG_FILE),
 
-		m_object_shader( p_OBJECT_VERTEX_SHADER, p_OBJECT_FRAGMENT_SHADER ),
-		m_advection_shader( p_VERTEX_SHADER, p_advection_shader ),
-		m_jacobi_iteration_shader( p_VERTEX_SHADER, p_jacobi_shader ),
-		m_force_shader( p_VERTEX_SHADER, p_force_shader ),
-		m_divergence_shader( p_VERTEX_SHADER, p_divergence_shader ),
-		m_clear_shader( p_VERTEX_SHADER, p_clear_shader ),
-		m_integrate_shader( p_VERTEX_SHADER, p_integrate_shader ),
-		m_gradient_subtraction_shader( p_VERTEX_SHADER, p_gradient_subtraction_shader ),
-		m_vorticity_shader( p_VERTEX_SHADER, p_vorticity_shader ),
-		m_curl_shader( p_VERTEX_SHADER, p_curl_shader ),
-		m_temperature_shader( p_VERTEX_SHADER, p_temperature_shader ),
-		m_density_shader( p_VERTEX_SHADER, p_density_shader ),
-		m_bounds_shader( p_VERTEX_SHADER, p_bounds_shader ),
-		m_splat_shader( p_VERTEX_SHADER, p_splat_shader )
+		m_object_shader(p_OBJECT_VERTEX_SHADER, p_OBJECT_FRAGMENT_SHADER),
+		m_advection_shader(p_VERTEX_SHADER, p_advection_shader),
+		m_jacobi_iteration_shader(p_VERTEX_SHADER, p_jacobi_shader),
+		m_force_shader(p_VERTEX_SHADER, p_force_shader),
+		m_divergence_shader(p_VERTEX_SHADER, p_divergence_shader),
+		m_clear_shader(p_VERTEX_SHADER, p_clear_shader),
+		m_integrate_shader(p_VERTEX_SHADER, p_integrate_shader),
+		m_gradient_subtraction_shader(p_VERTEX_SHADER, p_gradient_subtraction_shader),
+		m_vorticity_shader(p_VERTEX_SHADER, p_vorticity_shader),
+		m_curl_shader(p_VERTEX_SHADER, p_curl_shader),
+		m_temperature_shader(p_VERTEX_SHADER, p_temperature_shader),
+		m_density_shader(p_VERTEX_SHADER, p_density_shader),
+		m_bounds_shader(p_VERTEX_SHADER, p_bounds_shader),
+		m_splat_shader(p_VERTEX_SHADER, p_splat_shader)
 	{
 		std::cout << "APPLYING::CONFIGURATIONS" << std::endl;
 
-		if ( fluid_config.fileExists() ) applyConfiguration( fluid_config );
+		if ( fluid_config.fileExists() ) applyConfiguration(fluid_config);
 
 		std::cout << "INITIALIZING::FLUIDFIELD" << std::endl;
 
-		m_primary_shader		 = new Shader( p_VERTEX_SHADER, p_FRAGMENT_SHADER );
-		m_visualise_grid_shader	 = new Shader( p_VISUALISE_GRID_VERTEX_SHADER, p_VISUALISE_GRID_FRAGMENT_SHADER );
-		m_texture				 = new Texture2D( p_TEXTURE );
+		m_primary_shader		 = new Shader(p_VERTEX_SHADER, p_FRAGMENT_SHADER);
+		m_visualise_grid_shader	 = new Shader(p_VISUALISE_GRID_VERTEX_SHADER, p_VISUALISE_GRID_FRAGMENT_SHADER);
+		m_texture				 = new Texture2D(p_TEXTURE);
 		m_texture_buffer		 = new Texture2D();
 
 		//This is the rectangle that is used for displaying the simulation
 		//The simulation is simply a texture drawn on this rectangle
-		m_fieldQuad				 = new Rect( glm::vec3( 0.0f ), glm::vec3( 0.0f ), glm::vec3( 0.0f ), m_texture->get() );
+		m_fieldQuad				 = new Rect(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), m_texture->get());
 
 		GLenum textureType = GL_UNSIGNED_BYTE;	//Field type
-		TexFormat rgba( GL_RGBA32F, GL_RGBA );	//Quantity field
-		TexFormat rg( GL_RG32F, GL_RG );			//Vector field
-		TexFormat r( GL_R32F, GL_RED );			//Scalar field
-		glDisable( GL_BLEND );
+		TexFormat rgba(GL_RGBA32F, GL_RGBA);	//Quantity field
+		TexFormat rg(GL_RG32F, GL_RG);			//Vector field
+		TexFormat r(GL_R32F, GL_RED);			//Scalar field
+		glDisable(GL_BLEND);
 
 		float velocityResolution = m_resolution * m_velocity_scalar, dyeResolution = m_resolution * m_dye_scalar;
 
 		//Buffers that store the calculated results
-		m_dye_buffer = new DoubleFramebuffer( dyeResolution, m_WIDTH, m_HEIGHT, rgba.internal, rgba.format, textureType, GL_LINEAR );
+		m_dye_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, rgba.internal, rgba.format, textureType, GL_LINEAR);
 		//m_dye_buffer->readBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
 		//m_dye_buffer->writeBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
-		m_velocity_buffer = new DoubleFramebuffer( velocityResolution, m_WIDTH, m_HEIGHT, rg.internal, rg.format, textureType, GL_LINEAR );
-		m_curl_buffer = new Framebuffer( velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST );
-		m_divergence_buffer = new Framebuffer( velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST );
-		m_pressure_buffer = new DoubleFramebuffer( velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST );
+		m_velocity_buffer = new DoubleFramebuffer(velocityResolution, m_WIDTH, m_HEIGHT, rg.internal, rg.format, textureType, GL_LINEAR);
+		m_curl_buffer = new Framebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		m_divergence_buffer = new Framebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		m_pressure_buffer = new DoubleFramebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 
 		//Experimental
 		// Boyancy and Convection
-		m_temperature_buffer = new DoubleFramebuffer( dyeResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST );
-		m_temperature_buffer->readBuffer()->setTextureSource( p_TEMPERATURE_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_NEAREST );
-		m_temperature_buffer->writeBuffer()->setTextureSource( p_TEMPERATURE_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_NEAREST );
+		m_temperature_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+		m_temperature_buffer->readBuffer()->setTextureSource(p_TEMPERATURE_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_NEAREST);
+		m_temperature_buffer->writeBuffer()->setTextureSource(p_TEMPERATURE_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_NEAREST);
 
 		// Smoke and Clouds
-		m_density_buffer = new DoubleFramebuffer( dyeResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST );
+		m_density_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 
 		m_current_buffer = m_dye_buffer->readBuffer();
 
 		std::cout << "SUCCESS::INITIALIZATION::FLUIDFIELD" << std::endl;
 	}
 
-	void updateViewport( float width, float height )
+	void updateViewport(float width, float height)
 	{
 		float velocityResolution = m_resolution * m_velocity_scalar, dyeResolution = m_resolution * m_dye_scalar;
-		m_mouse.updateMousearea( width, height );
+		m_mouse.updateMousearea(width, height);
 		//m_dye_buffer->setDimensions(m_mouse.width, m_mouse.height, dyeResolution);
 		//m_velocity_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
 		//m_curl_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
@@ -367,46 +367,46 @@ public:
 	}
 
 	//Draw the fluid
-	void Draw( glm::vec3 origin ); //Should be used with a template?
+	void Draw(glm::vec3 origin); //Should be used with a template?
 	//Set mouse position and button properties
-	void updateMouse( double *mouseX, double *mouseY, bool *left_mouse_down, bool *right_mouse_down );
+	void updateMouse(double *mouseX, double *mouseY, bool *left_mouse_down, bool *right_mouse_down);
 	//Move forward in time, update values
-	void timeStep( float dt );
-	void setCurrentBuffer( Framebuffer *buffer );
-	void swapBuffer( int i );
+	void timeStep(float dt);
+	void setCurrentBuffer(Framebuffer *buffer);
+	void swapBuffer(int i);
 
 	//Clear everything and start from the beginning
 	void reset(); //TODO
-	int applyConfiguration( Config &configurationFile );
+	int applyConfiguration(Config &configurationFile);
 	void updateConfiguration();
 
 private:
 	//Draw using specified shader together with a specified framebuffer (NULL if the purpose is to render to the screen with specified shader)
-	void blit( Framebuffer *target, Shader *shader );
-	void border( Framebuffer *target );
-	void bufferIntegrate( DoubleFramebuffer *target, glm::vec4 value );
-	void advect( float dt );
-	void diffuse( float dt );
-	void addForces( float dt );
-	void project( float dt );
+	void blit(Framebuffer *target, Shader *shader);
+	void border(Framebuffer *target);
+	void bufferIntegrate(DoubleFramebuffer *target, glm::vec4 value);
+	void advect(float dt);
+	void diffuse(float dt);
+	void addForces(float dt);
+	void project(float dt);
 
-	void boundaryContainer( bool l, bool r, bool t, bool b, Framebuffer *target, Shader &shader );
-	void boundary( float dt, float scale, float offset, DoubleFramebuffer *target );
-	void boundaries( float dt );
-	void vorticity( float dt );
-	void curl( float dt );
-	void temperature( float dt );
-	void divergence( float dt );
-	void clearBuffer( DoubleFramebuffer *target, float value );
-	void clearBuffer( Framebuffer *target, float value );
-	void pressure( float dt );
-	void gradientSubtract( float dt );
+	void boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer *target, Shader &shader);
+	void boundary(float dt, float scale, float offset, DoubleFramebuffer *target);
+	void boundaries(float dt);
+	void vorticity(float dt);
+	void curl(float dt);
+	void temperature(float dt);
+	void divergence(float dt);
+	void clearBuffer(DoubleFramebuffer *target, float value);
+	void clearBuffer(Framebuffer *target, float value);
+	void pressure(float dt);
+	void gradientSubtract(float dt);
 	/// <summary>
 	///Add velocity in the specified position
 	/// </summary>
 	/// <param name="pos">Origin</param>
 	/// <param name="r">Radius of the splat</param>
-	void splat( glm::vec2 pos, float r, bool dye, bool velocity );
-	void splat( glm::vec2 pos, float r, unsigned int amount, bool dye, bool velocity );
+	void splat(glm::vec2 pos, float r, bool dye, bool velocity);
+	void splat(glm::vec2 pos, float r, unsigned int amount, bool dye, bool velocity);
 };
 
