@@ -396,7 +396,6 @@ private:
 	void vorticity(float dt);
 	void curl(float dt);
 	void temperature(float dt);
-	void density(float dt);
 	void divergence(float dt);
 	void clearBuffer(DoubleFramebuffer *target, float value);
 	void clearBuffer(Framebuffer *target, float value);
