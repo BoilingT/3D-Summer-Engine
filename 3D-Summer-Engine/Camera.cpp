@@ -1,19 +1,22 @@
 #include "Camera.h"
 
-Camera::Camera() {
+Camera::Camera()
+{
 	updateRelativeCoordinates();
 }
 
-Camera::Camera(const glm::vec3 pos) {
+Camera::Camera(const glm::vec3 pos)
+{
 	cameraPos = pos;
 
 	updateRelativeCoordinates();
 }
 
-void Camera::updateRelativeCoordinates() {
-	/*cameraDir = glm::normalize(cameraPos - cameraTarget);
-	cameraRight = glm::normalize(glm::cross(upDir, cameraDir));
-	cameraUp = glm::cross(cameraDir, cameraRight);*/
+void Camera::updateRelativeCoordinates()
+{
+/*cameraDir = glm::normalize(cameraPos - cameraTarget);
+cameraRight = glm::normalize(glm::cross(upDir, cameraDir));
+cameraUp = glm::cross(cameraDir, cameraRight);*/
 
 	if (cameraRot.x > 89.0f)
 		cameraRot.x = 89.0f;
@@ -42,41 +45,50 @@ void Camera::updateRelativeCoordinates() {
 	cameraUp = glm::cross(cameraDirection, cameraRight);
 }
 
-void Camera::setPos(const glm::vec3 pos) {
+void Camera::setPos(const glm::vec3 pos)
+{
 	cameraPos = pos;
 	updateRelativeCoordinates();
 }
 
-void Camera::setRot(const glm::vec3 rot) {
+void Camera::setRot(const glm::vec3 rot)
+{
 	cameraRot = rot;
 }
 
-glm::vec3 Camera::getPos() {
+glm::vec3 Camera::getPos()
+{
 	return cameraPos;
 }
 
-glm::vec3 Camera::getRot() {
+glm::vec3 Camera::getRot()
+{
 	return cameraRot;
 }
 
-glm::vec3 Camera::getDir() {
+glm::vec3 Camera::getDir()
+{
 	return cameraDirection;
 }
 
-glm::vec3 Camera::up() {
+glm::vec3 Camera::up()
+{
 	return cameraUp;
 }
 
-glm::vec3 Camera::right() {
+glm::vec3 Camera::right()
+{
 	return cameraRight;
 }
 
-glm::vec3 Camera::forward() {
+glm::vec3 Camera::forward()
+{
 	return cameraForward;
 }
 
-glm::mat4 Camera::lookAt(glm::vec3 target) {
-	//Calculate cameraDirection
+glm::mat4 Camera::lookAt(glm::vec3 target)
+{
+//Calculate cameraDirection
 	glm::vec3 zaxis = glm::normalize(-target);
 	//Get positive right axis vector
 	glm::vec3 xaxis = glm::normalize(glm::cross(glm::normalize(upDir), zaxis));
@@ -100,7 +112,8 @@ glm::mat4 Camera::lookAt(glm::vec3 target) {
 	return glm::transpose(lookAtRotation) * glm::transpose(lookAtTranslation);
 }
 
-void Camera::processKeyboardInput(Camera_Movement dir, float dt) {
+void Camera::processKeyboardInput(Camera_Movement dir, float dt)
+{
 
 	if (dir == Camera_Movement::FORWARD)
 	{
@@ -128,27 +141,33 @@ void Camera::processKeyboardInput(Camera_Movement dir, float dt) {
 	}
 }
 
-void Camera::processMouseScroll(float fovOffset) {
+void Camera::processMouseScroll(float fovOffset)
+{
 	fov -= fovOffset;
-	if (fov < 1.0f) {
+	if (fov < 1.0f)
+	{
 		fov = 1.0f;
 	}
-	if (fov > 45.0f) {
+	if (fov > 45.0f)
+	{
 		fov = 45.0f;
 	}
 }
 
-void Camera::processMouseMovement(float xTravel, float yTravel) {
+void Camera::processMouseMovement(float xTravel, float yTravel)
+{
 	rotate(glm::vec3(xTravel, yTravel, 0.0f));
 }
 
-void Camera::translate(const glm::vec3 translation) {
+void Camera::translate(const glm::vec3 translation)
+{
 	cameraPos = cameraPos + translation;
 	updateRelativeCoordinates();
 	std::cout << "Position: { " << cameraPos.x << ", " << cameraPos.y << ", " << cameraPos.z << " }" << std::endl;
 }
 
-void Camera::rotate(const glm::vec3 rotation) {
+void Camera::rotate(const glm::vec3 rotation)
+{
 	cameraRot = cameraRot + rotation;
 	updateRelativeCoordinates();
 	//std::cout << "Rotation: { " << cameraRot.x << ", " << cameraRot.y << ", " << cameraRot.z << " }" << std::endl;

@@ -2,7 +2,8 @@
 
 #include "Framebuffer.h"
 
-Framebuffer::Framebuffer(float res, unsigned int w, unsigned int h, GLint _internalFormat, GLenum _format, GLenum _type, GLint _param) {
+Framebuffer::Framebuffer(float res, unsigned int w, unsigned int h, GLint _internalFormat, GLenum _format, GLenum _type, GLint _param)
+{
 	resolution = res;
 	width = w;
 	height = h;
@@ -16,7 +17,7 @@ Framebuffer::Framebuffer(float res, unsigned int w, unsigned int h, GLint _inter
 	glActiveTexture(GL_TEXTURE0);
 	glGenFramebuffers(1, &fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	
+
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -25,13 +26,13 @@ Framebuffer::Framebuffer(float res, unsigned int w, unsigned int h, GLint _inter
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, param);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, 100);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, -100);
-	
+
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 100);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, NULL);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	
+
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
 	glViewport(0, 0, width, height);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -46,7 +47,8 @@ Framebuffer::Framebuffer(float res, unsigned int w, unsigned int h, GLint _inter
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Framebuffer::setDimensions(unsigned int w, unsigned int h, float res) {
+void Framebuffer::setDimensions(unsigned int w, unsigned int h, float res)
+{
 	resolution = res;
 	width = w;
 	height = h;
@@ -90,8 +92,9 @@ void Framebuffer::setDimensions(unsigned int w, unsigned int h, float res) {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Framebuffer::calculateTexelsize(float w, float h, float res) {
-	float ratio = (float)w / (float)h;
+void Framebuffer::calculateTexelsize(float w, float h, float res)
+{
+	float ratio = (float) w / (float) h;
 	if (ratio < 1.0f)
 	{
 		ratio = 1.0f / ratio;
@@ -103,7 +106,8 @@ void Framebuffer::calculateTexelsize(float w, float h, float res) {
 		width = max;
 		height = min;
 	}
-	else {
+	else
+	{
 		width = min;
 		height = max;
 	}
@@ -115,11 +119,13 @@ void Framebuffer::calculateTexelsize(float w, float h, float res) {
 	texelSizeY = 1.f / height;
 }
 
-int Framebuffer::status() {
-	return (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+int Framebuffer::status()
+{
+	return ( glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE );
 }
 
-void Framebuffer::bind() {
+void Framebuffer::bind()
+{
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 }
 
@@ -130,10 +136,10 @@ int Framebuffer::setTexture(unsigned int id)
 	return id;
 }
 
-void Framebuffer::setTextureSource(const char* path, int screen_width, int screen_height, GLint internalFormat, GLenum format, GLenum type, GLint param)
+void Framebuffer::setTextureSource(const char *path, int screen_width, int screen_height, GLint internalFormat, GLenum format, GLenum type, GLint param)
 {
 	int w, h, channels;
-	unsigned char* data = stbi_load(path, &w, &h, &channels, 0);
+	unsigned char *data = stbi_load(path, &w, &h, &channels, 0);
 	if (data)
 	{
 		glActiveTexture(GL_TEXTURE0);
@@ -158,16 +164,17 @@ void Framebuffer::setTextureSource(const char* path, int screen_width, int scree
 		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, w, h, 0, format, type, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, 0);
-	
+
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
 		GLuint clearColor[4] = { 0, 0, 0, 0 };
 		glClearBufferuiv(GL_COLOR, fbo, clearColor);
 		//glClearColor(0, 0, 0.0f, 0.0f);
 		//glClear(GL_COLOR_BUFFER_BIT);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		
+
 	}
-	else {
+	else
+	{
 		std::cout << "ERROR::FAILURE::LOADING::TEXTURE" << std::endl;
 	}
 	stbi_image_free(data);

@@ -1,6 +1,7 @@
 #include "Shader.h"
 
-Shader::Shader(const char* vertexPath, const char* fragmentPath) {
+Shader::Shader(const char *vertexPath, const char *fragmentPath)
+{
 	unsigned int vShader, fShader;
 	int success;
 	char compileInfo[512];
@@ -9,12 +10,12 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
 	//Read shader files
 	fileHandler.readFile(vertexPath, vShaderContent);
 	fileHandler.readFile(fragmentPath, fShaderContent);
-	
+
 	//std::cout << "Vertex Shader:\n" << vShaderContent << "\nEND OF FILE" << std::endl;
 	//std::cout << "Fragment Shader:\n" << fShaderContent << "\nEND OF FILE" << std::endl;
 
-	const char* vShaderSource = vShaderContent.c_str();
-	const char* fShaderSource = fShaderContent.c_str();
+	const char *vShaderSource = vShaderContent.c_str();
+	const char *fShaderSource = fShaderContent.c_str();
 
 	//Create each shader
 	vShader = glCreateShader(GL_VERTEX_SHADER);
@@ -35,7 +36,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
 	//Compile Fragment Shader
 	glShaderSource(fShader, 1, &fShaderSource, NULL);
 	glCompileShader(fShader);
-	
+
 	glGetShaderiv(fShader, GL_COMPILE_STATUS, &success);
 
 	if (!success)
@@ -62,7 +63,8 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
 	getUniforms();
 }
 
-Shader::Shader(const char* shaderPath, GLenum type) {
+Shader::Shader(const char *shaderPath, GLenum type)
+{
 	unsigned int shader;
 	int success;
 	char compileInfo[512];
@@ -74,7 +76,7 @@ Shader::Shader(const char* shaderPath, GLenum type) {
 	//std::cout << "Vertex Shader:\n" << vShaderContent << "\nEND OF FILE" << std::endl;
 	//std::cout << "Fragment Shader:\n" << fShaderContent << "\nEND OF FILE" << std::endl;
 
-	const char* shaderSource = shaderContent.c_str();
+	const char *shaderSource = shaderContent.c_str();
 
 	//Create each shader
 	shader = glCreateShader(type);
@@ -129,11 +131,12 @@ void Shader::generateTexture(unsigned int TEXTURE_WIDTH, unsigned int TEXTURE_HE
 	glBindImageTexture(0, m_compute_texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA32F);
 }
 
-void Shader::setValues(float* values, int width, int height) {
+void Shader::setValues(float *values, int width, int height)
+{
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, values);
 }
 
-unsigned int* Shader::getTexture()
+unsigned int *Shader::getTexture()
 {
 	return &m_compute_texture;
 }
@@ -150,31 +153,36 @@ void Shader::getUniforms()
 	int count = 0;
 	glGetProgramiv(ID, GL_ACTIVE_UNIFORMS, &count);
 	//uniforms.resize(count);
- 	for (unsigned int i = 0; i < count; i++)
+	for (unsigned int i = 0; i < count; i++)
 	{
-		glGetActiveUniform(ID, (GLuint)i, bufSize, &length, &size, &type, name);
+		glGetActiveUniform(ID, (GLuint) i, bufSize, &length, &size, &type, name);
 		int location = glGetUniformLocation(ID, name);
 		uniforms[name] = location;
 	}
 }
 
-void Shader::use() {
+void Shader::use()
+{
 	glUseProgram(ID);
 }
 
-void Shader::setBool(const std::string name, bool value) const {
+void Shader::setBool(const std::string name, bool value) const
+{
 	glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }
 
-void Shader::setInt(const std::string name, int value) const {
+void Shader::setInt(const std::string name, int value) const
+{
 	glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }
 
-void Shader::setFloat(const std::string name, float value) const {
+void Shader::setFloat(const std::string name, float value) const
+{
 	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
 
-void Shader::setMat4f(const std::string name, glm::mat4 values) const {
+void Shader::setMat4f(const std::string name, glm::mat4 values) const
+{
 	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(values));
 }
 
@@ -183,6 +191,7 @@ int Shader::getUniformLocation(const std::string name)
 	return glGetUniformLocation(ID, name.c_str());
 }
 
-unsigned int Shader::getID() {
+unsigned int Shader::getID()
+{
 	return ID;
 }

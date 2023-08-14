@@ -33,28 +33,28 @@ private:
 	//Fluid simulation properties
 	static unsigned int g_running;
 
-	static WindowHandler* m_window;
-	static FluidField*	m_fluid;
-	Camera*				m_camera;
+	static WindowHandler *m_window;
+	static FluidField *m_fluid;
+	Camera *m_camera;
 	FileHandler			fileSystem;
 
 	//Window Properties
 	static const int c_WIDTH								 = 1920;
 	static const int c_HEIGHT								 = 1080;
-	const char* c_WINDOW_NAME								 = "Summer Engine";
+	const char *c_WINDOW_NAME								 = "Summer Engine";
 	const float c_DEFAULT_CLEAR_COLOR[4]					 = { 1.0f, 0.0f, 0.0f, 1.0f };
 	const float c_CLEAR_COLOR[4]							 = { 0.28f, 0.41f, 0.61f, 1.0f };
 
 	//Filepaths
 	//Note: Only p_GENERATED_RESULTS is being used
-	const char* p_DEFAULT_VERTEX_SHADER						 = "Shaders/default_vertex_shader.vert";
-	const char* p_DEFAULT_FRAGMENT_SHADER					 = "Shaders/default_fragment_shader.frag";
-	const char* p_CONTAINER_IMAGE							 = "Images/LearnOpenGL/container.jpg";
-	const char* p_AWESOMEFACE_IMAGE							 = "Images/LearnOpenGL/awesomeface.png";
-	const char* p_GENERATED_RESULTS							 = "Images/Generated Results/";
-	const char* p_APPLICATION_ICON							 = "./Images/Icon/letter-f.png";
+	const char *p_DEFAULT_VERTEX_SHADER						 = "Shaders/default_vertex_shader.vert";
+	const char *p_DEFAULT_FRAGMENT_SHADER					 = "Shaders/default_fragment_shader.frag";
+	const char *p_CONTAINER_IMAGE							 = "Images/LearnOpenGL/container.jpg";
+	const char *p_AWESOMEFACE_IMAGE							 = "Images/LearnOpenGL/awesomeface.png";
+	const char *p_GENERATED_RESULTS							 = "Images/Generated Results/";
+	const char *p_APPLICATION_ICON							 = "./Images/Icon/letter-f.png";
 
-	
+
 	//Engine variables
 	float g_deltaTime										 = 0.0f;			//Time between each rendered frame
 	float g_pc_time											 = 0.0f;			//Stores how long the application has been running
@@ -76,7 +76,7 @@ public:
 
 	Engine();
 
-	~Engine() 
+	~Engine()
 	{
 		glfwTerminate();
 
@@ -95,21 +95,21 @@ public:
 	void update();
 	void physicsUpdate();
 	static void Pause();
-	
+
 
 private:
-	void saveImage(const char* path, GLFWwindow* window);
+	void saveImage(const char *path, GLFWwindow *window);
 	void saveResults();
 	void calculateDeltatime();
 	void calculateSleeptime();
 	void calculateFPS();
-	void constrainMouse(GLFWwindow* window, double xPos, double yPos);
+	void constrainMouse(GLFWwindow *window, double xPos, double yPos);
 
-	static void FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow* window, int width, int height);			//Is called when the window is resized
-	static void MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos);					//Is called when mouse is being used
-	static void KEY_CALLBACK(GLFWwindow* window, int key, int scancode, int action, int mods);	//Is called when keyboard events occur
-	static void WINDOW_ICONIFY_CALLBACK(GLFWwindow* window, int iconified);						//Is called when the window is "minimized"
-	static void WINDOW_FOCUS_CALLBACK(GLFWwindow* window, int focused);							//Is called when the window is "minimized"
-	void IO_EVENTS(GLFWwindow* window);															//Handles input and output events
+	static void FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow *window, int width, int height);			//Is called when the window is resized
+	static void MOUSE_CALLBACK(GLFWwindow *window, double xPos, double yPos);					//Is called when mouse is being used
+	static void KEY_CALLBACK(GLFWwindow *window, int key, int scancode, int action, int mods);	//Is called when keyboard events occur
+	static void WINDOW_ICONIFY_CALLBACK(GLFWwindow *window, int iconified);						//Is called when the window is "minimized"
+	static void WINDOW_FOCUS_CALLBACK(GLFWwindow *window, int focused);							//Is called when the window is "minimized"
+	void IO_EVENTS(GLFWwindow *window);															//Handles input and output events
 };
 

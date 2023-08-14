@@ -49,14 +49,18 @@ void Config::parseContents(std::string contents)
 	std::vector<std::string> lines = split(contents, newLineDelimiter);
 	//Divide parts between spaces
 	std::string delimiter = " ";
-	for (std::string line : lines) {
-		if (line.empty() || line == " " || line.length() <= 0 || line.find("//") != std::string::npos) {
+	for (std::string line : lines)
+	{
+		if (line.empty() || line == " " || line.length() <= 0 || line.find("//") != std::string::npos)
+		{
 			continue;
 		}
 		std::vector<std::string> parts = split(line, delimiter);
-		for (unsigned int i = 0; i < parts.size(); i++) {
+		for (unsigned int i = 0; i < parts.size(); i++)
+		{
 			std::string part = parts[i];
-			if (part.empty() || part == " " || part.length() <= 0) {
+			if (part.empty() || part == " " || part.length() <= 0)
+			{
 				parts.erase(parts.begin() + i);
 				i--;
 			}
@@ -68,7 +72,7 @@ void Config::parseContents(std::string contents)
 
 			values[key] = value;
 		}
-		catch (const std::exception&)
+		catch (const std::exception &)
 		{
 			std::cout << "Line inside config file could not be read: \n\"" << line << "\"" << std::endl;
 		}
@@ -77,14 +81,15 @@ void Config::parseContents(std::string contents)
 }
 
 //Split a string in parts where the specifik delimiter is found
-std::vector<std::string> Config::split(std::string str, std::string delimiter) {
+std::vector<std::string> Config::split(std::string str, std::string delimiter)
+{
 	std::vector<std::string> tokens;
 
 	int lastPos = 0;
 	int newPos = 0;
 	std::string token;
 
-	while ((newPos = str.find(delimiter, lastPos)) != std::string::npos)
+	while (( newPos = str.find(delimiter, lastPos) ) != std::string::npos)
 	{
 		token = str.substr(lastPos, newPos - lastPos);
 		lastPos = newPos + 1;
@@ -97,7 +102,8 @@ std::vector<std::string> Config::split(std::string str, std::string delimiter) {
 }
 
 //Unused
-std::string Config::concatenateString(std::string s, std::string delimiter) {
+std::string Config::concatenateString(std::string s, std::string delimiter)
+{
 	std::vector<std::string> tokens = split(s, ".");
 	std::string result = "";
 
@@ -108,9 +114,11 @@ std::string Config::concatenateString(std::string s, std::string delimiter) {
 	return result;
 }
 
-int Config::countChar(std::string str, char c) {
+int Config::countChar(std::string str, char c)
+{
 	int amount = 0;
-	for (char x : str) {
+	for (char x : str)
+	{
 		if (x == c) amount++;
 	}
 	return amount;

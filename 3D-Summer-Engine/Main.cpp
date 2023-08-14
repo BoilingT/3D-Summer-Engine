@@ -1,9 +1,11 @@
 #include "Engine.h"
 
 #ifdef _DEBUG
-int main() {
+int main()
+{
 #else
-int WinMain() {
+int WinMain()
+{
 #endif
 	Engine engine;
 	engine.Run();
