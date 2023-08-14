@@ -7,7 +7,7 @@ void FluidField::Draw(glm::vec3 origin)
 	glUniform1i(m_primary_shader->uniforms["u_image"], m_dye_buffer->readBuffer()->setTexture(0));
 	glUniform2f(m_primary_shader->uniforms["dyeTexelSize"], m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
 	glUniform2f(m_primary_shader->uniforms["velTexelSize"], m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
-	if ( m_current_buffer != m_dye_buffer->readBuffer() )
+	if (m_current_buffer != m_dye_buffer->readBuffer())
 	{
 		glUniform1i(m_primary_shader->uniforms["u_image_overlay"], m_current_buffer->setTexture(1));
 	}
@@ -49,7 +49,7 @@ void FluidField::blit(Framebuffer *target, Shader *shader)
 	//glClear(GL_COLOR_BUFFER_BIT);
 
 	//Bind framebuffer
-	if ( target == nullptr || target->fbo == NULL )
+	if (target == nullptr || target->fbo == NULL)
 	{
 		glViewport(0, 0, m_mouse.width, m_mouse.height);
 		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
@@ -62,7 +62,7 @@ void FluidField::blit(Framebuffer *target, Shader *shader)
 
 
 	//Draw to framebuffer
-	if ( !target->status() )
+	if (!target->status())
 	{
 		std::cout << "ERROR::BLIT::FRAMEBUFFER::STATUS::INCOMPLETE" << std::endl;
 		return;
@@ -72,7 +72,7 @@ void FluidField::blit(Framebuffer *target, Shader *shader)
 	//Unbind framebuffer
 	int boundBuffer = 0;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &boundBuffer);
-	if ( target != nullptr && boundBuffer == target->fbo )
+	if (target != nullptr && boundBuffer == target->fbo)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
@@ -90,7 +90,7 @@ void FluidField::boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer *
 	shader.setMat4f("projection", projectionM);
 	glBindFramebuffer(GL_FRAMEBUFFER, target->fbo);
 
-	if ( l )
+	if (l)
 	{
 		line.start(0.0f, 0.0f, 0.0f);
 		line.end(0.0f, 1.0f, 0.0f);
@@ -122,10 +122,10 @@ void FluidField::boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer *
 void FluidField::timeStep(float dt)
 {
 	float time = dt * m_timestep_scalar;
-	if ( m_advect )	advect(time);		//Move the fluid and its quantities
-	if ( m_diffuse )	diffuse(time);		//Spread out the fluid (if viscosity > 0)
-	if ( m_forces )	addForces(time);	//Add a ball in the center and gravity. Also add multiple splats
-	if ( m_project )	project(time);		//Remove unwanted stuff
+	if (m_advect)	advect(time);		//Move the fluid and its quantities
+	if (m_diffuse)	diffuse(time);		//Spread out the fluid (if viscosity > 0)
+	if (m_forces)	addForces(time);	//Add a ball in the center and gravity. Also add multiple splats
+	if (m_project)	project(time);		//Remove unwanted stuff
 }
 
 //Is not being used
@@ -222,7 +222,7 @@ void FluidField::advect(float dt)
 //Diffusion, by using jacobi iterations, spread out the fluid
 void FluidField::diffuse(float dt)
 {
-	if ( m_viscosity > 0 )
+	if (m_viscosity > 0)
 	{
 		m_jacobi_iteration_shader.use();
 		// Velocity
@@ -233,7 +233,7 @@ void FluidField::diffuse(float dt)
 		glUniform2f(m_jacobi_iteration_shader.uniforms["texelSize"], m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
 		glUniform1i(m_jacobi_iteration_shader.uniforms["b"], m_velocity_buffer->readBuffer()->setTexture(0));
 
-		for ( unsigned int k = 0; k < m_diffuseIterations; k++ ) //20 to 50 iterations
+		for (unsigned int k = 0; k < m_diffuseIterations; k++) //20 to 50 iterations
 		{
 			glUniform1i(m_jacobi_iteration_shader.uniforms["x"], m_velocity_buffer->readBuffer()->setTexture(1)); // x = b = u (velocity)
 			blit(m_velocity_buffer->writeBuffer(), &m_jacobi_iteration_shader);
@@ -244,7 +244,7 @@ void FluidField::diffuse(float dt)
 		glUniform2f(m_jacobi_iteration_shader.uniforms["texelSize"], m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
 		glUniform1i(m_jacobi_iteration_shader.uniforms["b"], m_dye_buffer->readBuffer()->setTexture(0));
 
-		for ( unsigned int k = 0; k < m_diffuseIterations; k++ ) //20 to 50 iterations
+		for (unsigned int k = 0; k < m_diffuseIterations; k++) //20 to 50 iterations
 		{
 			glUniform1i(m_jacobi_iteration_shader.uniforms["x"], m_dye_buffer->readBuffer()->setTexture(1)); // x = b = u (dye)
 			blit(m_dye_buffer->writeBuffer(), &m_jacobi_iteration_shader);
@@ -267,7 +267,7 @@ void FluidField::addForces(float dt)
 //Projection, by removing any divergence
 void FluidField::project(float dt)
 {
-	if ( m_vortitcity_scalar > 0 )
+	if (m_vortitcity_scalar > 0)
 	{
 //Compute a normalized vorticity vector field
 		curl(dt);
@@ -342,7 +342,7 @@ void FluidField::pressure(float dt)
 	glUniform1f(m_jacobi_iteration_shader.uniforms["rBeta"], rBeta);
 	glUniform2f(m_jacobi_iteration_shader.uniforms["texelSize"], m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
 	glUniform1i(m_jacobi_iteration_shader.uniforms["b"], m_divergence_buffer->setTexture(0));	//b = gradient of w (divergent velocity)
-	for ( unsigned int k = 0; k < m_pressureIterations; k++ )
+	for (unsigned int k = 0; k < m_pressureIterations; k++)
 	{
 		glUniform1i(m_jacobi_iteration_shader.uniforms["x"], m_pressure_buffer->readBuffer()->setTexture(1)); //x = p (pressure)
 		blit(m_pressure_buffer->writeBuffer(), &m_jacobi_iteration_shader);
@@ -384,7 +384,7 @@ void FluidField::splat(glm::vec2 pos, float r, bool dye, bool velocity)
 	//glUniform1f(m_splat_shader.uniforms["radius"], ratio > 1 ? r * ratio : r);
 	glUniform1f(m_splat_shader.uniforms["radius"], r);
 	glUniform2f(uTexLoc, m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
-	if ( velocity )
+	if (velocity)
 	{
 		blit(m_velocity_buffer->writeBuffer(), &m_splat_shader);
 		m_velocity_buffer->swap();
@@ -394,7 +394,7 @@ void FluidField::splat(glm::vec2 pos, float r, bool dye, bool velocity)
 	glUniform2f(uTexLoc, m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
 
 	glm::vec3 color = glm::vec3(0.0f);
-	if ( m_dye_color_acc_dependent )
+	if (m_dye_color_acc_dependent)
 	{
 		color = glm::normalize(glm::vec3(m_mouse.texcoord_delta.x * m_dye_force, m_mouse.texcoord_delta.y * m_dye_force, 0.2f));
 		color *= m_dye_brightness;
@@ -405,7 +405,7 @@ void FluidField::splat(glm::vec2 pos, float r, bool dye, bool velocity)
 		color *= m_dye_brightness;
 	}
 	glUniform3f(uColorLoc, abs(color.r), abs(color.g), abs(color.b + ( color.r + color.g ) / 5.0f) * 0.3f);
-	if ( dye )
+	if (dye)
 	{
 		blit(m_dye_buffer->writeBuffer(), &m_splat_shader);
 		m_dye_buffer->swap();
@@ -423,23 +423,23 @@ void FluidField::updateMouse(double *mouseX, double *mouseY, bool *left_mouse_do
 {
 	m_mouse.update(*mouseX, *mouseY, *left_mouse_down, *right_mouse_down);
 
-	if ( abs(m_mouse.window_delta.x) > 0 || abs(m_mouse.window_delta.y) > 0 )
+	if (abs(m_mouse.window_delta.x) > 0 || abs(m_mouse.window_delta.y) > 0)
 	{
-		if ( m_mouse.right_mouse_down && m_mouse.left_mouse_down )
+		if (m_mouse.right_mouse_down && m_mouse.left_mouse_down)
 		{
 			splat(m_mouse.texcoord_pos, m_dye_radius, true, false);
 		}
-		else if ( m_mouse.right_mouse_down )
+		else if (m_mouse.right_mouse_down)
 		{
 			splat(m_mouse.texcoord_pos, m_dye_radius, false, true);
 		}
-		else if ( m_mouse.left_mouse_down )
+		else if (m_mouse.left_mouse_down)
 		{
 			splat(m_mouse.texcoord_pos, m_dye_radius, true, true);
 		}
 		//std::cout << "X: " << m_mouse.window_pos.x << " Y: " << m_mouse.window_pos.y << "tX: " << m_mouse.texcoord_pos.x << " tY: " << m_mouse.texcoord_pos.y << std::endl;
 	}
-	else if ( m_mouse.left_mouse_down )
+	else if (m_mouse.left_mouse_down)
 	{
 		splat(m_mouse.texcoord_pos, m_dye_radius, true, false);
 	}
@@ -447,17 +447,17 @@ void FluidField::updateMouse(double *mouseX, double *mouseY, bool *left_mouse_do
 
 void FluidField::setCurrentBuffer(Framebuffer *buffer)
 {
-	if ( m_current_buffer == buffer ) return;
+	if (m_current_buffer == buffer) return;
 	m_current_buffer = buffer;
 }
 
 void FluidField::swapBuffer(int i)
 {
-	if ( i < 1 ) return;
+	if (i < 1) return;
 	m_primary_shader->use();
 
 	glUniform1i(m_primary_shader->uniforms["scene"], i - 1);
-	switch ( i )
+	switch (i)
 	{
 		case 1:
 		{
@@ -513,7 +513,7 @@ void FluidField::reset()
 
 int FluidField::applyConfiguration(Config &configurationFile)
 {
-	if ( configurationFile.size() <= 0 )
+	if (configurationFile.size() <= 0)
 	{
 		std::cout << "WARNING: Unable to read values from \"" << configurationFile.getPath() << "\"" << std::endl;
 		return -1;
@@ -545,7 +545,7 @@ int FluidField::applyConfiguration(Config &configurationFile)
 
 		return 0;
 	}
-	catch ( const std::exception &ex )
+	catch (const std::exception &ex)
 	{
 		std::cout << "ERROR::PARSING::CONFIGURATION \"" << configurationFile.getPath() << "\" -> '" << ex.what() << "'" << std::endl;
 		return -1;

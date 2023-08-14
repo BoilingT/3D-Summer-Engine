@@ -58,7 +58,7 @@ class FluidField
 			left_mouse_down			 = left_mouse_is_down;
 			right_mouse_down		 = right_mouse_is_down;
 
-			if ( !left_mouse_is_down && !right_mouse_is_down )
+			if (!left_mouse_is_down && !right_mouse_is_down)
 			{
 				texcoord_travel		 = glm::vec2(0.0f);
 				window_travel		 = glm::vec2(0.0f);
@@ -294,7 +294,7 @@ public:
 	{
 		std::cout << "APPLYING::CONFIGURATIONS" << std::endl;
 
-		if ( fluid_config.fileExists() ) applyConfiguration(fluid_config);
+		if (fluid_config.fileExists()) applyConfiguration(fluid_config);
 
 		std::cout << "INITIALIZING::FLUIDFIELD" << std::endl;
 

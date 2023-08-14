@@ -48,7 +48,7 @@ void Texture2D::setParameters()
 
 void Texture2D::generateTexture(unsigned char *data, int width, int height)
 {
-	if ( data )
+	if (data)
 	{
 		m_data = data;
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);

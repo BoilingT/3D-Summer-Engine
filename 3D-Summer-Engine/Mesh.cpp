@@ -43,7 +43,7 @@ void Mesh::setupMesh()
 
 void Mesh::Draw(Shader &shader)
 {
-	for ( unsigned int i = 0; i < textures.size(); i++ )
+	for (unsigned int i = 0; i < textures.size(); i++)
 	{
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);
 	}

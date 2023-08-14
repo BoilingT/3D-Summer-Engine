@@ -17,7 +17,7 @@ public:
 	bool fileExists();
 	std::string getValue(std::string key);
 	std::string getPath();
-	int size();
+	size_t size();
 
 private:
 	// Fill the map with values from a config

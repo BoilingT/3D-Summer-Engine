@@ -20,7 +20,7 @@ void FileHandler::closeFile()
 
 bool FileHandler::removeFile(const char *fileName)
 {
-	if ( file.is_open() )
+	if (file.is_open())
 	{
 		FileHandler::closeFile();
 	}
@@ -29,7 +29,7 @@ bool FileHandler::removeFile(const char *fileName)
 		std::remove(fileName);
 		return true;
 	}
-	catch ( const std::exception &e )
+	catch (const std::exception &e)
 	{
 		std::cout << e.what() << std::endl;
 		return false;
@@ -47,7 +47,7 @@ bool FileHandler::readFile(std::string fileName, std::string &content)
 		std::fstream file(fileName);
 
 		//Reading the file
-		while ( std::getline(file, line) )
+		while (std::getline(file, line))
 		{
 			content += line + "\n";
 		}
@@ -56,7 +56,7 @@ bool FileHandler::readFile(std::string fileName, std::string &content)
 		return true;
 
 	}
-	catch ( const std::exception & )
+	catch (const std::exception &)
 	{
 		return false;
 	}
@@ -66,7 +66,7 @@ bool FileHandler::writeFile(std::string fileName, std::string content)
 {
 //Open and create the file
 	std::fstream fileToBeWrittenTo = FileHandler::openFile(fileName);
-	if ( fileToBeWrittenTo.is_open() )
+	if (fileToBeWrittenTo.is_open())
 	{
 //Write to the file
 		fileToBeWrittenTo << content;

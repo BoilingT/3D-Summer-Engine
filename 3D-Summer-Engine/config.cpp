@@ -21,7 +21,7 @@ bool Config::fileExists()
 
 std::string Config::getValue(std::string key)
 {
-	if ( key.length() <= 0 || values.find(key) == values.end() ) return std::string();
+	if (key.length() <= 0 || values.find(key) == values.end()) return std::string();
 	return values[key];
 }
 
@@ -30,7 +30,7 @@ std::string Config::getPath()
 	return filepath;
 }
 
-int Config::size()
+size_t Config::size()
 {
 	return values.size();
 }
@@ -49,17 +49,17 @@ void Config::parseContents(std::string contents)
 	std::vector<std::string> lines = split(contents, newLineDelimiter);
 	//Divide parts between spaces
 	std::string delimiter = " ";
-	for ( std::string line : lines )
+	for (std::string line : lines)
 	{
-		if ( line.empty() || line == " " || line.length() <= 0 || line.find("//") != std::string::npos )
+		if (line.empty() || line == " " || line.length() <= 0 || line.find("//") != std::string::npos)
 		{
 			continue;
 		}
 		std::vector<std::string> parts = split(line, delimiter);
-		for ( unsigned int i = 0; i < parts.size(); i++ )
+		for (unsigned int i = 0; i < parts.size(); i++)
 		{
 			std::string part = parts[i];
-			if ( part.empty() || part == " " || part.length() <= 0 )
+			if (part.empty() || part == " " || part.length() <= 0)
 			{
 				parts.erase(parts.begin() + i);
 				i--;
@@ -72,7 +72,7 @@ void Config::parseContents(std::string contents)
 
 			values[key] = value;
 		}
-		catch ( const std::exception & )
+		catch (const std::exception &)
 		{
 			std::cout << "Line inside config file could not be read: \n\"" << line << "\"" << std::endl;
 		}
@@ -85,11 +85,11 @@ std::vector<std::string> Config::split(std::string str, std::string delimiter)
 {
 	std::vector<std::string> tokens;
 
-	int lastPos = 0;
-	int newPos = 0;
+	size_t lastPos = 0;
+	size_t newPos = 0;
 	std::string token;
 
-	while ( ( newPos = str.find(delimiter, lastPos) ) != std::string::npos )
+	while (( newPos = str.find(delimiter, lastPos) ) != std::string::npos)
 	{
 		token = str.substr(lastPos, newPos - lastPos);
 		lastPos = newPos + 1;
@@ -107,7 +107,7 @@ std::string Config::concatenateString(std::string s, std::string delimiter)
 	std::vector<std::string> tokens = split(s, ".");
 	std::string result = "";
 
-	for ( std::string token : tokens )
+	for (std::string token : tokens)
 	{
 		result.append(token);
 	}
@@ -117,9 +117,9 @@ std::string Config::concatenateString(std::string s, std::string delimiter)
 int Config::countChar(std::string str, char c)
 {
 	int amount = 0;
-	for ( char x : str )
+	for (char x : str)
 	{
-		if ( x == c ) amount++;
+		if (x == c) amount++;
 	}
 	return amount;
 }

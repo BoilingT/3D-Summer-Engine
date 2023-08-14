@@ -38,7 +38,7 @@ Framebuffer::Framebuffer(float res, unsigned int w, unsigned int h, GLint _inter
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	if ( !status() )
+	if (!status())
 	{
 		std::cout << "ERROR::BLIT::FRAMEBUFFER::STATUS::INCOMPLETE" << std::endl;
 		return;
@@ -83,7 +83,7 @@ void Framebuffer::setDimensions(unsigned int w, unsigned int h, float res)
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	if ( !status() )
+	if (!status())
 	{
 		std::cout << "ERROR::BLIT::FRAMEBUFFER::STATUS::INCOMPLETE" << std::endl;
 		return;
@@ -95,13 +95,13 @@ void Framebuffer::setDimensions(unsigned int w, unsigned int h, float res)
 void Framebuffer::calculateTexelsize(float w, float h, float res)
 {
 	float ratio = (float) w / (float) h;
-	if ( ratio < 1.0f )
+	if (ratio < 1.0f)
 	{
 		ratio = 1.0f / ratio;
 	}
 	float min = round(res);
 	float max = round(res * ratio);
-	if ( w > h )
+	if (w > h)
 	{
 		width = max;
 		height = min;
@@ -140,13 +140,13 @@ void Framebuffer::setTextureSource(const char *path, int screen_width, int scree
 {
 	int w, h, channels;
 	unsigned char *data = stbi_load(path, &w, &h, &channels, 0);
-	if ( data )
+	if (data)
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		int boundTexture = 0;
 		glGetIntegerv(GL_TEXTURE_BINDING_2D, &boundTexture);
-		if ( boundTexture == texture )
+		if (boundTexture == texture)
 		{
 			glDeleteTextures(1, &texture);
 		}

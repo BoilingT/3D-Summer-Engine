@@ -103,11 +103,11 @@ void Object::DrawInstanced(Shader &shader, glm::vec2 *values, int count)
 	//modelM = glm::rotate(modelM, transform.rot.y, glm::vec3(0.0f, 1.0f, 1.0f));
 
 	shader.setMat4f("model", modelM);
-	if ( verticesSize / sizeof(float) / 3 <= 2 )
+	if (verticesSize / sizeof(float) / 3 <= 2)
 	{
 		glDrawArraysInstanced(GL_LINES, 0, ( verticesSize / sizeof(float) ), count);
 	}
-	else if ( indicesSize > 0 )
+	else if (indicesSize > 0)
 	{
 		glDrawElementsInstanced(GL_TRIANGLES, indicesSize / sizeof(float), GL_UNSIGNED_INT, 0, count);
 	}
@@ -133,11 +133,11 @@ void Object::Draw(Shader &shader)
 	//modelM = glm::rotate(modelM, transform.rot.y, glm::vec3(0.0f, 1.0f, 1.0f));
 
 	shader.setMat4f("model", modelM);
-	if ( verticesSize / sizeof(float) / 3.0f <= 2.0f )
+	if (verticesSize / sizeof(float) / 3.0f <= 2.0f)
 	{
 		glDrawArrays(GL_LINES, 0, ( verticesSize / sizeof(float) ));
 	}
-	else if ( indicesSize > 0 )
+	else if (indicesSize > 0)
 	{
 		glDrawElements(GL_TRIANGLES, indicesSize / sizeof(float), GL_UNSIGNED_INT, 0);
 	}

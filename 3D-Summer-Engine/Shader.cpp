@@ -27,7 +27,7 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath)
 
 	glGetShaderiv(vShader, GL_COMPILE_STATUS, &success);
 
-	if ( !success )
+	if (!success)
 	{
 		glGetShaderInfoLog(vShader, sizeof(compileInfo), NULL, compileInfo);
 		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << compileInfo << std::endl;
@@ -39,7 +39,7 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath)
 
 	glGetShaderiv(fShader, GL_COMPILE_STATUS, &success);
 
-	if ( !success )
+	if (!success)
 	{
 		glGetShaderInfoLog(fShader, sizeof(compileInfo), NULL, compileInfo);
 		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << compileInfo << std::endl;
@@ -52,7 +52,7 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath)
 	glLinkProgram(ID);
 
 	glGetProgramiv(ID, GL_LINK_STATUS, &success);
-	if ( !success )
+	if (!success)
 	{
 		glGetProgramInfoLog(ID, 512, NULL, compileInfo);
 		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << "FRAGMENT::SHADER::" << fragmentPath << "\n" << "VERTEX::SHADER::" << vertexPath << "\n" << compileInfo << std::endl;
@@ -87,7 +87,7 @@ Shader::Shader(const char *shaderPath, GLenum type)
 
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 
-	if ( !success )
+	if (!success)
 	{
 		glGetShaderInfoLog(shader, sizeof(compileInfo), NULL, compileInfo);
 		std::cout << "ERROR::SHADER::COMPILATION::FAILED\n" << "SHADER:: " << shaderPath << "\n" << compileInfo << std::endl;
@@ -100,7 +100,7 @@ Shader::Shader(const char *shaderPath, GLenum type)
 	glLinkProgram(ID);
 
 	glGetProgramiv(ID, GL_LINK_STATUS, &success);
-	if ( !success )
+	if (!success)
 	{
 		glGetProgramInfoLog(ID, 512, NULL, compileInfo);
 		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << "SHADER:: " << shaderPath << "\n" << compileInfo << std::endl;
@@ -153,7 +153,7 @@ void Shader::getUniforms()
 	int count = 0;
 	glGetProgramiv(ID, GL_ACTIVE_UNIFORMS, &count);
 	//uniforms.resize(count);
-	for ( unsigned int i = 0; i < count; i++ )
+	for (unsigned int i = 0; i < count; i++)
 	{
 		glGetActiveUniform(ID, (GLuint) i, bufSize, &length, &size, &type, name);
 		int location = glGetUniformLocation(ID, name);

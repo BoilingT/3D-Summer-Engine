@@ -37,11 +37,11 @@ Engine::Engine()
 	m_camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 	//Open window
-	if ( m_window->open() == -1 ) return;
+	if (m_window->open() == -1) return;
 
 	int w, h, channels;
 	unsigned char *data = stbi_load(p_APPLICATION_ICON, &w, &h, &channels, 0);
-	if ( data != NULL )
+	if (data != NULL)
 	{
 
 		GLFWimage *icon = new GLFWimage();
@@ -59,14 +59,14 @@ Engine::Engine()
 	stbi_image_free(data);
 
 	//GLAD library loading
-	if ( !gladLoadGLLoader((GLADloadproc) glfwGetProcAddress) )
+	if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
 	{
 		std::cout << "ERROR :: Unable to initialize GLAD";
 		return;
 	}
 
 	g_pc_time = glfwGetTime();
-	if ( g_fps_limit < 0 )
+	if (g_fps_limit < 0)
 	{
 		const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		g_fps_limit = mode->refreshRate;
@@ -103,7 +103,7 @@ void Engine::Run()
 	Engine::g_running = true;
 
 	//Rendering loop
-	while ( !glfwWindowShouldClose(m_window->getWindow()) )
+	while (!glfwWindowShouldClose(m_window->getWindow()))
 	{
 		IO_EVENTS(m_window->getWindow());
 
@@ -114,7 +114,7 @@ void Engine::Run()
 		glClearColor(c_DEFAULT_CLEAR_COLOR[0], c_DEFAULT_CLEAR_COLOR[1], c_DEFAULT_CLEAR_COLOR[2], c_DEFAULT_CLEAR_COLOR[3]);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		if ( Engine::g_running )
+		if (Engine::g_running)
 		{
 			physicsUpdate();
 		}
@@ -131,7 +131,7 @@ void Engine::Run()
 		//Check if any events have been triggered
 		glfwPollEvents();
 
-		if ( sleepTime > 0 )
+		if (sleepTime > 0)
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds((long) ( sleepTime )));
 		}
@@ -153,7 +153,7 @@ void Engine::calculateSleeptime()
 	sleepTime = ( 1.0f / g_fps_limit - g_deltaTime + sleepTime / 1000.0f ) * 1000; //ms
 
 	//Avoiding negative numbers
-	if ( sleepTime < 0 || sleepTime == 0 )
+	if (sleepTime < 0 || sleepTime == 0)
 	{
 		sleepTime = 0;
 	}
@@ -176,7 +176,7 @@ void Engine::physicsUpdate()
 {
 	float tpf = g_deltaTime + sleepTime / 1000.0f;
 
-	if ( tpf < 0 )
+	if (tpf < 0)
 	{
 		tpf = 0;
 		std::cout << "TPF < 0!" << std::endl;
@@ -187,29 +187,29 @@ void Engine::physicsUpdate()
 
 void Engine::IO_EVENTS(GLFWwindow *window)
 {
-	if ( glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS )
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
 		std::cout << "TERMINATING::APPLICATION" << std::endl;
 		glfwSetWindowTitle(m_window->getWindow(), "Terminating...");
 		glfwSetWindowShouldClose(window, true);
 	}
-	if ( glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS )
+	if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS)
 	{
-		if ( glfwGetKey(window, GLFW_KEY_F11) == GLFW_RELEASE )
+		if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_RELEASE)
 		{
 			saveImage("C:/Users/to9751/Pictures/Generated Images/Framebuffer.png", window);
 		}
 	}
 
-	if ( glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS )
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
-	else if ( glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS )
+	else if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
-	else if ( glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS )
+	else if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 	}
@@ -223,7 +223,7 @@ void Engine::IO_EVENTS(GLFWwindow *window)
 	g_leftMouseDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
 	g_rightMouseDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
 
-	if ( g_leftMouseDown || g_rightMouseDown )
+	if (g_leftMouseDown || g_rightMouseDown)
 	{
 		double mouseX, mouseY;
 		glfwGetCursorPos(window, &mouseX, &mouseY);
@@ -231,15 +231,15 @@ void Engine::IO_EVENTS(GLFWwindow *window)
 	}
 
 	//Step forward a single timestep
-	if ( glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && Engine::g_running == false )
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && Engine::g_running == false)
 	{
 		m_fluid->timeStep(c_precision);
 	}
-	if ( glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS )
+	if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
 	{
 		m_fluid->updateConfiguration();
 	}
-	if ( glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS )
+	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
 	{
 		m_fluid->reset();
 	}
@@ -319,7 +319,7 @@ void Engine::saveImage(const char *path, GLFWwindow *window)
 
 void Engine::saveResults()
 {
-	if ( g_running && g_save_result )
+	if (g_running && g_save_result)
 	{
 		Engine::g_running = false;
 		//std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-hz" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound) + "-Z" + std::to_string((int)sum);
@@ -334,19 +334,19 @@ void Engine::saveResults()
 void Engine::constrainMouse(GLFWwindow *window, double xPos, double yPos)
 {
 	double margin = 2.f;
-	if ( xPos <= margin )
+	if (xPos <= margin)
 	{
 		glfwSetCursorPos(window, margin + 1, yPos);
 	}
-	else if ( xPos >= c_WIDTH - margin )
+	else if (xPos >= c_WIDTH - margin)
 	{
 		glfwSetCursorPos(window, c_WIDTH - margin + 1, yPos);
 	}
-	if ( yPos <= margin )
+	if (yPos <= margin)
 	{
 		glfwSetCursorPos(window, xPos, margin + 1);
 	}
-	else if ( yPos >= c_HEIGHT - margin )
+	else if (yPos >= c_HEIGHT - margin)
 	{
 		glfwSetCursorPos(window, xPos, c_HEIGHT - margin + 1);
 	}
@@ -354,11 +354,11 @@ void Engine::constrainMouse(GLFWwindow *window, double xPos, double yPos)
 
 void Engine::MOUSE_CALLBACK(GLFWwindow *window, double xPos, double yPos)
 {
-	if ( g_mouse_constrain )
+	if (g_mouse_constrain)
 	{
 
 	}
-	if ( g_firstMouseEnter )
+	if (g_firstMouseEnter)
 	{
 		g_lastX = xPos;
 		g_lastY = yPos;
@@ -381,7 +381,7 @@ void Engine::Pause()
 
 void Engine::FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow *window, int width, int height)
 {
-	if ( width <= 0 || height <= 0 || glfwGetWindowAttrib(window, GLFW_ICONIFIED) ) return;
+	if (width <= 0 || height <= 0 || glfwGetWindowAttrib(window, GLFW_ICONIFIED)) return;
 	std::cout << "Width: " << width << " Height: " << height << std::endl;
 	glViewport(0, 0, width, height);
 	m_fluid->updateViewport(width, height);
@@ -389,16 +389,16 @@ void Engine::FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow *window, int width, int heigh
 
 void Engine::WINDOW_ICONIFY_CALLBACK(GLFWwindow *window, int iconified)
 {
-	if ( Engine::g_running && iconified ) glfwRequestWindowAttention(window);
+	if (Engine::g_running && iconified) glfwRequestWindowAttention(window);
 }
 
 void Engine::WINDOW_FOCUS_CALLBACK(GLFWwindow *window, int focused)
 {
-	if ( focused )
+	if (focused)
 	{
 //m_window->setState(WindowHandler::WindowState::FULLSCREEN);
 	}
-	else if ( !focused )
+	else if (!focused)
 	{
 		m_window->setState(WindowHandler::WindowState::WINDOWED);
 	}
@@ -406,53 +406,53 @@ void Engine::WINDOW_FOCUS_CALLBACK(GLFWwindow *window, int focused)
 
 void Engine::KEY_CALLBACK(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
-	if ( ( key == GLFW_KEY_PAUSE || key == GLFW_KEY_0 ) && action == GLFW_PRESS )
+	if (( key == GLFW_KEY_PAUSE || key == GLFW_KEY_0 ) && action == GLFW_PRESS)
 	{
 		Engine::Pause();
 	}
-	if ( glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS )
+	if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
 	{
-		if ( m_window->windowState == WindowHandler::WindowState::WINDOWED )
+		if (m_window->windowState == WindowHandler::WindowState::WINDOWED)
 		{
 			m_window->setState(WindowHandler::WindowState::FULLSCREEN);
 		}
-		else if ( m_window->windowState == WindowHandler::WindowState::FULLSCREEN )
+		else if (m_window->windowState == WindowHandler::WindowState::FULLSCREEN)
 		{
 			m_window->setState(WindowHandler::WindowState::WINDOWED);
 		}
 	}
 	//Dye
-	if ( glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS )
+	if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
 	{
 		m_fluid->swapBuffer(1);
 	}
 	//Velocity
-	else if ( glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS )
+	else if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS)
 	{
 		m_fluid->swapBuffer(2);
 	}
 	//Divergence
-	else if ( glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS )
+	else if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
 	{
 		m_fluid->swapBuffer(3);
 	}
 	//Pressure
-	else if ( glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS )
+	else if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
 	{
 		m_fluid->swapBuffer(4);
 	}
 	//Curl
-	else if ( glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS )
+	else if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
 	{
 		m_fluid->swapBuffer(5);
 	}
 	//Temperature
-	else if ( glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS )
+	else if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
 	{
 		m_fluid->swapBuffer(6);
 	}
 	//Density
-	else if ( glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS )
+	else if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
 	{
 		m_fluid->swapBuffer(7);
 	}
