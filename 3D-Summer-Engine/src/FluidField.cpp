@@ -33,9 +33,7 @@ FluidField::FluidField(const unsigned int WIDTH, const unsigned int HEIGHT, cons
 	std::cout << "INITIALIZING::FLUIDFIELD" << std::endl;
 
 	m_primary_shader		 = new Shader(p_VERTEX_SHADER, p_FRAGMENT_SHADER);
-	m_visualise_grid_shader	 = new Shader(p_VISUALISE_GRID_VERTEX_SHADER, p_VISUALISE_GRID_FRAGMENT_SHADER);
 	m_texture				 = new Texture2D(p_TEXTURE);
-	m_texture_buffer		 = new Texture2D();
 
 	//This is the rectangle that is used for displaying the simulation
 	//The simulation is simply a texture drawn on this rectangle
@@ -67,7 +65,7 @@ FluidField::FluidField(const unsigned int WIDTH, const unsigned int HEIGHT, cons
 	// Smoke and Clouds
 	m_density_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 
-	m_current_buffer = m_dye_buffer->readBuffer();
+	m_render_buffer = m_dye_buffer->readBuffer();
 
 	std::cout << "SUCCESS::INITIALIZATION::FLUIDFIELD" << std::endl;
 }
@@ -90,9 +88,9 @@ void FluidField::Draw(glm::vec3 origin)
 	glUniform1i(m_primary_shader->uniforms["u_image"], m_dye_buffer->readBuffer()->setTexture(0));
 	glUniform2f(m_primary_shader->uniforms["dyeTexelSize"], m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
 	glUniform2f(m_primary_shader->uniforms["velTexelSize"], m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
-	if (m_current_buffer != m_dye_buffer->readBuffer())
+	if (m_render_buffer != m_dye_buffer->readBuffer())
 	{
-		glUniform1i(m_primary_shader->uniforms["u_image_overlay"], m_current_buffer->setTexture(1));
+		glUniform1i(m_primary_shader->uniforms["u_image_overlay"], m_render_buffer->setTexture(1));
 	}
 	else
 	{
@@ -161,46 +159,6 @@ void FluidField::blit(Framebuffer* target, Shader* shader)
 	}
 }
 
-//Is not being used
-void FluidField::boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer* target, Shader& shader)
-{
-	line.width(10.0f);
-	glm::mat4 projectionM = glm::mat4(1.0f);
-
-	//projectionM = glm::ortho(0.0f, (float)1.0f, 0.0f, (float)1.0f, -1000.0f, 1000.0f);
-
-	shader.use();
-	shader.setMat4f("projection", projectionM);
-	glBindFramebuffer(GL_FRAMEBUFFER, target->fbo);
-
-	if (l)
-	{
-		line.start(0.0f, 0.0f, 0.0f);
-		line.end(0.0f, 1.0f, 0.0f);
-		line.Draw(shader);
-	}
-	//if (t)
-	//{
-	//	line.start(0.0f, 1.0f, 0.0f);
-	//	line.end(1.0f, 1.0f, 0.0f);
-	//	line.Draw(shader);
-	//}
-	//if (r)
-	//{
-	//	line.start(1.0f, 1.0f, 0.0f);
-	//	line.end(1.0f, 0.0f, 0.0f);
-	//	line.Draw(shader);
-	//}
-	//if (b)
-	//{
-	//	line.start(1.0f, 0.0f, 0.0f);
-	//	line.end(0.0f, 0.0f, 0.0f);
-	//	line.Draw(shader);
-	//}
-	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
-
-}
-
 //Advection -> Diffusion -> Force Application -> Projection
 void FluidField::timeStep(float dt)
 {
@@ -209,33 +167,6 @@ void FluidField::timeStep(float dt)
 	if (m_diffuse)	diffuse(time);		//Spread out the fluid (if viscosity > 0)
 	if (m_forces)	addForces(time);	//Add a ball in the center and gravity. Also add multiple splats
 	if (m_project)	project(time);		//Remove unwanted stuff
-}
-
-//Is not being used
-/*void FluidField::boundary(float dt, float scale, float offset, DoubleFramebuffer* target)
-{
-	m_bounds_shader.use();
-	int uLoc = m_bounds_shader.uniforms["u"];
-	int texelSizeLoc = m_bounds_shader.uniforms["texelSize"];
-	int dtLoc = m_bounds_shader.uniforms["dt"];
-	int offsetLoc = m_bounds_shader.uniforms["off"];
-	int scaleLoc = m_bounds_shader.uniforms["scale"];
-	glUniform1i(uLoc, target->readBuffer()->setTexture(0));
-	glUniform2f(texelSizeLoc, target->readBuffer()->texelSizeX, target->readBuffer()->texelSizeY);
-	glUniform1f(dtLoc, dt);
-	glUniform1f(offsetLoc, offset);
-	glUniform1f(scaleLoc, scale);
-
-	boundaryContainer(1, 1, 1, 1, target->writeBuffer(), m_bounds_shader);
-}*/
-
-//Isn't being used
-void FluidField::boundaries(float dt)
-{
-//Velocity
-//boundary(dt, 1.0f, 0, m_dye_buffer);
-//Pressure
-//boundary(dt, 0, 0, m_pressure_buffer);
 }
 
 //Add a value to an entire framebuffer
@@ -530,8 +461,8 @@ void FluidField::updateMouse(double* mouseX, double* mouseY, bool* left_mouse_do
 
 void FluidField::setCurrentBuffer(Framebuffer* buffer)
 {
-	if (m_current_buffer == buffer) return;
-	m_current_buffer = buffer;
+	if (m_render_buffer == buffer) return;
+	m_render_buffer = buffer;
 }
 
 void FluidField::swapBuffer(int i)

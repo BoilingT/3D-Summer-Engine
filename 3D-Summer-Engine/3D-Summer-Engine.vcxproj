@@ -152,18 +152,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="Shaders\visualise_grid_fragment_shader.frag">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <FileType>Script</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-      <DeploymentContent>true</DeploymentContent>
-    </Text>
-    <Text Include="Shaders\visualise_grid_vertex_shader.vert">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <FileType>Script</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-      <DeploymentContent>true</DeploymentContent>
-    </Text>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Shaders\advection_shader.frag">

@@ -196,13 +196,13 @@ private:
 	DoubleFramebuffer* m_temperature_buffer;			//Boyancy and Convection
 	DoubleFramebuffer* m_density_buffer;				//Boyancy and Convection
 	Framebuffer* m_curl_buffer;							//Contains curling velocities
-	//Screen rendering buffers
-	Framebuffer* m_current_buffer;						//Contains the buffer that will be used when rendering
+	//Display buffer
+	Framebuffer* m_render_buffer;						//Contains the buffer that will be used when rendering
 
 	//Shaders
 	Shader m_advection_shader;							//Used for advecting quantities in the fluid dependent on the given velocity buffer
 	Shader m_jacobi_iteration_shader;					//Used for Pressure and Diffusion
-	Shader m_force_shader;								//TODO: Used for application of force (Velocities)
+	Shader m_force_shader;								//Alternative shader for splat shader (Not ready)
 	Shader m_divergence_shader;							//Calculates change in density (Density velocities)
 	Shader m_integrate_shader;							//Used for adding a value to an entire buffer
 	Shader m_clear_shader;								//Used for clearing a buffer of its values
@@ -216,10 +216,8 @@ private:
 	//Screen rendering shaders
 	Shader  m_object_shader;							//Used to render objects to the screen
 	Shader* m_primary_shader;							//Used to render the fluid to the screen
-	Shader* m_visualise_grid_shader;					//TODO: Used to render a visual representation of the resolution used to the screen (Is not being used)
 
 	Texture2D* m_texture;
-	Texture2D* m_texture_buffer;
 	Rect* m_fieldQuad;
 
 	const unsigned int m_WIDTH, m_HEIGHT, m_resolution, m_fieldWidth;
@@ -279,7 +277,6 @@ public:
 		delete(m_pressure_buffer);
 
 		delete(m_primary_shader);
-		delete(m_visualise_grid_shader);
 		delete(m_fieldQuad);
 		std::cout << "DESTROYED::FLUIDFIELD" << std::endl;
 	}
@@ -309,9 +306,6 @@ private:
 	void addForces(float dt);
 	void project(float dt);
 
-	void boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer* target, Shader& shader);
-	void boundary(float dt, float scale, float offset, DoubleFramebuffer* target);
-	void boundaries(float dt);
 	void vorticity(float dt);
 	void curl(float dt);
 	void temperature(float dt);

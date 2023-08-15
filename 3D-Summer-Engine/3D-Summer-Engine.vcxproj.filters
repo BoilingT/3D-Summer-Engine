@@ -234,12 +234,6 @@
     <Text Include="Shaders\vertex_shader.vert">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\visualise_grid_fragment_shader.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </Text>
-    <Text Include="Shaders\visualise_grid_vertex_shader.vert">
-      <Filter>Resource Files\Shaders</Filter>
-    </Text>
     <Text Include="infoForCreator.txt" />
   </ItemGroup>
   <ItemGroup>
