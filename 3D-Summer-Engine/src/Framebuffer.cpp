@@ -1,7 +1,7 @@
 #include <stb/stb_image.h>
 #include "Framebuffer.h"
 
-Framebuffer::Framebuffer(float res, unsigned int w, unsigned int h, GLint _internalFormat, GLenum _format, GLenum _type, GLint _param)
+Framebuffer::Framebuffer(unsigned int res, unsigned int w, unsigned int h, GLint _internalFormat, GLenum _format, GLenum _type, GLint _param)
 {
 	resolution = res;
 	width = w;
@@ -46,7 +46,7 @@ Framebuffer::Framebuffer(float res, unsigned int w, unsigned int h, GLint _inter
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Framebuffer::setDimensions(unsigned int w, unsigned int h, float res)
+void Framebuffer::setDimensions(unsigned int w, unsigned int h, unsigned int res)
 {
 	resolution = res;
 	width = w;
@@ -91,15 +91,17 @@ void Framebuffer::setDimensions(unsigned int w, unsigned int h, float res)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Framebuffer::calculateTexelsize(float w, float h, float res)
+void Framebuffer::calculateTexelsize(unsigned int w, unsigned int h, unsigned int res)
 {
 	float ratio = (float) w / (float) h;
 	if (ratio < 1.0f)
 	{
 		ratio = 1.0f / ratio;
 	}
-	float min = round(res);
-	float max = round(res * ratio);
+
+	unsigned int min = (unsigned int) round(res);
+	unsigned int max = (unsigned int) round(res * ratio);
+
 	if (w > h)
 	{
 		width = max;
@@ -120,7 +122,7 @@ void Framebuffer::calculateTexelsize(float w, float h, float res)
 
 int Framebuffer::status()
 {
-	return ( glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE );
+	return (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
 }
 
 void Framebuffer::bind()
@@ -135,10 +137,10 @@ int Framebuffer::setTexture(unsigned int id)
 	return id;
 }
 
-void Framebuffer::setTextureSource(const char *path, int screen_width, int screen_height, GLint internalFormat, GLenum format, GLenum type, GLint param)
+void Framebuffer::setTextureSource(const char* path, unsigned int screen_width, unsigned int screen_height, GLint internalFormat, GLenum format, GLenum type, GLint param)
 {
 	int w, h, channels;
-	unsigned char *data = stbi_load(path, &w, &h, &channels, 0);
+	unsigned char* data = stbi_load(path, &w, &h, &channels, 0);
 	if (data)
 	{
 		glActiveTexture(GL_TEXTURE0);
@@ -165,7 +167,7 @@ void Framebuffer::setTextureSource(const char *path, int screen_width, int scree
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
-		GLuint clearColor[4] = { 0, 0, 0, 0 };
+		GLuint clearColor[4] ={ 0, 0, 0, 0 };
 		glClearBufferuiv(GL_COLOR, fbo, clearColor);
 		//glClearColor(0, 0, 0.0f, 0.0f);
 		//glClear(GL_COLOR_BUFFER_BIT);

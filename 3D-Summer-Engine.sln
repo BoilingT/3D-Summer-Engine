@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.32510.428
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34003.232
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "3D-Summer-Engine", "3D-Summer-Engine\3D-Summer-Engine.vcxproj", "{4EA7AB94-CBB3-4FE7-86DF-763916AFDF78}"
 EndProject
@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		..\..\..\Visual Studio 2019 Formatting\.editorconfig = ..\..\..\Visual Studio 2019 Formatting\.editorconfig
 	EndProjectSection
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{3F858506-86A2-436D-8028-B97E58478C94}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +34,10 @@ Global
 		{A3B69315-2953-48AC-8285-9F4A4026BD7E}.Debug|x86.ActiveCfg = Debug
 		{A3B69315-2953-48AC-8285-9F4A4026BD7E}.Release|x64.ActiveCfg = Release
 		{A3B69315-2953-48AC-8285-9F4A4026BD7E}.Release|x86.ActiveCfg = Release
+		{3F858506-86A2-436D-8028-B97E58478C94}.Debug|x64.ActiveCfg = Debug
+		{3F858506-86A2-436D-8028-B97E58478C94}.Debug|x86.ActiveCfg = Debug
+		{3F858506-86A2-436D-8028-B97E58478C94}.Release|x64.ActiveCfg = Release
+		{3F858506-86A2-436D-8028-B97E58478C94}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

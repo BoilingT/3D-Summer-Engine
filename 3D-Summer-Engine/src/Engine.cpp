@@ -11,14 +11,14 @@ bool Engine::g_leftMouseDown		 = 0;
 bool Engine::g_rightMouseDown		 = 0;
 bool Engine::g_firstMouseEnter		 = 0;
 bool Engine::g_mouse_constrain		 = true;
-unsigned int Engine::g_running		 = false;
+bool Engine::g_running				 = false;
 
 double g_lastTime = glfwGetTime();
 double currentTime = glfwGetTime();
 int frames = 0;
 int fps = 0;
 double TPF = 0;
-float sleepTime = 0;
+double sleepTime = 0;
 int steps = 0;
 float simulationTime = 0.0f;
 float engineTime = 0.0;
@@ -26,8 +26,8 @@ float savedTime = 0.0f;
 float timeRatio = 1.0f;
 float sum = 0.0f;
 
-WindowHandler *Engine::m_window;
-FluidField *Engine::m_fluid;
+WindowHandler* Engine::m_window;
+FluidField* Engine::m_fluid;
 
 Engine::Engine()
 {
@@ -40,16 +40,16 @@ Engine::Engine()
 	if (m_window->open() == -1) return;
 
 	int w, h, channels;
-	unsigned char *data = stbi_load(p_APPLICATION_ICON, &w, &h, &channels, 0);
+	unsigned char* data = stbi_load(p_APPLICATION_ICON, &w, &h, &channels, 0);
 	if (data != NULL)
 	{
 
-		GLFWimage *icon = new GLFWimage();
+		GLFWimage* icon = new GLFWimage();
 		icon->height = h;
 		icon->width = w;
 		icon->pixels = data;
 		glfwSetWindowIcon(m_window->getWindow(), 1, icon);
-		delete( icon );
+		delete(icon);
 		icon = nullptr;
 	}
 	else
@@ -68,13 +68,13 @@ Engine::Engine()
 	g_pc_time = glfwGetTime();
 	if (g_fps_limit < 0)
 	{
-		const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		g_fps_limit = mode->refreshRate;
 	}
 	//Set the viewport size
 	glViewport(0, 0, c_WIDTH, c_HEIGHT);
 	//Resize the viewport when the window size is changed
-	glfwSetFramebufferSizeCallback(m_window->getWindow(), FRAME_BUFFER_SIZE_CALLBACK);
+	glfwSetFramebufferSizeCallback(m_window->getWindow(), FRAMEBUFFER_RESIZE_CALLBACK);
 	glfwSetWindowIconifyCallback(m_window->getWindow(), WINDOW_ICONIFY_CALLBACK);
 	glfwSetWindowFocusCallback(m_window->getWindow(), WINDOW_FOCUS_CALLBACK);
 	glfwSetKeyCallback(m_window->getWindow(), KEY_CALLBACK);
@@ -133,7 +133,7 @@ void Engine::Run()
 
 		if (sleepTime > 0)
 		{
-			std::this_thread::sleep_for(std::chrono::milliseconds((long) ( sleepTime )));
+			std::this_thread::sleep_for(std::chrono::milliseconds((long) (sleepTime)));
 		}
 	}
 	std::cout << "EXITED::RENDER::LOOP" << std::endl;
@@ -150,7 +150,7 @@ void Engine::calculateDeltatime()
 void Engine::calculateSleeptime()
 {
 
-	sleepTime = ( 1.0f / g_fps_limit - g_deltaTime + sleepTime / 1000.0f ) * 1000; //ms
+	sleepTime = (1.0f / g_fps_limit - g_deltaTime + sleepTime / 1000.0f) * 1000; //ms
 
 	//Avoiding negative numbers
 	if (sleepTime < 0 || sleepTime == 0)
@@ -161,7 +161,7 @@ void Engine::calculateSleeptime()
 
 void Engine::calculateFPS()
 {
-	fps = (int) ( 1000.f / g_deltaTime );
+	fps = (int) (1000.f / g_deltaTime);
 }
 
 void Engine::update()
@@ -174,18 +174,10 @@ void Engine::update()
 
 void Engine::physicsUpdate()
 {
-	float tpf = g_deltaTime + sleepTime / 1000.0f;
-
-	if (tpf < 0)
-	{
-		tpf = 0;
-		std::cout << "TPF < 0!" << std::endl;
-	}
-
-	m_fluid->timeStep(g_deltaTime);
+	m_fluid->timeStep((float) g_deltaTime);
 }
 
-void Engine::IO_EVENTS(GLFWwindow *window)
+void Engine::IO_EVENTS(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
@@ -216,8 +208,8 @@ void Engine::IO_EVENTS(GLFWwindow *window)
 
 	float cameraSpeed = 2.5f;
 
-	const float cameraSensitivity = m_camera->sensitivity * g_deltaTime;
-	float time = glfwGetTime(); //Seconds
+	const float cameraSensitivity = m_camera->sensitivity * (float) g_deltaTime;
+	double time = glfwGetTime(); //Seconds
 	float passed_time = 0;
 
 	g_leftMouseDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
@@ -297,7 +289,7 @@ void Engine::IO_EVENTS(GLFWwindow *window)
 }
 
 //This is some copy pasta from somewhere on stackoverflow
-void Engine::saveImage(const char *path, GLFWwindow *window)
+void Engine::saveImage(const char* path, GLFWwindow* window)
 {
 	std::cout << "Writing file..." << std::endl;
 	int width = 0;
@@ -305,7 +297,7 @@ void Engine::saveImage(const char *path, GLFWwindow *window)
 	glfwGetFramebufferSize(window, &width, &height);
 	int channelAmount = 3;
 	int stride = channelAmount * width;
-	stride += ( stride % 4 ) ? ( 4 - stride % 4 ) : 0;
+	stride += (stride % 4) ? (4 - stride % 4) : 0;
 	int bufferSize = stride * height;
 	std::vector<char> buffer(bufferSize);
 
@@ -323,7 +315,7 @@ void Engine::saveResults()
 	{
 		Engine::g_running = false;
 		//std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-hz" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound) + "-Z" + std::to_string((int)sum);
-		std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int) ( c_precision * 1000 )) + "-dt" + std::to_string((int) ( g_deltaTime * 1000 ));
+		std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int) (c_precision * 1000)) + "-dt" + std::to_string((int) (g_deltaTime * 1000));
 		std::string path = p_GENERATED_RESULTS + filename + ".png";
 		saveImage(path.c_str(), m_window->getWindow());
 		g_save_result = false;
@@ -331,7 +323,7 @@ void Engine::saveResults()
 	}
 }
 
-void Engine::constrainMouse(GLFWwindow *window, double xPos, double yPos)
+void Engine::constrainMouse(GLFWwindow* window, double xPos, double yPos)
 {
 	double margin = 2.f;
 	if (xPos <= margin)
@@ -352,7 +344,7 @@ void Engine::constrainMouse(GLFWwindow *window, double xPos, double yPos)
 	}
 }
 
-void Engine::MOUSE_CALLBACK(GLFWwindow *window, double xPos, double yPos)
+void Engine::MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos)
 {
 	if (g_mouse_constrain)
 	{
@@ -364,7 +356,7 @@ void Engine::MOUSE_CALLBACK(GLFWwindow *window, double xPos, double yPos)
 		g_lastY = yPos;
 		g_firstMouseEnter = false;
 	}
-	float xTravel, yTravel;
+	double xTravel, yTravel;
 	xTravel = xPos - g_lastX;
 	yTravel = yPos - g_lastY;
 	g_lastX = xPos;
@@ -379,7 +371,7 @@ void Engine::Pause()
 	std::cout << "Running: " << Engine::g_running << std::endl;
 }
 
-void Engine::FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow *window, int width, int height)
+void Engine::FRAMEBUFFER_RESIZE_CALLBACK(GLFWwindow* window, int width, int height)
 {
 	if (width <= 0 || height <= 0 || glfwGetWindowAttrib(window, GLFW_ICONIFIED)) return;
 	std::cout << "Width: " << width << " Height: " << height << std::endl;
@@ -387,12 +379,12 @@ void Engine::FRAME_BUFFER_SIZE_CALLBACK(GLFWwindow *window, int width, int heigh
 	m_fluid->updateViewport(width, height);
 }
 
-void Engine::WINDOW_ICONIFY_CALLBACK(GLFWwindow *window, int iconified)
+void Engine::WINDOW_ICONIFY_CALLBACK(GLFWwindow* window, int iconified)
 {
 	if (Engine::g_running && iconified) glfwRequestWindowAttention(window);
 }
 
-void Engine::WINDOW_FOCUS_CALLBACK(GLFWwindow *window, int focused)
+void Engine::WINDOW_FOCUS_CALLBACK(GLFWwindow* window, int focused)
 {
 	if (focused)
 	{
@@ -404,9 +396,9 @@ void Engine::WINDOW_FOCUS_CALLBACK(GLFWwindow *window, int focused)
 	}
 }
 
-void Engine::KEY_CALLBACK(GLFWwindow *window, int key, int scancode, int action, int mods)
+void Engine::KEY_CALLBACK(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (( key == GLFW_KEY_PAUSE || key == GLFW_KEY_0 ) && action == GLFW_PRESS)
+	if ((key == GLFW_KEY_PAUSE || key == GLFW_KEY_0) && action == GLFW_PRESS)
 	{
 		Engine::Pause();
 	}

@@ -1,24 +1,24 @@
 #pragma once
 #include <iostream>
+#include <vector>
+#include "glm_includes.h"
 #include <string>
 #include <glad/glad.h>
-#include <vector>
-#include <map>
-#include "glm_includes.h"
+#include <unordered_map>
 #include "fileHandler.h"
 
 class Shader
 {
 private:
-	unsigned int ID;
-	unsigned int m_compute_texture;
 	FileHandler fileHandler;
+	unsigned int m_compute_texture;
+	unsigned int ID;
 
 public:
-	std::map<std::string, char> uniforms;
+	std::unordered_map<std::string, char> uniforms;
 	//Read, Compile, Link
-	Shader(const char *vertexPath, const char *fragmentPath);
-	Shader(const char *shaderPath, GLenum type);
+	Shader(const char* vertexPath, const char* fragmentPath);
+	Shader(const char* shaderPath, GLenum type);
 	~Shader();
 
 	void use();
@@ -30,8 +30,8 @@ public:
 	unsigned int getID();
 
 	void generateTexture(unsigned int TEXTURE_WIDTH, unsigned int TEXTURE_HEIGHT);
-	void setValues(float *values, int width, int height);
-	unsigned int *getTexture();
+	void setValues(float* values, int width, int height);
+	unsigned int* getTexture();
 
 private:
 	void getUniforms();

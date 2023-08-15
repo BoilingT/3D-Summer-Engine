@@ -1,5 +1,88 @@
 #include "FluidField.h"
 
+FluidField::FluidField(const unsigned int WIDTH, const unsigned int HEIGHT, const unsigned int resolution) :
+	m_resolution(resolution),
+	m_fieldWidth((unsigned int) sqrt(resolution)),
+	m_WIDTH(WIDTH),
+	m_HEIGHT(HEIGHT),
+	m_mouse(WIDTH, HEIGHT),
+	rectangle(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)),
+	line(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f),
+
+	fluid_config(p_CONFIG_FILE),
+
+	m_object_shader(p_OBJECT_VERTEX_SHADER, p_OBJECT_FRAGMENT_SHADER),
+	m_advection_shader(p_VERTEX_SHADER, p_advection_shader),
+	m_jacobi_iteration_shader(p_VERTEX_SHADER, p_jacobi_shader),
+	m_force_shader(p_VERTEX_SHADER, p_force_shader),
+	m_divergence_shader(p_VERTEX_SHADER, p_divergence_shader),
+	m_clear_shader(p_VERTEX_SHADER, p_clear_shader),
+	m_integrate_shader(p_VERTEX_SHADER, p_integrate_shader),
+	m_gradient_subtraction_shader(p_VERTEX_SHADER, p_gradient_subtraction_shader),
+	m_vorticity_shader(p_VERTEX_SHADER, p_vorticity_shader),
+	m_curl_shader(p_VERTEX_SHADER, p_curl_shader),
+	m_temperature_shader(p_VERTEX_SHADER, p_temperature_shader),
+	m_density_shader(p_VERTEX_SHADER, p_density_shader),
+	m_bounds_shader(p_VERTEX_SHADER, p_bounds_shader),
+	m_splat_shader(p_VERTEX_SHADER, p_splat_shader)
+{
+	std::cout << "APPLYING::CONFIGURATIONS" << std::endl;
+
+	if (fluid_config.fileExists()) applyConfiguration(fluid_config);
+
+	std::cout << "INITIALIZING::FLUIDFIELD" << std::endl;
+
+	m_primary_shader		 = new Shader(p_VERTEX_SHADER, p_FRAGMENT_SHADER);
+	m_visualise_grid_shader	 = new Shader(p_VISUALISE_GRID_VERTEX_SHADER, p_VISUALISE_GRID_FRAGMENT_SHADER);
+	m_texture				 = new Texture2D(p_TEXTURE);
+	m_texture_buffer		 = new Texture2D();
+
+	//This is the rectangle that is used for displaying the simulation
+	//The simulation is simply a texture drawn on this rectangle
+	m_fieldQuad				 = new Rect(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), m_texture->get());
+
+	GLenum textureType = GL_UNSIGNED_BYTE;	//Field type
+	TexFormat rgba(GL_RGBA32F, GL_RGBA);	//Quantity field
+	TexFormat rg(GL_RG32F, GL_RG);			//Vector field
+	TexFormat r(GL_R32F, GL_RED);			//Scalar field
+	glDisable(GL_BLEND);
+
+	const unsigned int velocityResolution = (unsigned int) (m_resolution * m_velocity_resolution_scalar), dyeResolution = (unsigned int) (m_resolution * m_dye_resolution_scalar);
+
+	//Buffers that store the calculated results
+	m_dye_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, rgba.internal, rgba.format, textureType, GL_LINEAR);
+	//m_dye_buffer->readBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
+	//m_dye_buffer->writeBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
+	m_velocity_buffer = new DoubleFramebuffer(velocityResolution, m_WIDTH, m_HEIGHT, rg.internal, rg.format, textureType, GL_LINEAR);
+	m_curl_buffer = new Framebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+	m_divergence_buffer = new Framebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+	m_pressure_buffer = new DoubleFramebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+
+	//Experimental
+	// Boyancy and Convection
+	m_temperature_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+	m_temperature_buffer->readBuffer()->setTextureSource(p_TEMPERATURE_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_NEAREST);
+	m_temperature_buffer->writeBuffer()->setTextureSource(p_TEMPERATURE_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_NEAREST);
+
+	// Smoke and Clouds
+	m_density_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+
+	m_current_buffer = m_dye_buffer->readBuffer();
+
+	std::cout << "SUCCESS::INITIALIZATION::FLUIDFIELD" << std::endl;
+}
+
+void FluidField::updateViewport(unsigned int width, unsigned int height)
+{
+	float velocityResolution = m_resolution * m_velocity_resolution_scalar, dyeResolution = m_resolution * m_dye_resolution_scalar;
+	m_mouse.updateMousearea(width, height);
+	//m_dye_buffer->setDimensions(m_mouse.width, m_mouse.height, dyeResolution);
+	//m_velocity_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
+	//m_curl_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
+	//m_divergence_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
+	//m_pressure_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
+}
+
 void FluidField::Draw(glm::vec3 origin)
 {
 
@@ -32,7 +115,7 @@ void FluidField::Draw(glm::vec3 origin)
 }
 
 //Draw to specified framebuffer with specified shader
-void FluidField::blit(Framebuffer *target, Shader *shader)
+void FluidField::blit(Framebuffer* target, Shader* shader)
 {
 //glm::mat4 modelM = glm::mat4(1.0f);
 //glm::mat4 viewM = glm::mat4(1.0f);
@@ -51,7 +134,7 @@ void FluidField::blit(Framebuffer *target, Shader *shader)
 	//Bind framebuffer
 	if (target == nullptr || target->fbo == NULL)
 	{
-		glViewport(0, 0, m_mouse.width, m_mouse.height);
+		glViewport(0, 0, m_mouse.width, (GLsizei) m_mouse.height);
 		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 	}
 	else
@@ -79,7 +162,7 @@ void FluidField::blit(Framebuffer *target, Shader *shader)
 }
 
 //Is not being used
-void FluidField::boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer *target, Shader &shader)
+void FluidField::boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer* target, Shader& shader)
 {
 	line.width(10.0f);
 	glm::mat4 projectionM = glm::mat4(1.0f);
@@ -129,7 +212,7 @@ void FluidField::timeStep(float dt)
 }
 
 //Is not being used
-void FluidField::boundary(float dt, float scale, float offset, DoubleFramebuffer *target)
+/*void FluidField::boundary(float dt, float scale, float offset, DoubleFramebuffer* target)
 {
 	m_bounds_shader.use();
 	int uLoc = m_bounds_shader.uniforms["u"];
@@ -144,7 +227,7 @@ void FluidField::boundary(float dt, float scale, float offset, DoubleFramebuffer
 	glUniform1f(scaleLoc, scale);
 
 	boundaryContainer(1, 1, 1, 1, target->writeBuffer(), m_bounds_shader);
-}
+}*/
 
 //Isn't being used
 void FluidField::boundaries(float dt)
@@ -156,7 +239,7 @@ void FluidField::boundaries(float dt)
 }
 
 //Add a value to an entire framebuffer
-void FluidField::bufferIntegrate(DoubleFramebuffer *target, glm::vec4 values)
+void FluidField::bufferIntegrate(DoubleFramebuffer* target, glm::vec4 values)
 {
 	m_integrate_shader.use();
 	glUniform4f(m_integrate_shader.uniforms["value"], values.x, values.y, values.z, values.w);
@@ -226,8 +309,8 @@ void FluidField::diffuse(float dt)
 	{
 		m_jacobi_iteration_shader.use();
 		// Velocity
-		float alpha = 1.0f / ( dt * m_viscosity ); //Alpha = pow(x, 2)/t
-		float rBeta = 1.0f / ( 4.0f + alpha );	 //rBeta = 1/(4+Alpha)
+		float alpha = 1.0f / (dt * m_viscosity); //Alpha = pow(x, 2)/t
+		float rBeta = 1.0f / (4.0f + alpha);	 //rBeta = 1/(4+Alpha)
 		glUniform1f(m_jacobi_iteration_shader.uniforms["alpha"], alpha);
 		glUniform1f(m_jacobi_iteration_shader.uniforms["rBeta"], rBeta);
 		glUniform2f(m_jacobi_iteration_shader.uniforms["texelSize"], m_velocity_buffer->readBuffer()->texelSizeX, m_velocity_buffer->readBuffer()->texelSizeY);
@@ -257,10 +340,10 @@ void FluidField::diffuse(float dt)
 void FluidField::addForces(float dt)
 {
 	m_integrate_shader.use();
-	float r = m_dye_radius / 10.0f;
+	float r = m_splat_radius / 10.0f;
 
 	splat(glm::vec2(0.5f, 0.9f), r, m_splats, true, false);
-	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -150.82f, 0.0f, 0.0f) * dt);
+	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -150.82f, 0.0f, 0.0f) * (float) dt);
 	//temperature(dt);
 }
 
@@ -312,7 +395,7 @@ void FluidField::divergence(float dt)
 	blit(m_divergence_buffer, &m_divergence_shader);
 }
 
-void FluidField::clearBuffer(DoubleFramebuffer *target, float value)
+void FluidField::clearBuffer(DoubleFramebuffer* target, float value)
 {
 	m_clear_shader.use();
 	glUniform1f(m_clear_shader.uniforms["value"], value);
@@ -322,7 +405,7 @@ void FluidField::clearBuffer(DoubleFramebuffer *target, float value)
 	target->swap();
 }
 
-void FluidField::clearBuffer(Framebuffer *target, float value)
+void FluidField::clearBuffer(Framebuffer* target, float value)
 {
 	m_clear_shader.use();
 	glUniform1f(m_clear_shader.uniforms["value"], value);
@@ -378,7 +461,7 @@ void FluidField::splat(glm::vec2 pos, float r, bool dye, bool velocity)
 
 	glUniform1i(m_splat_shader.uniforms["uTarget"], m_velocity_buffer->readBuffer()->setTexture(0));
 	glUniform2f(m_splat_shader.uniforms["point"], pos.x, pos.y);
-	glUniform3f(uColorLoc, m_mouse.texcoord_delta.x * m_dye_force, m_mouse.texcoord_delta.y * m_dye_force, 0.0f);
+	glUniform3f(uColorLoc, m_mouse.texcoord_delta.x * m_splat_force, m_mouse.texcoord_delta.y * m_splat_force, 0.0f);
 
 	//float ratio = m_mouse.width / m_mouse.height * 0.5f;
 	//glUniform1f(m_splat_shader.uniforms["radius"], ratio > 1 ? r * ratio : r);
@@ -394,17 +477,17 @@ void FluidField::splat(glm::vec2 pos, float r, bool dye, bool velocity)
 	glUniform2f(uTexLoc, m_dye_buffer->readBuffer()->texelSizeX, m_dye_buffer->readBuffer()->texelSizeY);
 
 	glm::vec3 color = glm::vec3(0.0f);
-	if (m_dye_color_acc_dependent)
+	if (m_splat_color_acc_dependent)
 	{
-		color = glm::normalize(glm::vec3(m_mouse.texcoord_delta.x * m_dye_force, m_mouse.texcoord_delta.y * m_dye_force, 0.2f));
-		color *= m_dye_brightness;
+		color = glm::normalize(glm::vec3(m_mouse.texcoord_delta.x * m_splat_force, m_mouse.texcoord_delta.y * m_splat_force, 0.2f));
+		color *= m_splat_brightness;
 	}
 	else
 	{
-		color = glm::vec3(m_dye_color[0], m_dye_color[1], m_dye_color[2]);
-		color *= m_dye_brightness;
+		color = glm::vec3(m_splat_color[0], m_splat_color[1], m_splat_color[2]);
+		color *= m_splat_brightness;
 	}
-	glUniform3f(uColorLoc, abs(color.r), abs(color.g), abs(color.b + ( color.r + color.g ) / 5.0f) * 0.3f);
+	glUniform3f(uColorLoc, abs(color.r), abs(color.g), abs(color.b + (color.r + color.g) / 5.0f) * 0.3f);
 	if (dye)
 	{
 		blit(m_dye_buffer->writeBuffer(), &m_splat_shader);
@@ -419,7 +502,7 @@ void FluidField::splat(glm::vec2 pos, float r, bool dye, bool velocity)
 	}
 }
 
-void FluidField::updateMouse(double *mouseX, double *mouseY, bool *left_mouse_down, bool *right_mouse_down)
+void FluidField::updateMouse(double* mouseX, double* mouseY, bool* left_mouse_down, bool* right_mouse_down)
 {
 	m_mouse.update(*mouseX, *mouseY, *left_mouse_down, *right_mouse_down);
 
@@ -427,25 +510,25 @@ void FluidField::updateMouse(double *mouseX, double *mouseY, bool *left_mouse_do
 	{
 		if (m_mouse.right_mouse_down && m_mouse.left_mouse_down)
 		{
-			splat(m_mouse.texcoord_pos, m_dye_radius, true, false);
+			splat(m_mouse.texcoord_pos, m_splat_radius, true, false);
 		}
 		else if (m_mouse.right_mouse_down)
 		{
-			splat(m_mouse.texcoord_pos, m_dye_radius, false, true);
+			splat(m_mouse.texcoord_pos, m_splat_radius, false, true);
 		}
 		else if (m_mouse.left_mouse_down)
 		{
-			splat(m_mouse.texcoord_pos, m_dye_radius, true, true);
+			splat(m_mouse.texcoord_pos, m_splat_radius, true, true);
 		}
 		//std::cout << "X: " << m_mouse.window_pos.x << " Y: " << m_mouse.window_pos.y << "tX: " << m_mouse.texcoord_pos.x << " tY: " << m_mouse.texcoord_pos.y << std::endl;
 	}
 	else if (m_mouse.left_mouse_down)
 	{
-		splat(m_mouse.texcoord_pos, m_dye_radius, true, false);
+		splat(m_mouse.texcoord_pos, m_splat_radius, true, false);
 	}
 }
 
-void FluidField::setCurrentBuffer(Framebuffer *buffer)
+void FluidField::setCurrentBuffer(Framebuffer* buffer)
 {
 	if (m_current_buffer == buffer) return;
 	m_current_buffer = buffer;
@@ -511,7 +594,7 @@ void FluidField::reset()
 	clearBuffer(m_curl_buffer, 0.0);
 }
 
-int FluidField::applyConfiguration(Config &configurationFile)
+int FluidField::applyConfiguration(Config& configurationFile)
 {
 	if (configurationFile.size() <= 0)
 	{
@@ -520,13 +603,13 @@ int FluidField::applyConfiguration(Config &configurationFile)
 	}
 	try
 	{
-		m_dye_scalar = std::stof(configurationFile.getValue(FLUID.dye_scalar));
-		m_velocity_scalar = std::stof(configurationFile.getValue(FLUID.velocity_scalar));
-		//m_dye_color = std::stof(configurationFile.getValue(FLUID.dye_color));
-		m_dye_brightness = std::stof(configurationFile.getValue(FLUID.dye_brightness));
-		m_dye_color_acc_dependent = configurationFile.getValue(FLUID.dye_color_acc_dependent) == "1";
-		m_dye_force = std::stof(configurationFile.getValue(FLUID.dye_force));
-		m_dye_radius = std::stof(configurationFile.getValue(FLUID.dye_radius));
+		m_dye_resolution_scalar = std::stof(configurationFile.getValue(FLUID.dye_scalar));
+		m_velocity_resolution_scalar = std::stof(configurationFile.getValue(FLUID.velocity_scalar));
+		//m_splat_color = std::stof(configurationFile.getValue(FLUID.dye_color));
+		m_splat_brightness = std::stof(configurationFile.getValue(FLUID.dye_brightness));
+		m_splat_color_acc_dependent = configurationFile.getValue(FLUID.dye_color_acc_dependent) == "1";
+		m_splat_force = std::stof(configurationFile.getValue(FLUID.dye_force));
+		m_splat_radius = std::stof(configurationFile.getValue(FLUID.dye_radius));
 		m_dye_dissipation = std::stof(configurationFile.getValue(FLUID.dye_dissipation));
 		m_velocity_dissipation = std::stof(configurationFile.getValue(FLUID.velocity_dissipation));
 		m_diffuseIterations = std::stoi(configurationFile.getValue(FLUID.diffuseIterations));
@@ -545,7 +628,7 @@ int FluidField::applyConfiguration(Config &configurationFile)
 
 		return 0;
 	}
-	catch (const std::exception &ex)
+	catch (const std::exception& ex)
 	{
 		std::cout << "ERROR::PARSING::CONFIGURATION \"" << configurationFile.getPath() << "\" -> '" << ex.what() << "'" << std::endl;
 		return -1;
