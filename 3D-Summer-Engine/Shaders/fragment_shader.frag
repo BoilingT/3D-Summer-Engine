@@ -46,7 +46,7 @@ void main(){
 		float offset = 0.08f;
 		for(float i = 0; i < 1; i += offset){
 			for(float j = 0; j < 1; j += offset){
-				vec2 texel = texture(u_image_overlay, vec2(j,i)).xy;
+				vec2 texel = texture(u_image_overlay, vec2(i,j)).xy;
 				maxP = max(maxP, texel.x);
 				minP = min(minP, texel.x);
 			}

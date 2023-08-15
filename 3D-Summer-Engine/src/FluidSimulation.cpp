@@ -23,7 +23,8 @@ FluidSimulation::FluidSimulation(const unsigned int WIDTH, const unsigned int HE
 	m_temperature_shader(p_VERTEX_SHADER, p_temperature_shader),
 	m_density_shader(p_VERTEX_SHADER, p_density_shader),
 	m_bounds_shader(p_VERTEX_SHADER, p_bounds_shader),
-	m_splat_shader(p_VERTEX_SHADER, p_splat_shader)
+	m_splat_shader(p_VERTEX_SHADER, p_splat_shader),
+	m_apply_shader(p_VERTEX_SHADER, p_apply_shader)
 {
 	std::cout << "APPLYING::CONFIGURATIONS" << std::endl;
 
@@ -44,10 +45,13 @@ FluidSimulation::FluidSimulation(const unsigned int WIDTH, const unsigned int HE
 	TexFormat r(GL_R32F, GL_RED);			//Scalar field
 	glDisable(GL_BLEND);
 
+	std::cout << "Framebuffer: Height: " << m_HEIGHT << " Width: " << m_WIDTH << std::endl;
+
 	const unsigned int velocityResolution = (unsigned int) (m_resolution * m_velocity_resolution_scalar), dyeResolution = (unsigned int) (m_resolution * m_dye_resolution_scalar);
 
+
 	//Buffers that store the calculated results
-	m_dye_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, rgba.internal, rgba.format, textureType, GL_NEAREST);
+	m_dye_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, rgba.internal, rgba.format, textureType, GL_LINEAR);
 	//m_dye_buffer->readBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
 	//m_dye_buffer->writeBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
 	m_velocity_buffer = new DoubleFramebuffer(velocityResolution, m_WIDTH, m_HEIGHT, rg.internal, rg.format, textureType, GL_LINEAR);
@@ -66,12 +70,19 @@ FluidSimulation::FluidSimulation(const unsigned int WIDTH, const unsigned int HE
 
 	m_render_buffer = m_dye_buffer->readBuffer();
 
+	std::cout
+		<< "-Velocity resolution: " << velocityResolution
+		<< "\n-Velocity buffer size: " << m_velocity_buffer->readBuffer()->width << "x" << m_velocity_buffer->readBuffer()->height
+		<< "\n-Dye resolution: " << dyeResolution
+		<< "\n-Dye buffer size: " << m_dye_buffer->readBuffer()->width << "x" << m_dye_buffer->readBuffer()->height << std::endl;
+
 	std::cout << "SUCCESS::INITIALIZATION::FLUIDFIELD" << std::endl;
 }
 
 void FluidSimulation::resizeViewport(unsigned int width, unsigned int height)
 {
 	m_mouse.updateMousearea(width, height);
+	std::cout << "Set viewport to: Height: " << height << " Width: " << width << std::endl;
 }
 
 void FluidSimulation::Draw(glm::vec3 origin)
@@ -172,6 +183,14 @@ void FluidSimulation::bufferIntegrate(DoubleFramebuffer* target, glm::vec4 value
 	glUniform2f(m_integrate_shader.uniforms["texelSize"], target->readBuffer()->texelSize.x, target->readBuffer()->texelSize.y);
 	blit(target->writeBuffer(), &m_integrate_shader);
 	target->swap();
+}
+
+void FluidSimulation::bufferApplyValue(Framebuffer* target, glm::vec4 values)
+{
+	m_apply_shader.use();
+	glUniform4f(m_apply_shader.uniforms["value"], values.x, values.y, values.z, values.w);
+	glUniform1i(m_apply_shader.uniforms["uTexture"], target->setTexture(0));
+	blit(target, &m_apply_shader);
 }
 
 //Calculate and add forces due to temprature (Is not being used)

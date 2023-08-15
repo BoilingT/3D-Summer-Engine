@@ -147,6 +147,7 @@ private:
 	const char* p_density_shader						 = "./Shaders/density_shader.frag";
 	const char* p_bounds_shader							 = "./Shaders/bounds_shader.frag";
 	const char* p_splat_shader							 = "./Shaders/splat_shader.frag";
+	const char* p_apply_shader							 = "./Shaders/apply_shader.frag";
 
 	const char* p_VISUALISE_GRID_VERTEX_SHADER			 = "./Shaders/visualise_grid_vertex_shader.vert";
 	const char* p_VISUALISE_GRID_FRAGMENT_SHADER		 = "./Shaders/visualise_grid_fragment_shader.frag";
@@ -213,6 +214,7 @@ private:
 	Shader m_density_shader;							//TODO
 	Shader m_bounds_shader;								//TODO: Control of Fluid boundaries
 	Shader m_splat_shader;								//Used for application of Dye and Velocity manipulation
+	Shader m_apply_shader;								//Used for application of value
 	//Screen rendering shaders
 	Shader  m_object_shader;							//Used to render objects to the screen
 	Shader* m_primary_shader;							//Used to render the fluid to the screen
@@ -301,6 +303,7 @@ private:
 	//Draw using specified shader together with a specified framebuffer (NULL if the purpose is to render to the screen with specified shader)
 	void blit(Framebuffer* target, Shader* shader);
 	void bufferIntegrate(DoubleFramebuffer* target, glm::vec4 value);
+	void bufferApplyValue(Framebuffer* target, glm::vec4 value);
 	void advect(float dt);
 	void diffuse(float dt);
 	void addForces(float dt);

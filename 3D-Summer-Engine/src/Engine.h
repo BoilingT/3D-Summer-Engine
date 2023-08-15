@@ -35,14 +35,16 @@ private:
 	//Fluid simulation properties
 	static bool g_running;
 
-	static WindowHandler* m_window;
+	static WindowHandler m_window;
 	static FluidSimulation* m_fluid;
-	Camera* m_camera;
-	FileHandler fileSystem;
+	static FileHandler fileSystem;
+
+	WindowHandler::WindowState windowType = WindowHandler::WindowState::WINDOWED;
+	Camera m_camera;
 
 	//Window Properties
-	static const int c_WIDTH								 = 1920;
-	static const int c_HEIGHT								 = 1080;
+	const unsigned int c_WIDTH								 = 1920;
+	const unsigned int c_HEIGHT								 = 1080;
 	const char* c_WINDOW_NAME								 = "Summer Engine";
 	const float c_DEFAULT_CLEAR_COLOR[4]					 = { 1.0f, 0.0f, 0.0f, 1.0f };
 	const float c_CLEAR_COLOR[4]							 = { 0.28f, 0.41f, 0.61f, 1.0f };
@@ -90,9 +92,7 @@ public:
 		glfwTerminate();
 
 		delete m_fluid;
-		delete m_camera;
 
-		m_camera = NULL;
 		m_fluid = NULL;
 		std::cout << "DESTROYED::ENGINE" << std::endl;
 	}

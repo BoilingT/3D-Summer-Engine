@@ -26,7 +26,7 @@ float savedTime = 0.0f;
 float timeRatio = 1.0f;
 float sum = 0.0f;
 
-WindowHandler* Engine::m_window;
+WindowHandler Engine::m_window;
 FluidSimulation* Engine::m_fluid;
 Engine::Mouse Engine::g_mouse;
 double Engine::Time::deltaTime, Engine::Time::fixedDeltaTime, Engine::Time::pc_time;
@@ -34,31 +34,16 @@ double Engine::Time::deltaTime, Engine::Time::fixedDeltaTime, Engine::Time::pc_t
 Engine::Engine()
 {
 	std::cout << "INITIALIZING::ENGINE" << std::endl;
+	Camera m_camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
-	m_window = new WindowHandler(c_WIDTH, c_HEIGHT, c_WINDOW_NAME);
-	m_camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-
+	if (m_window.init(c_WINDOW_NAME) == -1) return;
 	//Open window
-	if (m_window->open() == -1) return;
-
-	int w, h, channels;
-	unsigned char* data = stbi_load(p_APPLICATION_ICON, &w, &h, &channels, 0);
-	if (data != NULL)
+	if (m_window.open(WindowHandler::WindowState::NONE, c_WIDTH, c_HEIGHT) == -1) return;
+	if (m_window.setIcon(p_APPLICATION_ICON) == -1)
 	{
+		std::cout << "Could not set application icon" << std::endl;
+	}
 
-		GLFWimage* icon = new GLFWimage();
-		icon->height = h;
-		icon->width = w;
-		icon->pixels = data;
-		glfwSetWindowIcon(m_window->getWindow(), 1, icon);
-		delete(icon);
-		icon = nullptr;
-	}
-	else
-	{
-		std::cout << "Could not set window icon" << std::endl;
-	}
-	stbi_image_free(data);
 
 	//GLAD library loading
 	if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
@@ -76,38 +61,38 @@ Engine::Engine()
 	//Set the viewport size
 	glViewport(0, 0, c_WIDTH, c_HEIGHT);
 	//Resize the viewport when the window size is changed
-	glfwSetFramebufferSizeCallback(m_window->getWindow(), FRAMEBUFFER_RESIZE_CALLBACK);
-	glfwSetWindowIconifyCallback(m_window->getWindow(), WINDOW_ICONIFY_CALLBACK);
-	glfwSetWindowFocusCallback(m_window->getWindow(), WINDOW_FOCUS_CALLBACK);
-	glfwSetKeyCallback(m_window->getWindow(), KEY_CALLBACK);
-	glfwSetCursorPosCallback(m_window->getWindow(), MOUSE_CALLBACK);
+	glfwSetFramebufferSizeCallback(m_window.getWindow(), FRAMEBUFFER_RESIZE_CALLBACK);
+	glfwSetWindowIconifyCallback(m_window.getWindow(), WINDOW_ICONIFY_CALLBACK);
+	glfwSetWindowFocusCallback(m_window.getWindow(), WINDOW_FOCUS_CALLBACK);
+	glfwSetKeyCallback(m_window.getWindow(), KEY_CALLBACK);
+	glfwSetCursorPosCallback(m_window.getWindow(), MOUSE_CALLBACK);
 
-	glfwSetInputMode(m_window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	glfwSetInputMode(m_window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
 	m_fluid = new FluidSimulation(c_WIDTH, c_HEIGHT, c_RESOLUTION);
 
 	std::cout << "SUCCESS::INITIALIZATION::ENGINE" << std::endl;
-	glfwSetWindowTitle(m_window->getWindow(), "Engine Initialized");
+	m_window.setTitle("Engine Initialized");
 }
 
 void Engine::Run()
 {
 	std::cout << "STARTING::ENGINE" << std::endl;
-	glfwSetWindowTitle(m_window->getWindow(), "Starting Engine...");
+	m_window.setState(windowType);
+	m_window.setTitle("Starting Engine...");
 
-	glfwMaximizeWindow(m_window->getWindow());
 	//This removes the FPS cap
 	glfwSwapInterval(0);
 
 	std::cout << "ENTERING::RENDER::LOOP" << std::endl;
-	glfwSetWindowTitle(m_window->getWindow(), "Fluid Simulation");
+	m_window.setTitle("Fluid Simulation");
 
 	Engine::g_running = true;
 
 	//Rendering loop
-	while (!glfwWindowShouldClose(m_window->getWindow()))
+	while (!glfwWindowShouldClose(m_window.getWindow()))
 	{
-		IO_EVENTS(m_window->getWindow());
+		IO_EVENTS(m_window.getWindow());
 
 		calculateDeltatime();
 		calculateSleeptime();
@@ -129,7 +114,7 @@ void Engine::Run()
 			While it is being drawn to the screen a back buffer is being drawn behind the scenes in order to reduce flickering issues.
 		*/
 		//Swap color buffer in order to render new images
-		glfwSwapBuffers(m_window->getWindow());
+		glfwSwapBuffers(m_window.getWindow());
 		//Check if any events have been triggered
 		glfwPollEvents();
 
@@ -184,7 +169,7 @@ void Engine::IO_EVENTS(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
 		std::cout << "TERMINATING::APPLICATION" << std::endl;
-		glfwSetWindowTitle(m_window->getWindow(), "Terminating...");
+		m_window.setTitle("Terminating...");
 		glfwSetWindowShouldClose(window, true);
 	}
 	if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS)
@@ -210,7 +195,7 @@ void Engine::IO_EVENTS(GLFWwindow* window)
 
 	float cameraSpeed = 2.5f;
 
-	const float cameraSensitivity = m_camera->sensitivity * (float) Time::deltaTime;
+	const float cameraSensitivity = m_camera.sensitivity * (float) Time::deltaTime;
 	double time = glfwGetTime(); //Seconds
 	float passed_time = 0;
 
@@ -319,7 +304,7 @@ void Engine::saveResults()
 		//std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(Time::deltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-hz" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound) + "-Z" + std::to_string((int)sum);
 		std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int) (c_precision * 1000)) + "-dt" + std::to_string((int) (Time::deltaTime * 1000));
 		std::string path = p_GENERATED_RESULTS + filename + ".png";
-		saveImage(path.c_str(), m_window->getWindow());
+		saveImage(path.c_str(), m_window.getWindow());
 		g_save_result = false;
 		//sum = 0;
 	}
@@ -386,11 +371,11 @@ void Engine::WINDOW_FOCUS_CALLBACK(GLFWwindow* window, int focused)
 {
 	if (focused)
 	{
-//m_window->setState(WindowHandler::WindowState::FULLSCREEN);
+		//m_window.setState(WindowHandler::WindowState::FULLSCREEN);
 	}
 	else if (!focused)
 	{
-		m_window->setState(WindowHandler::WindowState::WINDOWED);
+		m_window.setState(WindowHandler::WindowState::WINDOWED);
 	}
 }
 
@@ -402,13 +387,13 @@ void Engine::KEY_CALLBACK(GLFWwindow* window, int key, int scancode, int action,
 	}
 	if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
 	{
-		if (m_window->windowState == WindowHandler::WindowState::WINDOWED)
+		if (m_window.windowState == WindowHandler::WindowState::WINDOWED)
 		{
-			m_window->setState(WindowHandler::WindowState::FULLSCREEN);
+			m_window.setState(WindowHandler::WindowState::FULLSCREEN);
 		}
-		else if (m_window->windowState == WindowHandler::WindowState::FULLSCREEN)
+		else if (m_window.windowState == WindowHandler::WindowState::FULLSCREEN)
 		{
-			m_window->setState(WindowHandler::WindowState::WINDOWED);
+			m_window.setState(WindowHandler::WindowState::WINDOWED);
 		}
 	}
 	//Dye
