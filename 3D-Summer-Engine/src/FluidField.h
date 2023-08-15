@@ -228,7 +228,7 @@ private:
 	float	 m_dye_resolution_scalar				 = 1.0f;
 	bool	 m_splat_color_acc_dependent			 = false;
 	float	 m_splat_brightness						 = 0.5f;
-	float	 m_splat_color[3]						 ={ 0.0f, 0.1f, 1.0f };
+	float	 m_splat_color[3]						 = { 0.0f, 0.1f, 1.0f };
 	float	 m_splat_force							 = 6000.0f;
 	float	 m_splat_radius							 = 0.35f;
 	float	 m_dye_dissipation						 = 0.2f;		// The rate at which the dye clears from the screen
@@ -265,92 +265,11 @@ private:
 	Mouse  m_mouse;
 
 public:
-	FluidField(const unsigned int WIDTH, const unsigned int HEIGHT, const unsigned int resolution) :
-		m_resolution(resolution),
-		m_fieldWidth((unsigned int) sqrt(resolution)),
-		m_WIDTH(WIDTH),
-		m_HEIGHT(HEIGHT),
-		m_mouse(WIDTH, HEIGHT),
-		rectangle(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)),
-		line(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1.0f),
-
-		fluid_config(p_CONFIG_FILE),
-
-		m_object_shader(p_OBJECT_VERTEX_SHADER, p_OBJECT_FRAGMENT_SHADER),
-		m_advection_shader(p_VERTEX_SHADER, p_advection_shader),
-		m_jacobi_iteration_shader(p_VERTEX_SHADER, p_jacobi_shader),
-		m_force_shader(p_VERTEX_SHADER, p_force_shader),
-		m_divergence_shader(p_VERTEX_SHADER, p_divergence_shader),
-		m_clear_shader(p_VERTEX_SHADER, p_clear_shader),
-		m_integrate_shader(p_VERTEX_SHADER, p_integrate_shader),
-		m_gradient_subtraction_shader(p_VERTEX_SHADER, p_gradient_subtraction_shader),
-		m_vorticity_shader(p_VERTEX_SHADER, p_vorticity_shader),
-		m_curl_shader(p_VERTEX_SHADER, p_curl_shader),
-		m_temperature_shader(p_VERTEX_SHADER, p_temperature_shader),
-		m_density_shader(p_VERTEX_SHADER, p_density_shader),
-		m_bounds_shader(p_VERTEX_SHADER, p_bounds_shader),
-		m_splat_shader(p_VERTEX_SHADER, p_splat_shader)
-	{
-		std::cout << "APPLYING::CONFIGURATIONS" << std::endl;
-
-		if (fluid_config.fileExists()) applyConfiguration(fluid_config);
-
-		std::cout << "INITIALIZING::FLUIDFIELD" << std::endl;
-
-		m_primary_shader		 = new Shader(p_VERTEX_SHADER, p_FRAGMENT_SHADER);
-		m_visualise_grid_shader	 = new Shader(p_VISUALISE_GRID_VERTEX_SHADER, p_VISUALISE_GRID_FRAGMENT_SHADER);
-		m_texture				 = new Texture2D(p_TEXTURE);
-		m_texture_buffer		 = new Texture2D();
-
-		//This is the rectangle that is used for displaying the simulation
-		//The simulation is simply a texture drawn on this rectangle
-		m_fieldQuad				 = new Rect(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), m_texture->get());
-
-		GLenum textureType = GL_UNSIGNED_BYTE;	//Field type
-		TexFormat rgba(GL_RGBA32F, GL_RGBA);	//Quantity field
-		TexFormat rg(GL_RG32F, GL_RG);			//Vector field
-		TexFormat r(GL_R32F, GL_RED);			//Scalar field
-		glDisable(GL_BLEND);
-
-		const unsigned int velocityResolution = (unsigned int) (m_resolution * m_velocity_resolution_scalar), dyeResolution = (unsigned int) (m_resolution * m_dye_resolution_scalar);
-
-		//Buffers that store the calculated results
-		m_dye_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, rgba.internal, rgba.format, textureType, GL_LINEAR);
-		//m_dye_buffer->readBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
-		//m_dye_buffer->writeBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
-		m_velocity_buffer = new DoubleFramebuffer(velocityResolution, m_WIDTH, m_HEIGHT, rg.internal, rg.format, textureType, GL_LINEAR);
-		m_curl_buffer = new Framebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
-		m_divergence_buffer = new Framebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
-		m_pressure_buffer = new DoubleFramebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
-
-		//Experimental
-		// Boyancy and Convection
-		m_temperature_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
-		m_temperature_buffer->readBuffer()->setTextureSource(p_TEMPERATURE_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_NEAREST);
-		m_temperature_buffer->writeBuffer()->setTextureSource(p_TEMPERATURE_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_NEAREST);
-
-		// Smoke and Clouds
-		m_density_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
-
-		m_current_buffer = m_dye_buffer->readBuffer();
-
-		std::cout << "SUCCESS::INITIALIZATION::FLUIDFIELD" << std::endl;
-	}
-
-	void updateViewport(unsigned int width, unsigned int height)
-	{
-		float velocityResolution = m_resolution * m_velocity_resolution_scalar, dyeResolution = m_resolution * m_dye_resolution_scalar;
-		m_mouse.updateMousearea(width, height);
-		//m_dye_buffer->setDimensions(m_mouse.width, m_mouse.height, dyeResolution);
-		//m_velocity_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
-		//m_curl_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
-		//m_divergence_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
-		//m_pressure_buffer->setDimensions(m_mouse.width, m_mouse.height, velocityResolution);
-	}
+	FluidField(const unsigned int WIDTH, const unsigned int HEIGHT, const unsigned int resolution);
 
 	~FluidField()
 	{
-//There is probably a better way to do this
+		//There is probably a better way to do this
 		delete(m_dye_buffer);
 		delete(m_velocity_buffer);
 		delete(m_temperature_buffer);
@@ -364,6 +283,8 @@ public:
 		delete(m_fieldQuad);
 		std::cout << "DESTROYED::FLUIDFIELD" << std::endl;
 	}
+
+	void updateViewport(unsigned int width, unsigned int height);
 
 	//Draw the fluid
 	void Draw(glm::vec3 origin); //Should be used with a template?

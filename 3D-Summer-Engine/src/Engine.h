@@ -36,14 +36,14 @@ private:
 	static WindowHandler* m_window;
 	static FluidField* m_fluid;
 	Camera* m_camera;
-	FileHandler			fileSystem;
+	FileHandler fileSystem;
 
 	//Window Properties
 	static const int c_WIDTH								 = 1920;
 	static const int c_HEIGHT								 = 1080;
 	const char* c_WINDOW_NAME								 = "Summer Engine";
-	const float c_DEFAULT_CLEAR_COLOR[4]					 ={ 1.0f, 0.0f, 0.0f, 1.0f };
-	const float c_CLEAR_COLOR[4]							 ={ 0.28f, 0.41f, 0.61f, 1.0f };
+	const float c_DEFAULT_CLEAR_COLOR[4]					 = { 1.0f, 0.0f, 0.0f, 1.0f };
+	const float c_CLEAR_COLOR[4]							 = { 0.28f, 0.41f, 0.61f, 1.0f };
 
 	//Filepaths
 	//Note: Only p_GENERATED_RESULTS is being used
@@ -57,7 +57,7 @@ private:
 
 	//Engine variables
 	double g_deltaTime										 = 0.0f;			//Time between each rendered frame
-	double g_pc_time											 = 0.0f;			//Stores how long the application has been running
+	double g_pc_time										 = 0.0f;			//Stores how long the application has been running
 	bool  g_save_result										 = false;			//If set to TRUE a screenshot will be saved after the desired time below
 	double g_save_result_time								 = 20.0f;			//How long the simulation has to be running before taking a screenshot (seconds)
 
