@@ -9,10 +9,16 @@ class Framebuffer
 private:
 	GLint internalFormat, param;
 	GLenum format, type;
+
+	struct TexelSize
+	{
+		float x, y;
+	};
+
 public:
 	unsigned int fbo, texture;
 	unsigned int width, height, resolution;
-	float texelSizeX, texelSizeY;
+	TexelSize texelSize;
 
 	Framebuffer(unsigned int res, unsigned int width, unsigned int height, GLint internalFormat, GLenum format, GLenum type, GLint param);
 	~Framebuffer()

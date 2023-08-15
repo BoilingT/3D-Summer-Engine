@@ -14,7 +14,7 @@
 #include <chrono>
 #include <thread>
 
-class FluidField
+class FluidSimulation
 {
 	struct Mouse
 	{
@@ -220,7 +220,7 @@ private:
 	Texture2D* m_texture;
 	Rect* m_fieldQuad;
 
-	const unsigned int m_WIDTH, m_HEIGHT, m_resolution, m_fieldWidth;
+	const unsigned int m_WIDTH, m_HEIGHT, m_resolution;
 
 	float	 m_velocity_resolution_scalar			 = 1.0f;
 	float	 m_dye_resolution_scalar				 = 1.0f;
@@ -263,9 +263,9 @@ private:
 	Mouse  m_mouse;
 
 public:
-	FluidField(const unsigned int WIDTH, const unsigned int HEIGHT, const unsigned int resolution);
+	FluidSimulation(const unsigned int WIDTH, const unsigned int HEIGHT, const unsigned int resolution);
 
-	~FluidField()
+	~FluidSimulation()
 	{
 		//There is probably a better way to do this
 		delete(m_dye_buffer);
@@ -281,7 +281,7 @@ public:
 		std::cout << "DESTROYED::FLUIDFIELD" << std::endl;
 	}
 
-	void updateViewport(unsigned int width, unsigned int height);
+	void resizeViewport(unsigned int width, unsigned int height);
 
 	//Draw the fluid
 	void Draw(glm::vec3 origin); //Should be used with a template?

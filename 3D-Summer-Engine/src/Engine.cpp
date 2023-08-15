@@ -5,12 +5,12 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb/stb_image_write.h>
 
-double Engine::g_lastX				 = 0;
-double Engine::g_lastY				 = 0;
-bool Engine::g_leftMouseDown		 = 0;
-bool Engine::g_rightMouseDown		 = 0;
+/*double Engine::g_mouse.lastX				 = 0;
+double Engine::g_mouse.lastY				 = 0;
+bool Engine::g_mouse.leftMouseDown		 = 0;
+bool Engine::g_mouse.rightMouseDown		 = 0;
 bool Engine::g_firstMouseEnter		 = 0;
-bool Engine::g_mouse_constrain		 = true;
+bool Engine::g_mouse_constrain		 = true;*/
 bool Engine::g_running				 = false;
 
 double g_lastTime = glfwGetTime();
@@ -27,7 +27,9 @@ float timeRatio = 1.0f;
 float sum = 0.0f;
 
 WindowHandler* Engine::m_window;
-FluidField* Engine::m_fluid;
+FluidSimulation* Engine::m_fluid;
+Engine::Mouse Engine::g_mouse;
+double Engine::Time::deltaTime, Engine::Time::fixedDeltaTime, Engine::Time::pc_time;
 
 Engine::Engine()
 {
@@ -65,7 +67,7 @@ Engine::Engine()
 		return;
 	}
 
-	g_pc_time = glfwGetTime();
+	Time::pc_time = glfwGetTime();
 	if (g_fps_limit < 0)
 	{
 		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -82,7 +84,7 @@ Engine::Engine()
 
 	glfwSetInputMode(m_window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
-	m_fluid = new FluidField(c_WIDTH, c_HEIGHT, c_RESOLUTION);
+	m_fluid = new FluidSimulation(c_WIDTH, c_HEIGHT, c_RESOLUTION);
 
 	std::cout << "SUCCESS::INITIALIZATION::ENGINE" << std::endl;
 	glfwSetWindowTitle(m_window->getWindow(), "Engine Initialized");
@@ -143,14 +145,14 @@ void Engine::Run()
 void Engine::calculateDeltatime()
 {
 	currentTime = glfwGetTime();
-	g_deltaTime = currentTime - g_lastTime;
+	Time::deltaTime = currentTime - g_lastTime;
 	g_lastTime = glfwGetTime();
 }
 
 void Engine::calculateSleeptime()
 {
 
-	sleepTime = (1.0f / g_fps_limit - g_deltaTime + sleepTime / 1000.0f) * 1000; //ms
+	sleepTime = (1.0f / g_fps_limit - Time::deltaTime + sleepTime / 1000.0f) * 1000; //ms
 
 	//Avoiding negative numbers
 	if (sleepTime < 0 || sleepTime == 0)
@@ -161,12 +163,12 @@ void Engine::calculateSleeptime()
 
 void Engine::calculateFPS()
 {
-	fps = (int) (1000.f / g_deltaTime);
+	fps = (int) (1000.f / Time::deltaTime);
 }
 
 void Engine::update()
 {
-	m_fluid->updateMouse(&g_lastX, &g_lastY, &g_leftMouseDown, &g_rightMouseDown);
+	m_fluid->updateMouse(&g_mouse.lastX, &g_mouse.lastY, &g_mouse.leftMouseDown, &g_mouse.rightMouseDown);
 	m_fluid->updateConfiguration();
 
 	m_fluid->Draw(glm::vec3(0, 0, 0));
@@ -174,7 +176,7 @@ void Engine::update()
 
 void Engine::physicsUpdate()
 {
-	m_fluid->timeStep((float) g_deltaTime);
+	m_fluid->timeStep((float) Time::deltaTime);
 }
 
 void Engine::IO_EVENTS(GLFWwindow* window)
@@ -208,14 +210,14 @@ void Engine::IO_EVENTS(GLFWwindow* window)
 
 	float cameraSpeed = 2.5f;
 
-	const float cameraSensitivity = m_camera->sensitivity * (float) g_deltaTime;
+	const float cameraSensitivity = m_camera->sensitivity * (float) Time::deltaTime;
 	double time = glfwGetTime(); //Seconds
 	float passed_time = 0;
 
-	g_leftMouseDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
-	g_rightMouseDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
+	g_mouse.leftMouseDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
+	g_mouse.rightMouseDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
 
-	if (g_leftMouseDown || g_rightMouseDown)
+	if (g_mouse.leftMouseDown || g_mouse.rightMouseDown)
 	{
 		double mouseX, mouseY;
 		glfwGetCursorPos(window, &mouseX, &mouseY);
@@ -241,32 +243,32 @@ void Engine::IO_EVENTS(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		//std::cout << "Forward: { " << m_camera->forward().x << ", " << m_camera->forward().y << ", " << m_camera->forward().z << " }" << std::endl;
-		m_camera->processKeyboardInput(Camera_Movement::FORWARD, g_deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::FORWARD, Time::deltaTime);
 	}
 	//Backward
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		m_camera->processKeyboardInput(Camera_Movement::BACKWARD, g_deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::BACKWARD, Time::deltaTime);
 	}
 	//Left
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		m_camera->processKeyboardInput(Camera_Movement::LEFT, g_deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::LEFT, Time::deltaTime);
 	}
 	//Right
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
-		m_camera->processKeyboardInput(Camera_Movement::RIGHT, g_deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::RIGHT, Time::deltaTime);
 	}
 	//Up
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
-		m_camera->processKeyboardInput(Camera_Movement::UP, g_deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::UP, Time::deltaTime);
 	}
 	//Down
 	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
 	{
-		m_camera->processKeyboardInput(Camera_Movement::DOWN, g_deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::DOWN, Time::deltaTime);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
@@ -314,8 +316,8 @@ void Engine::saveResults()
 	if (g_running && g_save_result)
 	{
 		Engine::g_running = false;
-		//std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(g_deltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-hz" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound) + "-Z" + std::to_string((int)sum);
-		std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int) (c_precision * 1000)) + "-dt" + std::to_string((int) (g_deltaTime * 1000));
+		//std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(Time::deltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-hz" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound) + "-Z" + std::to_string((int)sum);
+		std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int) (c_precision * 1000)) + "-dt" + std::to_string((int) (Time::deltaTime * 1000));
 		std::string path = p_GENERATED_RESULTS + filename + ".png";
 		saveImage(path.c_str(), m_window->getWindow());
 		g_save_result = false;
@@ -346,21 +348,17 @@ void Engine::constrainMouse(GLFWwindow* window, double xPos, double yPos)
 
 void Engine::MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos)
 {
-	if (g_mouse_constrain)
+	if (g_mouse.firstMouseEnter)
 	{
-
-	}
-	if (g_firstMouseEnter)
-	{
-		g_lastX = xPos;
-		g_lastY = yPos;
-		g_firstMouseEnter = false;
+		g_mouse.lastX = xPos;
+		g_mouse.lastY = yPos;
+		g_mouse.firstMouseEnter = false;
 	}
 	double xTravel, yTravel;
-	xTravel = xPos - g_lastX;
-	yTravel = yPos - g_lastY;
-	g_lastX = xPos;
-	g_lastY = yPos;
+	xTravel = xPos - g_mouse.lastX;
+	yTravel = yPos - g_mouse.lastY;
+	g_mouse.lastX = xPos;
+	g_mouse.lastY = yPos;
 	//const float sensitivity = m_camera->sensitivity / 100.f;
 	//m_camera->processMouseMovement(yTravel * -sensitivity, xTravel * -sensitivity);
 }
@@ -376,7 +374,7 @@ void Engine::FRAMEBUFFER_RESIZE_CALLBACK(GLFWwindow* window, int width, int heig
 	if (width <= 0 || height <= 0 || glfwGetWindowAttrib(window, GLFW_ICONIFIED)) return;
 	std::cout << "Width: " << width << " Height: " << height << std::endl;
 	glViewport(0, 0, width, height);
-	m_fluid->updateViewport(width, height);
+	m_fluid->resizeViewport(width, height);
 }
 
 void Engine::WINDOW_ICONIFY_CALLBACK(GLFWwindow* window, int iconified)

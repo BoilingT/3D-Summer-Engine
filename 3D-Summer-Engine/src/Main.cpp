@@ -1,3 +1,4 @@
+//#include "FluidSimulation.h"
 #include "Engine.h"
 
 #ifdef _DEBUG
@@ -7,6 +8,10 @@ int main()
 int WinMain()
 {
 #endif
+
+	//FluidSimulation fluidSimulation;
+	//fluidSimulation.Run();
+
 	Engine engine;
 	engine.Run();
 }

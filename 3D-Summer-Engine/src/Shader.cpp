@@ -144,7 +144,7 @@ void Shader::getUniforms()
 	GLint size; // size of the variable
 	GLenum type; // type of the variable (float, vec3 or mat4, etc)
 
-	const GLsizei bufSize = 16; // maximum name length
+	const GLsizei bufSize = 32; // maximum name length
 	char name[bufSize]; // variable name in GLSL
 	GLsizei length; // name length
 

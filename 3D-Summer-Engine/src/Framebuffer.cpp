@@ -116,8 +116,8 @@ void Framebuffer::calculateTexelsize(unsigned int w, unsigned int h, unsigned in
 	//width = (float) w;
 	//height = (float) h;
 
-	texelSizeX = 1.f / width;
-	texelSizeY = 1.f / height;
+	texelSize.x = 1.f / width;
+	texelSize.y = 1.f / height;
 }
 
 int Framebuffer::status()
@@ -158,8 +158,8 @@ void Framebuffer::setTextureSource(const char* path, unsigned int screen_width, 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glBindTexture(GL_TEXTURE_2D, texture);
-		texelSizeX = 1.f / w;
-		texelSizeY = 1.f / h;
+		texelSize.x = 1.f / w;
+		texelSize.y = 1.f / h;
 		width = w;
 		height = h;
 		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, w, h, 0, format, type, data);

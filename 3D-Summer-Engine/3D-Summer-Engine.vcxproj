@@ -25,7 +25,7 @@
     <ClCompile Include="src\Cube.cpp" />
     <ClCompile Include="src\Engine.cpp" />
     <ClCompile Include="src\fileHandler.cpp" />
-    <ClCompile Include="src\FluidField.cpp" />
+    <ClCompile Include="src\FluidSimulation.cpp" />
     <ClCompile Include="src\Framebuffer.cpp" />
     <ClCompile Include="src\Line.cpp" />
     <ClCompile Include="src\Main.cpp" />
@@ -44,7 +44,7 @@
     <ClInclude Include="src\Cube.h" />
     <ClInclude Include="src\Engine.h" />
     <ClInclude Include="src\fileHandler.h" />
-    <ClInclude Include="src\FluidField.h" />
+    <ClInclude Include="src\FluidSimulation.h" />
     <ClInclude Include="src\Framebuffer.h" />
     <ClInclude Include="src\Line.h" />
     <ClInclude Include="src\Mesh.h" />
@@ -202,6 +202,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\Visual Studio 2019 Formatting\.editorconfig" />
+    <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
+    <None Include="ClassDiagram3.cd" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
