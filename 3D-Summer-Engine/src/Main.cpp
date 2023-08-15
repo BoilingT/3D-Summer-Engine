@@ -9,9 +9,6 @@ int WinMain()
 {
 #endif
 
-	//FluidSimulation fluidSimulation;
-	//fluidSimulation.Run();
-
 	Engine engine;
 	engine.Run();
 }
