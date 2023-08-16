@@ -14,7 +14,7 @@
 #include <chrono>
 #include <thread>
 
-class FluidField
+class FluidSimulation
 {
 	struct Mouse
 	{
@@ -147,6 +147,7 @@ private:
 	const char* p_density_shader						 = "./Shaders/density_shader.frag";
 	const char* p_bounds_shader							 = "./Shaders/bounds_shader.frag";
 	const char* p_splat_shader							 = "./Shaders/splat_shader.frag";
+	const char* p_apply_shader							 = "./Shaders/apply_shader.frag";
 
 	const char* p_VISUALISE_GRID_VERTEX_SHADER			 = "./Shaders/visualise_grid_vertex_shader.vert";
 	const char* p_VISUALISE_GRID_FRAGMENT_SHADER		 = "./Shaders/visualise_grid_fragment_shader.frag";
@@ -187,42 +188,37 @@ private:
 	} FLUID;
 
 	//Framebuffers
-	DoubleFramebuffer* m_velocity_buffer;				//Contains velocities to be advected
-	Framebuffer* m_divergence_buffer;					//Contains divergent velocities
-	DoubleFramebuffer* m_pressure_buffer;				//Contains a pressure field
+	DoubleFramebuffer* m_velocity_buffer;                     //Contains velocities to be advected
+	Framebuffer* m_divergence_buffer;                         //Contains divergent velocities
+	DoubleFramebuffer* m_pressure_buffer;                     //Contains a pressure field
 
 	//Application buffers
-	DoubleFramebuffer* m_dye_buffer;					//Contains dye quantities to be advected
-	DoubleFramebuffer* m_temperature_buffer;			//Boyancy and Convection
-	DoubleFramebuffer* m_density_buffer;				//Boyancy and Convection
-	Framebuffer* m_curl_buffer;							//Contains curling velocities
-	//Screen rendering buffers
-	Framebuffer* m_current_buffer;						//Contains the buffer that will be used when rendering
+	DoubleFramebuffer* m_dye_buffer;                          //Contains dye quantities to be advected
+	Framebuffer* m_curl_buffer;                               //Contains curling velocities
+	//Display buffer
+	Framebuffer* m_render_buffer;                             //Contains the buffer that will be used when rendering
 
 	//Shaders
-	Shader m_advection_shader;							//Used for advecting quantities in the fluid dependent on the given velocity buffer
-	Shader m_jacobi_iteration_shader;					//Used for Pressure and Diffusion
-	Shader m_force_shader;								//TODO: Used for application of force (Velocities)
-	Shader m_divergence_shader;							//Calculates change in density (Density velocities)
-	Shader m_integrate_shader;							//Used for adding a value to an entire buffer
-	Shader m_clear_shader;								//Used for clearing a buffer of its values
-	Shader m_gradient_subtraction_shader;				//Subtract a gradient from given buffer
-	Shader m_vorticity_shader;							//Adds swirly movement and details lost by numerical error.
-	Shader m_curl_shader;								//Calculates how the fluid curls
-	Shader m_temperature_shader;						//TODO
-	Shader m_density_shader;							//TODO
-	Shader m_bounds_shader;								//TODO: Control of Fluid boundaries
-	Shader m_splat_shader;								//Used for application of Dye and Velocity manipulation
+	Shader m_advection_shader;                                //Used for advecting quantities in the fluid dependent on the given velocity buffer
+	Shader m_jacobi_iteration_shader;                         //Used for Pressure and Diffusion
+	Shader m_force_shader;                                    //Alternative shader for splat shader (Not ready)
+	Shader m_divergence_shader;                               //Calculates change in velocities
+	Shader m_integrate_shader;                                //Used for adding a value to an entire buffer
+	Shader m_clear_shader;                                    //Used for clearing a buffer of its values
+	Shader m_gradient_subtraction_shader;                     //Subtract a gradient from given buffer
+	Shader m_vorticity_shader;                                //Adds swirly movement and details lost by numerical error.
+	Shader m_curl_shader;                                     //Calculates how the fluid curls
+	Shader m_bounds_shader;                                   //TODO: Control of Fluid boundaries
+	Shader m_splat_shader;                                    //Used for application of Dye and Velocity manipulation
+	Shader m_apply_shader;                                    //Used for application of value
 	//Screen rendering shaders
-	Shader  m_object_shader;							//Used to render objects to the screen
-	Shader* m_primary_shader;							//Used to render the fluid to the screen
-	Shader* m_visualise_grid_shader;					//TODO: Used to render a visual representation of the resolution used to the screen (Is not being used)
+	Shader  m_object_shader;                                  //Used to render objects to the screen
+	Shader* m_primary_shader;                                 //Used to render the fluid to the screen
 
 	Texture2D* m_texture;
-	Texture2D* m_texture_buffer;
 	Rect* m_fieldQuad;
 
-	const unsigned int m_WIDTH, m_HEIGHT, m_resolution, m_fieldWidth;
+	const unsigned int m_WIDTH, m_HEIGHT, m_resolution;
 
 	float	 m_velocity_resolution_scalar			 = 1.0f;
 	float	 m_dye_resolution_scalar				 = 1.0f;
@@ -247,17 +243,6 @@ private:
 	bool	 m_project								 = 1;
 	bool	 m_image								 = 0;
 
-	//Experimental
-	//const float  m_ambient_temperature					 = 18.0f;	// Ambient temperature in degrees celsius
-	//const float  m_temperature_scalar					 = 10.0f;		// Scales the effect that the difference in temperature has on the boyant force
-	//const float  m_mass									 = 3.0f;	// Smoke mass (Dye mass)
-	//const float  m_density								 = 1.8f;	// Smoke density (Dye density)
-	//Experimental (Is not in use)
-	const float  m_ambient_temperature					 = -7.0f;		// Ambient temperature in degrees celsius
-	const float  m_temperature_scalar					 = 25.0f;		// Scales the effect that the difference in temperature has on the boyant force
-	const float  m_mass									 = 10.0f;		// Smoke mass (Dye mass) //Downforce
-	const float  m_density								 = 0.6f;		// Smoke density (Dye density) //Downforce
-
 	//Visualisation
 	Rect					rectangle;
 	Line					line;
@@ -265,26 +250,23 @@ private:
 	Mouse  m_mouse;
 
 public:
-	FluidField(const unsigned int WIDTH, const unsigned int HEIGHT, const unsigned int resolution);
+	FluidSimulation(const unsigned int WIDTH, const unsigned int HEIGHT, const unsigned int resolution);
 
-	~FluidField()
+	~FluidSimulation()
 	{
 		//There is probably a better way to do this
 		delete(m_dye_buffer);
 		delete(m_velocity_buffer);
-		delete(m_temperature_buffer);
-		delete(m_density_buffer);
 		delete(m_curl_buffer);
 		delete(m_divergence_buffer);
 		delete(m_pressure_buffer);
 
 		delete(m_primary_shader);
-		delete(m_visualise_grid_shader);
 		delete(m_fieldQuad);
 		std::cout << "DESTROYED::FLUIDFIELD" << std::endl;
 	}
 
-	void updateViewport(unsigned int width, unsigned int height);
+	void resizeViewport(unsigned int width, unsigned int height);
 
 	//Draw the fluid
 	void Draw(glm::vec3 origin); //Should be used with a template?
@@ -304,17 +286,14 @@ private:
 	//Draw using specified shader together with a specified framebuffer (NULL if the purpose is to render to the screen with specified shader)
 	void blit(Framebuffer* target, Shader* shader);
 	void bufferIntegrate(DoubleFramebuffer* target, glm::vec4 value);
+	void bufferApplyValue(Framebuffer* target, glm::vec3 value);
 	void advect(float dt);
 	void diffuse(float dt);
 	void addForces(float dt);
 	void project(float dt);
 
-	void boundaryContainer(bool l, bool r, bool t, bool b, Framebuffer* target, Shader& shader);
-	void boundary(float dt, float scale, float offset, DoubleFramebuffer* target);
-	void boundaries(float dt);
 	void vorticity(float dt);
 	void curl(float dt);
-	void temperature(float dt);
 	void divergence(float dt);
 	void clearBuffer(DoubleFramebuffer* target, float value);
 	void clearBuffer(Framebuffer* target, float value);

@@ -54,7 +54,7 @@
     <ClCompile Include="src\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\FluidField.cpp">
+    <ClCompile Include="src\FluidSimulation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Line.cpp">
@@ -104,7 +104,7 @@
     <ClInclude Include="src\Engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\FluidField.h">
+    <ClInclude Include="src\FluidSimulation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Line.h">
@@ -234,12 +234,6 @@
     <Text Include="Shaders\vertex_shader.vert">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\visualise_grid_fragment_shader.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </Text>
-    <Text Include="Shaders\visualise_grid_vertex_shader.vert">
-      <Filter>Resource Files\Shaders</Filter>
-    </Text>
     <Text Include="infoForCreator.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -249,5 +243,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\Visual Studio 2019 Formatting\.editorconfig" />
+    <None Include="Shaders\apply_shader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -15,7 +15,7 @@
 #include "Camera.h"
 #include "Mesh.h"
 #include "object_includes.h"
-#include "FluidField.h"
+#include "FluidSimulation.h"
 #include "Compute.h"
 
 
@@ -23,24 +23,28 @@ class Engine
 {
 private:
 	//Mouse properties
-	static double g_lastX;
-	static double g_lastY;
-	static bool g_leftMouseDown;
-	static bool g_rightMouseDown;
-	static bool g_firstMouseEnter;
-	static bool g_mouse_constrain;
+	static struct Mouse
+	{
+		double lastX = 0;
+		double lastY = 0;
+		bool leftMouseDown = 0;
+		bool rightMouseDown = 0;
+		bool firstMouseEnter = false;
+	} g_mouse;
 
 	//Fluid simulation properties
 	static bool g_running;
 
-	static WindowHandler* m_window;
-	static FluidField* m_fluid;
-	Camera* m_camera;
-	FileHandler fileSystem;
+	static WindowHandler m_window;
+	static FluidSimulation* m_fluid;
+	static FileHandler fileSystem;
+
+	WindowHandler::WindowState windowType = WindowHandler::WindowState::WINDOWED;
+	Camera m_camera;
 
 	//Window Properties
-	static const int c_WIDTH								 = 1920;
-	static const int c_HEIGHT								 = 1080;
+	const unsigned int c_WIDTH								 = 1920;
+	const unsigned int c_HEIGHT								 = 1080;
 	const char* c_WINDOW_NAME								 = "Summer Engine";
 	const float c_DEFAULT_CLEAR_COLOR[4]					 = { 1.0f, 0.0f, 0.0f, 1.0f };
 	const float c_CLEAR_COLOR[4]							 = { 0.28f, 0.41f, 0.61f, 1.0f };
@@ -56,15 +60,22 @@ private:
 
 
 	//Engine variables
-	double g_deltaTime										 = 0.0f;			//Time between each rendered frame
-	double g_pc_time										 = 0.0f;			//Stores how long the application has been running
-	bool  g_save_result										 = false;			//If set to TRUE a screenshot will be saved after the desired time below
-	double g_save_result_time								 = 20.0f;			//How long the simulation has to be running before taking a screenshot (seconds)
+	class Time
+	{
+	public:
+		static double deltaTime;
+		static double fixedDeltaTime;
+		static double pc_time;
+	};
+
+
+	bool  g_save_result									 = false;			//If set to TRUE a screenshot will be saved after the desired time below
+	const double g_save_result_time						 = 20.0f;			//How long the simulation has to be running before taking a screenshot (seconds)
 
 	//Engine Properties
 	//Note: Higher fps will result in faster simulation speed (144 FPS is currently the "sweetspot")
 
-	int g_fps_limit											 = 144;			// Monitor refreshrate: (x < 0), No limit: (x = 0)
+	int g_fps_limit											 = 144;				// Monitor refreshrate: (x < 0), No limit: (x = 0)
 
 	//Fluid Simulation Properties
 	const unsigned int c_RESOLUTION							 = 256;				// The amount of cells that the velocityfield will contain the fluid. Note: The visual resolution is 1.333333 times larger than this resolution.
@@ -81,9 +92,7 @@ public:
 		glfwTerminate();
 
 		delete m_fluid;
-		delete m_camera;
 
-		m_camera = NULL;
 		m_fluid = NULL;
 		std::cout << "DESTROYED::ENGINE" << std::endl;
 	}

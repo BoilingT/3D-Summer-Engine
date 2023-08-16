@@ -1,12 +1,14 @@
+//#include "FluidSimulation.h"
+#ifdef _DEBUG
+#define Main main
+#else
+#define Main WinMain
+#endif
+
 #include "Engine.h"
 
-#ifdef _DEBUG
-int main()
+int Main()
 {
-#else
-int WinMain()
-{
-#endif
 	Engine engine;
 	engine.Run();
 }

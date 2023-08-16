@@ -7,11 +7,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "3D-Summer-Engine", "3D-Summ
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "FluidSimSetup", "FluidSimSetup\FluidSimSetup.vdproj", "{A3B69315-2953-48AC-8285-9F4A4026BD7E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{45D9F7B9-E484-4E10-9328-E671A0DEAA3C}"
-	ProjectSection(SolutionItems) = preProject
-		..\..\..\Visual Studio 2019 Formatting\.editorconfig = ..\..\..\Visual Studio 2019 Formatting\.editorconfig
-	EndProjectSection
-EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{3F858506-86A2-436D-8028-B97E58478C94}"
 EndProject
 Global
