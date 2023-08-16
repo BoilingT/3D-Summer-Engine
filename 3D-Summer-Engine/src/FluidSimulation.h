@@ -188,36 +188,32 @@ private:
 	} FLUID;
 
 	//Framebuffers
-	DoubleFramebuffer* m_velocity_buffer;				//Contains velocities to be advected
-	Framebuffer* m_divergence_buffer;					//Contains divergent velocities
-	DoubleFramebuffer* m_pressure_buffer;				//Contains a pressure field
+	DoubleFramebuffer* m_velocity_buffer;                     //Contains velocities to be advected
+	Framebuffer* m_divergence_buffer;                         //Contains divergent velocities
+	DoubleFramebuffer* m_pressure_buffer;                     //Contains a pressure field
 
 	//Application buffers
-	DoubleFramebuffer* m_dye_buffer;					//Contains dye quantities to be advected
-	DoubleFramebuffer* m_temperature_buffer;			//Boyancy and Convection
-	DoubleFramebuffer* m_density_buffer;				//Boyancy and Convection
-	Framebuffer* m_curl_buffer;							//Contains curling velocities
+	DoubleFramebuffer* m_dye_buffer;                          //Contains dye quantities to be advected
+	Framebuffer* m_curl_buffer;                               //Contains curling velocities
 	//Display buffer
-	Framebuffer* m_render_buffer;						//Contains the buffer that will be used when rendering
+	Framebuffer* m_render_buffer;                             //Contains the buffer that will be used when rendering
 
 	//Shaders
-	Shader m_advection_shader;							//Used for advecting quantities in the fluid dependent on the given velocity buffer
-	Shader m_jacobi_iteration_shader;					//Used for Pressure and Diffusion
-	Shader m_force_shader;								//Alternative shader for splat shader (Not ready)
-	Shader m_divergence_shader;							//Calculates change in density (Density velocities)
-	Shader m_integrate_shader;							//Used for adding a value to an entire buffer
-	Shader m_clear_shader;								//Used for clearing a buffer of its values
-	Shader m_gradient_subtraction_shader;				//Subtract a gradient from given buffer
-	Shader m_vorticity_shader;							//Adds swirly movement and details lost by numerical error.
-	Shader m_curl_shader;								//Calculates how the fluid curls
-	Shader m_temperature_shader;						//TODO
-	Shader m_density_shader;							//TODO
-	Shader m_bounds_shader;								//TODO: Control of Fluid boundaries
-	Shader m_splat_shader;								//Used for application of Dye and Velocity manipulation
-	Shader m_apply_shader;								//Used for application of value
+	Shader m_advection_shader;                                //Used for advecting quantities in the fluid dependent on the given velocity buffer
+	Shader m_jacobi_iteration_shader;                         //Used for Pressure and Diffusion
+	Shader m_force_shader;                                    //Alternative shader for splat shader (Not ready)
+	Shader m_divergence_shader;                               //Calculates change in velocities
+	Shader m_integrate_shader;                                //Used for adding a value to an entire buffer
+	Shader m_clear_shader;                                    //Used for clearing a buffer of its values
+	Shader m_gradient_subtraction_shader;                     //Subtract a gradient from given buffer
+	Shader m_vorticity_shader;                                //Adds swirly movement and details lost by numerical error.
+	Shader m_curl_shader;                                     //Calculates how the fluid curls
+	Shader m_bounds_shader;                                   //TODO: Control of Fluid boundaries
+	Shader m_splat_shader;                                    //Used for application of Dye and Velocity manipulation
+	Shader m_apply_shader;                                    //Used for application of value
 	//Screen rendering shaders
-	Shader  m_object_shader;							//Used to render objects to the screen
-	Shader* m_primary_shader;							//Used to render the fluid to the screen
+	Shader  m_object_shader;                                  //Used to render objects to the screen
+	Shader* m_primary_shader;                                 //Used to render the fluid to the screen
 
 	Texture2D* m_texture;
 	Rect* m_fieldQuad;
@@ -247,17 +243,6 @@ private:
 	bool	 m_project								 = 1;
 	bool	 m_image								 = 0;
 
-	//Experimental
-	//const float  m_ambient_temperature					 = 18.0f;	// Ambient temperature in degrees celsius
-	//const float  m_temperature_scalar					 = 10.0f;		// Scales the effect that the difference in temperature has on the boyant force
-	//const float  m_mass									 = 3.0f;	// Smoke mass (Dye mass)
-	//const float  m_density								 = 1.8f;	// Smoke density (Dye density)
-	//Experimental (Is not in use)
-	const float  m_ambient_temperature					 = -7.0f;		// Ambient temperature in degrees celsius
-	const float  m_temperature_scalar					 = 25.0f;		// Scales the effect that the difference in temperature has on the boyant force
-	const float  m_mass									 = 10.0f;		// Smoke mass (Dye mass) //Downforce
-	const float  m_density								 = 0.6f;		// Smoke density (Dye density) //Downforce
-
 	//Visualisation
 	Rect					rectangle;
 	Line					line;
@@ -272,8 +257,6 @@ public:
 		//There is probably a better way to do this
 		delete(m_dye_buffer);
 		delete(m_velocity_buffer);
-		delete(m_temperature_buffer);
-		delete(m_density_buffer);
 		delete(m_curl_buffer);
 		delete(m_divergence_buffer);
 		delete(m_pressure_buffer);
@@ -303,7 +286,7 @@ private:
 	//Draw using specified shader together with a specified framebuffer (NULL if the purpose is to render to the screen with specified shader)
 	void blit(Framebuffer* target, Shader* shader);
 	void bufferIntegrate(DoubleFramebuffer* target, glm::vec4 value);
-	void bufferApplyValue(Framebuffer* target, glm::vec4 value);
+	void bufferApplyValue(Framebuffer* target, glm::vec3 value);
 	void advect(float dt);
 	void diffuse(float dt);
 	void addForces(float dt);
@@ -311,7 +294,6 @@ private:
 
 	void vorticity(float dt);
 	void curl(float dt);
-	void temperature(float dt);
 	void divergence(float dt);
 	void clearBuffer(DoubleFramebuffer* target, float value);
 	void clearBuffer(Framebuffer* target, float value);

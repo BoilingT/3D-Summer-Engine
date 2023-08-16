@@ -20,8 +20,6 @@ FluidSimulation::FluidSimulation(const unsigned int WIDTH, const unsigned int HE
 	m_gradient_subtraction_shader(p_VERTEX_SHADER, p_gradient_subtraction_shader),
 	m_vorticity_shader(p_VERTEX_SHADER, p_vorticity_shader),
 	m_curl_shader(p_VERTEX_SHADER, p_curl_shader),
-	m_temperature_shader(p_VERTEX_SHADER, p_temperature_shader),
-	m_density_shader(p_VERTEX_SHADER, p_density_shader),
 	m_bounds_shader(p_VERTEX_SHADER, p_bounds_shader),
 	m_splat_shader(p_VERTEX_SHADER, p_splat_shader),
 	m_apply_shader(p_VERTEX_SHADER, p_apply_shader)
@@ -58,15 +56,6 @@ FluidSimulation::FluidSimulation(const unsigned int WIDTH, const unsigned int HE
 	m_curl_buffer = new Framebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 	m_divergence_buffer = new Framebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 	m_pressure_buffer = new DoubleFramebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
-
-	//Experimental
-	// Boyancy and Convection
-	m_temperature_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
-	m_temperature_buffer->readBuffer()->setTextureSource(p_TEMPERATURE_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_NEAREST);
-	m_temperature_buffer->writeBuffer()->setTextureSource(p_TEMPERATURE_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_NEAREST);
-
-	// Smoke and Clouds
-	m_density_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 
 	m_render_buffer = m_dye_buffer->readBuffer();
 
@@ -172,6 +161,9 @@ void FluidSimulation::timeStep(float dt)
 	if (m_diffuse)	diffuse(time);		//Spread out the fluid (if viscosity > 0)
 	if (m_forces)	addForces(time);	//Add a ball in the center and gravity. Also add multiple splats
 	if (m_project)	project(time);		//Remove unwanted stuff
+	bufferApplyValue(m_dye_buffer->writeBuffer(), glm::vec3(3.5f, 0.0, 0));
+	m_dye_buffer->swap();
+
 }
 
 //Add a value to an entire framebuffer
@@ -185,31 +177,13 @@ void FluidSimulation::bufferIntegrate(DoubleFramebuffer* target, glm::vec4 value
 	target->swap();
 }
 
-void FluidSimulation::bufferApplyValue(Framebuffer* target, glm::vec4 values)
+void FluidSimulation::bufferApplyValue(Framebuffer* target, glm::vec3 values)
 {
 	m_apply_shader.use();
-	glUniform4f(m_apply_shader.uniforms["value"], values.x, values.y, values.z, values.w);
-	glUniform1i(m_apply_shader.uniforms["uTexture"], target->setTexture(0));
+	glUniform3f(m_apply_shader.uniforms["value"], values.x, values.y, values.z);
+	glUniform1i(m_apply_shader.uniforms["divergenceTexture"], m_divergence_buffer->setTexture(0));
+	glUniform1i(m_apply_shader.uniforms["dyeTexture"], m_dye_buffer->readBuffer()->setTexture(1));
 	blit(target, &m_apply_shader);
-}
-
-//Calculate and add forces due to temprature (Is not being used)
-void FluidSimulation::temperature(float dt)
-{
-	m_temperature_shader.use();
-
-	glUniform1i(m_temperature_shader.uniforms["u"], m_velocity_buffer->readBuffer()->setTexture(0));	//Velocity
-	glUniform1i(m_temperature_shader.uniforms["t"], m_pressure_buffer->readBuffer()->setTexture(1));	//Temp
-	glUniform1i(m_temperature_shader.uniforms["d"], m_density_buffer->readBuffer()->setTexture(2));		//Density
-
-	glUniform1f(m_temperature_shader.uniforms["T0"], m_ambient_temperature);
-	glUniform1f(m_temperature_shader.uniforms["k"], m_mass);
-	glUniform1f(m_temperature_shader.uniforms["s"], m_temperature_scalar);
-	glUniform1f(m_temperature_shader.uniforms["dt"], dt);
-	glUniform2f(m_temperature_shader.uniforms["texelSize"], m_velocity_buffer->readBuffer()->texelSize.x, m_velocity_buffer->readBuffer()->texelSize.y);
-
-	blit(m_velocity_buffer->writeBuffer(), &m_temperature_shader);
-	m_velocity_buffer->swap();
 }
 
 //Move the quantities in the fluid
@@ -237,13 +211,6 @@ void FluidSimulation::advect(float dt)
 
 	blit(m_dye_buffer->writeBuffer(), &m_advection_shader);
 	m_dye_buffer->swap();
-
-	//Advect density
-	/*glUniform1f(dissipationLoc, m_dye_dissipation);
-	glUniform1i(xLoc, m_density_buffer->readBuffer()->setTexture(1)); //x = quantity scalar texture
-	glUniform2f(texelLoc, m_density_buffer->readBuffer()->texelSize.x, m_density_buffer->readBuffer()->texelSize.y);
-	blit(m_density_buffer->writeBuffer(), &m_advection_shader);
-	m_density_buffer->swap();*/
 }
 
 //Diffusion, by using jacobi iterations, spread out the fluid
@@ -287,7 +254,7 @@ void FluidSimulation::addForces(float dt)
 	float r = m_splat_radius / 10.0f;
 
 	splat(glm::vec2(0.5f, 0.9f), r, m_splats, true, false);
-	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -150.82f, 0.0f, 0.0f) * (float) dt);
+	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -90.82f, 0.0f, 0.0f) * (float) dt);
 	//temperature(dt);
 }
 
@@ -436,13 +403,6 @@ void FluidSimulation::splat(glm::vec2 pos, float r, bool dye, bool velocity)
 	{
 		blit(m_dye_buffer->writeBuffer(), &m_splat_shader);
 		m_dye_buffer->swap();
-		//Add density
-		/*color = glm::vec3(m_density, 0.0f, 0.0f);
-		glUniform3f(uColorLoc, color.r, 0.0f, 0.0f);
-		glUniform1i(m_splat_shader.uniforms["uTarget"], m_density_buffer->readBuffer()->setTexture(0));
-		glUniform2f(uTexLoc, m_density_buffer->readBuffer()->texelSize.x, m_density_buffer->readBuffer()->texelSize.y);
-		blit(m_density_buffer->writeBuffer(), &m_splat_shader);
-		m_density_buffer->swap();*/
 	}
 }
 
@@ -511,16 +471,6 @@ void FluidSimulation::swapBuffer(int i)
 			setCurrentBuffer(m_curl_buffer);
 			break;
 		}
-		case 6:
-		{
-			setCurrentBuffer(m_temperature_buffer->readBuffer());
-			break;
-		}
-		case 7:
-		{
-			setCurrentBuffer(m_density_buffer->readBuffer());
-			break;
-		}
 		default:
 		{
 			std::cout << "BUFFER::NONE" << std::endl;
@@ -534,7 +484,6 @@ void FluidSimulation::reset()
 	clearBuffer(m_dye_buffer, 0.0);
 	clearBuffer(m_velocity_buffer, 0.0);
 	clearBuffer(m_pressure_buffer, 0.0);
-	clearBuffer(m_density_buffer, 0.0);
 	clearBuffer(m_curl_buffer, 0.0);
 }
 
