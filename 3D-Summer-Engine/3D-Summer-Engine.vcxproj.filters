@@ -171,34 +171,34 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Shaders\advection_shader.frag">
+    <Text Include="Shaders\FluidSimulation\advection_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\bounds_shader.frag">
+    <Text Include="Shaders\FluidSimulation\bounds_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\clear_shader.frag">
+    <Text Include="Shaders\FluidSimulation\clear_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\curl_shader.frag">
+    <Text Include="Shaders\FluidSimulation\curl_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\density_shader.frag">
+    <Text Include="Shaders\FluidSimulation\density_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\divergence_shader.frag">
+    <Text Include="Shaders\FluidSimulation\divergence_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\force_shader.frag">
+    <Text Include="Shaders\FluidSimulation\force_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\gradient_subtraction_shader.frag">
+    <Text Include="Shaders\FluidSimulation\gradient_subtraction_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\integrate_shader.frag">
+    <Text Include="Shaders\FluidSimulation\integrate_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\jacobi_shader.frag">
+    <Text Include="Shaders\FluidSimulation\jacobi_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
     <Text Include="Shaders\shader.glsl">
@@ -207,13 +207,13 @@
     <Text Include="Shaders\shader_backup.glsl">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\splat_shader.frag">
+    <Text Include="Shaders\FluidSimulation\splat_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\temperature_shader.frag">
+    <Text Include="Shaders\FluidSimulation\temperature_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="Shaders\vorticity_shader.frag">
+    <Text Include="Shaders\FluidSimulation\vorticity_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
     <Text Include="Shaders\default_fragment_shader.frag">
@@ -243,7 +243,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\Visual Studio 2019 Formatting\.editorconfig" />
-    <None Include="Shaders\apply_shader.frag">
+    <None Include="Shaders\FluidSimulation\apply_shader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

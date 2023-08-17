@@ -60,15 +60,6 @@ private:
 
 
 	//Engine variables
-	class Time
-	{
-	public:
-		static double deltaTime;
-		static double fixedDeltaTime;
-		static double pc_time;
-	};
-
-
 	bool  g_save_result									 = false;			//If set to TRUE a screenshot will be saved after the desired time below
 	const double g_save_result_time						 = 20.0f;			//How long the simulation has to be running before taking a screenshot (seconds)
 
@@ -83,7 +74,52 @@ private:
 	const float c_precision									 = 1.0f / 144.0f;	// The time step for each new iteration
 	const bool  c_precision_bound							 = false;			// If the simulator should account for time lost by lag
 
+	
 public:
+	struct Time
+	{
+	private:
+		double deltaTime = 0;
+		double fixedDeltaTime = 0;
+		double pc_time = 0;
+
+		static Time& Instance()
+		{
+			static Time instance;
+			return instance;
+		}
+	public:
+		static double DeltaTime(double value)
+		{
+			return Instance().deltaTime = value;
+		}
+
+		static double DeltaTime()
+		{
+			return Instance().deltaTime;
+		}
+
+		static double FixedDeltaTime(double value)
+		{
+			return Instance().fixedDeltaTime = value;
+		}
+
+		static double FixedDeltaTime()
+		{
+			return Instance().fixedDeltaTime;
+		}
+
+		static double PcTime(double value)
+		{
+			return Instance().pc_time = value;
+		}
+
+		static double PcTime()
+		{
+			return Instance().pc_time;
+		}
+	};
+	//Time time;
 
 	Engine();
 
@@ -96,6 +132,11 @@ public:
 		m_fluid = NULL;
 		std::cout << "DESTROYED::ENGINE" << std::endl;
 	}
+
+	/*Time Time()
+	{
+		return Instance().s_time;
+	}*/
 
 	void Run();
 	void update();

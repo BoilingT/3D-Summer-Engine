@@ -29,7 +29,7 @@ float sum = 0.0f;
 WindowHandler Engine::m_window;
 FluidSimulation* Engine::m_fluid;
 Engine::Mouse Engine::g_mouse;
-double Engine::Time::deltaTime, Engine::Time::fixedDeltaTime, Engine::Time::pc_time;
+
 
 Engine::Engine()
 {
@@ -52,7 +52,7 @@ Engine::Engine()
 		return;
 	}
 
-	Time::pc_time = glfwGetTime();
+	Engine::Time::PcTime(glfwGetTime());
 	if (g_fps_limit < 0)
 	{
 		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -130,14 +130,14 @@ void Engine::Run()
 void Engine::calculateDeltatime()
 {
 	currentTime = glfwGetTime();
-	Time::deltaTime = currentTime - g_lastTime;
+	Engine::Time::DeltaTime(currentTime - g_lastTime);
 	g_lastTime = glfwGetTime();
 }
 
 void Engine::calculateSleeptime()
 {
 
-	sleepTime = (1.0f / g_fps_limit - Time::deltaTime + sleepTime / 1000.0f) * 1000; //ms
+	sleepTime = (1.0f / g_fps_limit - Engine::Time::DeltaTime() + sleepTime / 1000.0f) * 1000; //ms
 
 	//Avoiding negative numbers
 	if (sleepTime < 0 || sleepTime == 0)
@@ -148,7 +148,7 @@ void Engine::calculateSleeptime()
 
 void Engine::calculateFPS()
 {
-	fps = (int) (1000.f / Time::deltaTime);
+	fps = (int) (1000.f / Engine::Time::DeltaTime());
 }
 
 void Engine::update()
@@ -161,7 +161,7 @@ void Engine::update()
 
 void Engine::physicsUpdate()
 {
-	m_fluid->timeStep((float) Time::deltaTime);
+	m_fluid->timeStep((float) Engine::Time::DeltaTime());
 }
 
 void Engine::IO_EVENTS(GLFWwindow* window)
@@ -195,7 +195,7 @@ void Engine::IO_EVENTS(GLFWwindow* window)
 
 	float cameraSpeed = 2.5f;
 
-	const float cameraSensitivity = m_camera.sensitivity * (float) Time::deltaTime;
+	const float cameraSensitivity = m_camera.sensitivity * (float) Engine::Time::DeltaTime();
 	double time = glfwGetTime(); //Seconds
 	float passed_time = 0;
 
@@ -228,32 +228,32 @@ void Engine::IO_EVENTS(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		//std::cout << "Forward: { " << m_camera->forward().x << ", " << m_camera->forward().y << ", " << m_camera->forward().z << " }" << std::endl;
-		m_camera->processKeyboardInput(Camera_Movement::FORWARD, Time::deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::FORWARD, Time::DeltaTime);
 	}
 	//Backward
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		m_camera->processKeyboardInput(Camera_Movement::BACKWARD, Time::deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::BACKWARD, Time::DeltaTime);
 	}
 	//Left
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		m_camera->processKeyboardInput(Camera_Movement::LEFT, Time::deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::LEFT, Time::DeltaTime);
 	}
 	//Right
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
-		m_camera->processKeyboardInput(Camera_Movement::RIGHT, Time::deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::RIGHT, Time::DeltaTime);
 	}
 	//Up
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
-		m_camera->processKeyboardInput(Camera_Movement::UP, Time::deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::UP, Time::DeltaTime);
 	}
 	//Down
 	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
 	{
-		m_camera->processKeyboardInput(Camera_Movement::DOWN, Time::deltaTime);
+		m_camera->processKeyboardInput(Camera_Movement::DOWN, Time::DeltaTime);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
@@ -301,8 +301,8 @@ void Engine::saveResults()
 	if (g_running && g_save_result)
 	{
 		Engine::g_running = false;
-		//std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(Time::deltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-hz" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound) + "-Z" + std::to_string((int)sum);
-		std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int) (c_precision * 1000)) + "-dt" + std::to_string((int) (Time::deltaTime * 1000));
+		//std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(Time::DeltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-hz" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound) + "-Z" + std::to_string((int)sum);
+		std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int) (c_precision * 1000)) + "-dt" + std::to_string((int) (Engine::Time::DeltaTime() * 1000));
 		std::string path = p_GENERATED_RESULTS + filename + ".png";
 		saveImage(path.c_str(), m_window.getWindow());
 		g_save_result = false;

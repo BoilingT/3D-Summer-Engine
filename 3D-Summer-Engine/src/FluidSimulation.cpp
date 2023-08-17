@@ -144,6 +144,7 @@ void FluidSimulation::blit(Framebuffer* target, Shader* shader)
 	}
 
 	m_fieldQuad->Draw(*shader);
+
 	//Unbind framebuffer
 	int boundBuffer = 0;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &boundBuffer);
@@ -161,8 +162,9 @@ void FluidSimulation::timeStep(float dt)
 	if (m_diffuse)	diffuse(time);		//Spread out the fluid (if viscosity > 0)
 	if (m_forces)	addForces(time);	//Add a ball in the center and gravity. Also add multiple splats
 	if (m_project)	project(time);		//Remove unwanted stuff
-	bufferApplyValue(m_dye_buffer->writeBuffer(), glm::vec3(3.5f, 0.0, 0));
-	m_dye_buffer->swap();
+
+	//displayFluidMotion(m_dye_buffer->writeBuffer(), glm::vec3(3.5f, 0.0, 0));
+	//m_dye_buffer->swap();
 
 }
 
@@ -177,10 +179,10 @@ void FluidSimulation::bufferIntegrate(DoubleFramebuffer* target, glm::vec4 value
 	target->swap();
 }
 
-void FluidSimulation::bufferApplyValue(Framebuffer* target, glm::vec3 values)
+void FluidSimulation::displayFluidMotion(Framebuffer* target, glm::vec3 color)
 {
 	m_apply_shader.use();
-	glUniform3f(m_apply_shader.uniforms["value"], values.x, values.y, values.z);
+	glUniform3f(m_apply_shader.uniforms["value"], color.r, color.g, color.b);
 	glUniform1i(m_apply_shader.uniforms["divergenceTexture"], m_divergence_buffer->setTexture(0));
 	glUniform1i(m_apply_shader.uniforms["dyeTexture"], m_dye_buffer->readBuffer()->setTexture(1));
 	blit(target, &m_apply_shader);
@@ -189,7 +191,7 @@ void FluidSimulation::bufferApplyValue(Framebuffer* target, glm::vec3 values)
 //Move the quantities in the fluid
 void FluidSimulation::advect(float dt)
 {
-//Advection
+	//Advection
 	m_advection_shader.use();
 	glUniform1f(m_advection_shader.uniforms["timestep"], dt); //timestep = m_timestep
 	glUniform1f(m_advection_shader.uniforms["dissipation"], m_velocity_dissipation);
@@ -219,7 +221,7 @@ void FluidSimulation::diffuse(float dt)
 	if (m_viscosity > 0)
 	{
 		m_jacobi_iteration_shader.use();
-		// Velocity
+		//Velocity
 		float alpha = 1.0f / (dt * m_viscosity); //Alpha = pow(x, 2)/t
 		float rBeta = 1.0f / (4.0f + alpha);	 //rBeta = 1/(4+Alpha)
 		glUniform1f(m_jacobi_iteration_shader.uniforms["alpha"], alpha);
@@ -234,7 +236,7 @@ void FluidSimulation::diffuse(float dt)
 			m_velocity_buffer->swap();
 		}
 		//Diffusion
-		// Dye
+		//Dye
 		glUniform2f(m_jacobi_iteration_shader.uniforms["texelSize"], m_dye_buffer->readBuffer()->texelSize.x, m_dye_buffer->readBuffer()->texelSize.y);
 		glUniform1i(m_jacobi_iteration_shader.uniforms["b"], m_dye_buffer->readBuffer()->setTexture(0));
 
@@ -255,7 +257,6 @@ void FluidSimulation::addForces(float dt)
 
 	splat(glm::vec2(0.5f, 0.9f), r, m_splats, true, false);
 	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -90.82f, 0.0f, 0.0f) * (float) dt);
-	//temperature(dt);
 }
 
 //Projection, by removing any divergence
@@ -263,9 +264,7 @@ void FluidSimulation::project(float dt)
 {
 	if (m_vortitcity_scalar > 0)
 	{
-//Compute a normalized vorticity vector field
 		curl(dt);
-		//Restore, approximate, computated and dissipated vorticity
 		vorticity(dt);
 	}
 	divergence(dt);
@@ -376,8 +375,10 @@ void FluidSimulation::splat(glm::vec2 pos, float r, bool dye, bool velocity)
 
 	//float ratio = m_mouse.width / m_mouse.height * 0.5f;
 	//glUniform1f(m_splat_shader.uniforms["radius"], ratio > 1 ? r * ratio : r);
+
 	glUniform1f(m_splat_shader.uniforms["radius"], r);
 	glUniform2f(uTexLoc, m_velocity_buffer->readBuffer()->texelSize.x, m_velocity_buffer->readBuffer()->texelSize.y);
+
 	if (velocity)
 	{
 		blit(m_velocity_buffer->writeBuffer(), &m_splat_shader);
@@ -387,18 +388,19 @@ void FluidSimulation::splat(glm::vec2 pos, float r, bool dye, bool velocity)
 	glUniform1i(m_splat_shader.uniforms["uTarget"], m_dye_buffer->readBuffer()->setTexture(0));
 	glUniform2f(uTexLoc, m_dye_buffer->readBuffer()->texelSize.x, m_dye_buffer->readBuffer()->texelSize.y);
 
-	glm::vec3 color = glm::vec3(0.0f);
+	glm::vec3 color = glm::vec3(1.0f) * m_splat_brightness;
+
 	if (m_splat_color_acc_dependent)
 	{
-		color = glm::normalize(glm::vec3(m_mouse.texcoord_delta.x * m_splat_force, m_mouse.texcoord_delta.y * m_splat_force, 0.2f));
-		color *= m_splat_brightness;
+		color *= glm::normalize(glm::vec3(m_mouse.texcoord_delta.x * m_splat_force, m_mouse.texcoord_delta.y * m_splat_force, 0.2f));
 	}
 	else
 	{
-		color = glm::vec3(m_splat_color[0], m_splat_color[1], m_splat_color[2]);
-		color *= m_splat_brightness;
+		color *= glm::vec3(m_splat_color[0], m_splat_color[1], m_splat_color[2]);
 	}
+
 	glUniform3f(uColorLoc, abs(color.r), abs(color.g), abs(color.b + (color.r + color.g) / 5.0f) * 0.3f);
+
 	if (dye)
 	{
 		blit(m_dye_buffer->writeBuffer(), &m_splat_shader);

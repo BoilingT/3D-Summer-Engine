@@ -1,4 +1,5 @@
 #version 430 core
+in vec2 vUv;
 out vec4 fragColor;
 uniform sampler2D u; //Velocity field
 uniform float x;	//Mouse pos x
@@ -12,5 +13,6 @@ void main(){
 	float pT = 0;
 	float r = 1;
 	float c = F*pT*exp((pow(x-pos.x,2) + pow(y-pos.y,2))/r);
-	fragColor = vec4(x, y, 0.0f, 1.0f);
+	vec3 base = texture2D(u, vUv).xyz;
+	fragColor = vec4(base + c, 1.0f);
 }
