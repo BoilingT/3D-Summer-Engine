@@ -222,19 +222,19 @@ private:
 
 	const unsigned int m_WIDTH, m_HEIGHT, m_resolution;
 
-	float m_velocity_resolution_scalar			 = 1.0f;
-	float m_dye_resolution_scalar				 = 1.0f;
+	float m_velocity_resolution_scalar			 = 11.0f;
+	float m_dye_resolution_scalar				 = 2.0f;
 	bool  m_splat_color_acc_dependent			 = false;
-	float m_splat_brightness					 = 0.5f;
+	float m_splat_brightness					 = 1.0f;
 	float m_splat_color[3]						 = { 0.0f, 0.1f, 1.0f };
 	float m_splat_force							 = 6000.0f;
-	float m_splat_radius						 = 0.35f;
-	float m_dye_dissipation						 = 0.2f;		// The rate at which the dye clears from the screen
-	float m_velocity_dissipation				 = 0.1f;		// The rate at which the velocities reduces to zero
+	float m_splat_radius						 = 0.25f;
+	float m_dye_dissipation						 = 0.3f;		// The rate at which the dye clears from the screen
+	float m_velocity_dissipation				 = 0.2f;		// The rate at which the velocities reduces to zero
 	float m_viscosity							 = 0.0f;		// Internal friction of the fluid
-	unsigned int m_diffuseIterations			 = 30;			// Number of iterations used to calculate proper diffusion of the applied dye or velocities
+	unsigned int m_diffuseIterations			 = 20;			// Number of iterations used to calculate proper diffusion of the applied dye or velocities
 	unsigned int m_pressureIterations			 = 60;			// Number of iterations used to calculate more precise pressure fields
-	float m_pressure_dissipation				 = 0.9f;		// How fast the pressure field dissipates
+	float m_pressure_dissipation				 = 0.8f;		// How fast the pressure field dissipates
 	float m_vortitcity_scalar					 = 30.0f;		// Scale the magnitude of force that will be used when applying curling velocities
 	float m_timestep_scalar						 = 1.0f;		// Unit of time which the simulation will use when advancing forward.
 
