@@ -22,7 +22,8 @@ FluidSimulation::FluidSimulation(const unsigned int WIDTH, const unsigned int HE
 	m_curl_shader(p_VERTEX_SHADER, p_curl_shader),
 	m_bounds_shader(p_VERTEX_SHADER, p_bounds_shader),
 	m_splat_shader(p_VERTEX_SHADER, p_splat_shader),
-	m_apply_shader(p_VERTEX_SHADER, p_apply_shader)
+	m_apply_shader(p_VERTEX_SHADER, p_apply_shader),
+	m_primary_shader(p_VERTEX_SHADER, p_FRAGMENT_SHADER)
 {
 	std::cout << "APPLYING::CONFIGURATIONS" << std::endl;
 
@@ -30,12 +31,10 @@ FluidSimulation::FluidSimulation(const unsigned int WIDTH, const unsigned int HE
 
 	std::cout << "INITIALIZING::FLUIDFIELD" << std::endl;
 
-	m_primary_shader		 = new Shader(p_VERTEX_SHADER, p_FRAGMENT_SHADER);
-	m_texture				 = new Texture2D(p_TEXTURE);
+	m_texture = new Texture2D(p_TEXTURE);
 
-	//This is the rectangle that is used for displaying the simulation
 	//The simulation is simply a texture drawn on this rectangle
-	m_fieldQuad				 = new Rect(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), m_texture->get());
+	m_fieldQuad	= new Rect(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), m_texture->get());
 
 	GLenum textureType = GL_UNSIGNED_BYTE;	//Field type
 	TexFormat rgba(GL_RGBA32F, GL_RGBA);	//Quantity field
@@ -49,13 +48,13 @@ FluidSimulation::FluidSimulation(const unsigned int WIDTH, const unsigned int HE
 
 
 	//Buffers that store the calculated results
-	m_dye_buffer = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, rgba.internal, rgba.format, textureType, GL_LINEAR);
+	m_dye_buffer        = new DoubleFramebuffer(dyeResolution, m_WIDTH, m_HEIGHT, rgba.internal, rgba.format, textureType, GL_LINEAR);
 	//m_dye_buffer->readBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
 	//m_dye_buffer->writeBuffer()->setTextureSource(p_TEXTURE, m_WIDTH, m_HEIGHT, GL_RGB32F, GL_RGB, textureType, GL_LINEAR);
-	m_velocity_buffer = new DoubleFramebuffer(velocityResolution, m_WIDTH, m_HEIGHT, rg.internal, rg.format, textureType, GL_LINEAR);
-	m_curl_buffer = new Framebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+	m_velocity_buffer   = new DoubleFramebuffer(velocityResolution, m_WIDTH, m_HEIGHT, rg.internal, rg.format, textureType, GL_LINEAR);
+	m_pressure_buffer   = new DoubleFramebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
+	m_curl_buffer       = new Framebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 	m_divergence_buffer = new Framebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
-	m_pressure_buffer = new DoubleFramebuffer(velocityResolution, m_WIDTH, m_HEIGHT, r.internal, r.format, textureType, GL_NEAREST);
 
 	m_render_buffer = m_dye_buffer->readBuffer();
 
@@ -77,20 +76,20 @@ void FluidSimulation::resizeViewport(unsigned int width, unsigned int height)
 void FluidSimulation::Draw(glm::vec3 origin)
 {
 
-	m_primary_shader->use();
-	glUniform1i(m_primary_shader->uniforms["u_image"], m_dye_buffer->readBuffer()->setTexture(0));
-	glUniform2f(m_primary_shader->uniforms["viewportBufferSize"], m_mouse.width, m_mouse.height);
-	glUniform2f(m_primary_shader->uniforms["dyeTexelSize"], m_dye_buffer->readBuffer()->texelSize.x, m_dye_buffer->readBuffer()->texelSize.y);
-	glUniform2f(m_primary_shader->uniforms["velTexelSize"], m_velocity_buffer->readBuffer()->texelSize.x, m_velocity_buffer->readBuffer()->texelSize.y);
+	m_primary_shader.use();
+	glUniform1i(m_primary_shader.uniforms["u_image"], m_dye_buffer->readBuffer()->setTexture(0));
+	glUniform2f(m_primary_shader.uniforms["viewportBufferSize"], m_mouse.width, m_mouse.height);
+	glUniform2f(m_primary_shader.uniforms["dyeTexelSize"], m_dye_buffer->readBuffer()->texelSize.x, m_dye_buffer->readBuffer()->texelSize.y);
+	glUniform2f(m_primary_shader.uniforms["velTexelSize"], m_velocity_buffer->readBuffer()->texelSize.x, m_velocity_buffer->readBuffer()->texelSize.y);
 	if (m_render_buffer != m_dye_buffer->readBuffer())
 	{
-		glUniform1i(m_primary_shader->uniforms["u_image_overlay"], m_render_buffer->setTexture(1));
+		glUniform1i(m_primary_shader.uniforms["u_image_overlay"], m_render_buffer->setTexture(1));
 	}
 	else
 	{
-		glUniform1i(m_primary_shader->uniforms["u_image_overlay"], 0);
+		glUniform1i(m_primary_shader.uniforms["u_image_overlay"], 0);
 	}
-	blit(nullptr, m_primary_shader);
+	blit(nullptr, &m_primary_shader);
 
 	/*glm::mat4 viewM = glm::mat4(1.0f);
 	glm::mat4 projectionM = glm::mat4(1.0f);
@@ -434,43 +433,43 @@ void FluidSimulation::updateMouse(double* mouseX, double* mouseY, bool* left_mou
 	}
 }
 
-void FluidSimulation::setCurrentBuffer(Framebuffer* buffer)
+void FluidSimulation::setDisplayBuffer(Framebuffer* buffer)
 {
 	if (m_render_buffer == buffer) return;
 	m_render_buffer = buffer;
 }
 
-void FluidSimulation::swapBuffer(int i)
+void FluidSimulation::displayTexture(int i)
 {
 	if (i < 1) return;
-	m_primary_shader->use();
+	m_primary_shader.use();
 
-	glUniform1i(m_primary_shader->uniforms["scene"], i - 1);
+	glUniform1i(m_primary_shader.uniforms["scene"], i - 1);
 	switch (i)
 	{
 		case 1:
 		{
-			setCurrentBuffer(m_dye_buffer->readBuffer());
+			setDisplayBuffer(m_dye_buffer->readBuffer());
 			break;
 		}
 		case 2:
 		{
-			setCurrentBuffer(m_velocity_buffer->readBuffer());
+			setDisplayBuffer(m_velocity_buffer->readBuffer());
 			break;
 		}
 		case 3:
 		{
-			setCurrentBuffer(m_divergence_buffer);
+			setDisplayBuffer(m_divergence_buffer);
 			break;
 		}
 		case 4:
 		{
-			setCurrentBuffer(m_pressure_buffer->readBuffer());
+			setDisplayBuffer(m_pressure_buffer->readBuffer());
 			break;
 		}
 		case 5:
 		{
-			setCurrentBuffer(m_curl_buffer);
+			setDisplayBuffer(m_curl_buffer);
 			break;
 		}
 		default:
@@ -481,7 +480,7 @@ void FluidSimulation::swapBuffer(int i)
 	}
 }
 
-void FluidSimulation::reset()
+void FluidSimulation::clearSimulationBuffers()
 {
 	clearBuffer(m_dye_buffer, 0.0);
 	clearBuffer(m_velocity_buffer, 0.0);

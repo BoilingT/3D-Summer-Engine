@@ -220,7 +220,7 @@ void Engine::IO_EVENTS(GLFWwindow* window)
 	}
 	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
 	{
-		m_fluid->reset();
+		m_fluid->clearSimulationBuffers();
 	}
 	//Camera movement
 	/*
@@ -399,36 +399,36 @@ void Engine::KEY_CALLBACK(GLFWwindow* window, int key, int scancode, int action,
 	//Dye
 	if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
 	{
-		m_fluid->swapBuffer(1);
+		m_fluid->displayTexture(1);
 	}
 	//Velocity
 	else if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS)
 	{
-		m_fluid->swapBuffer(2);
+		m_fluid->displayTexture(2);
 	}
 	//Divergence
 	else if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
 	{
-		m_fluid->swapBuffer(3);
+		m_fluid->displayTexture(3);
 	}
 	//Pressure
 	else if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
 	{
-		m_fluid->swapBuffer(4);
+		m_fluid->displayTexture(4);
 	}
 	//Curl
 	else if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
 	{
-		m_fluid->swapBuffer(5);
+		m_fluid->displayTexture(5);
 	}
 	//Temperature
 	else if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
 	{
-		m_fluid->swapBuffer(6);
+		m_fluid->displayTexture(6);
 	}
 	//Density
 	else if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
 	{
-		m_fluid->swapBuffer(7);
+		m_fluid->displayTexture(7);
 	}
 }

@@ -191,13 +191,10 @@ private:
 
 	//Framebuffers
 	DoubleFramebuffer* m_velocity_buffer; //Contains velocities to be advected
-	Framebuffer* m_divergence_buffer;     //Contains divergent velocities
 	DoubleFramebuffer* m_pressure_buffer; //Contains a pressure field
-
-	//Application buffers
 	DoubleFramebuffer* m_dye_buffer;      //Contains dye quantities to be advected
+	Framebuffer* m_divergence_buffer;     //Contains divergent velocities
 	Framebuffer* m_curl_buffer;           //Contains curling velocities
-	//Display buffer
 	Framebuffer* m_render_buffer;         //Contains the buffer that will be used when rendering
 
 	//Shaders
@@ -214,8 +211,8 @@ private:
 	Shader m_splat_shader;                //Used for application of Dye and Velocity manipulation
 	Shader m_apply_shader;                //Used for application of value
 	//Screen rendering shaders
-	Shader  m_object_shader;              //Used to render objects to the screen
-	Shader* m_primary_shader;             //Used to render the fluid to the screen
+	Shader m_object_shader;               //Used to render objects to the screen
+	Shader m_primary_shader;              //Used to render the fluid to the screen
 
 	Texture2D* m_texture;
 	Rect* m_fieldQuad;
@@ -260,24 +257,19 @@ public:
 		delete(m_divergence_buffer);
 		delete(m_pressure_buffer);
 
-		delete(m_primary_shader);
 		delete(m_fieldQuad);
 		std::cout << "DESTROYED::FLUIDFIELD" << std::endl;
 	}
 
 	void resizeViewport(unsigned int width, unsigned int height);
 
-	//Draw the fluid
-	void Draw(glm::vec3 origin); //Should be used with a template?
-	//Set mouse position and button properties
+	void Draw(glm::vec3 origin);
 	void updateMouse(double* mouseX, double* mouseY, bool* left_mouse_down, bool* right_mouse_down);
-	//Move forward in time, update values
 	void timeStep(float dt);
-	void setCurrentBuffer(Framebuffer* buffer);
-	void swapBuffer(int i);
+	void setDisplayBuffer(Framebuffer* buffer);
+	void displayTexture(int i);
+	void clearSimulationBuffers();
 
-	//Clear everything and start from the beginning
-	void reset(); //TODO
 	int applyConfiguration(Config& configurationFile);
 	void updateConfiguration();
 
@@ -286,6 +278,7 @@ private:
 	void blit(Framebuffer* target, Shader* shader);
 	void bufferIntegrate(DoubleFramebuffer* target, glm::vec4 value);
 	void displayFluidMotion(Framebuffer* target, glm::vec3 color);
+
 	void advect(float dt);
 	void diffuse(float dt);
 	void addForces(float dt);
