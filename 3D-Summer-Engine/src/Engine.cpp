@@ -13,37 +13,23 @@ bool Engine::g_firstMouseEnter		 = 0;
 bool Engine::g_mouse_constrain		 = true;*/
 bool Engine::g_running				 = false;
 
-double g_lastTime = glfwGetTime();
-double currentTime = glfwGetTime();
-int frames = 0;
-int fps = 0;
-double TPF = 0;
-double sleepTime = 0;
-int steps = 0;
-float simulationTime = 0.0f;
-float engineTime = 0.0;
-float savedTime = 0.0f;
-float timeRatio = 1.0f;
-float sum = 0.0f;
-
 WindowHandler Engine::m_window;
 FluidSimulation* Engine::m_fluid;
 Engine::Mouse Engine::g_mouse;
-
 
 Engine::Engine()
 {
 	std::cout << "INITIALIZING::ENGINE" << std::endl;
 	Camera m_camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
-	if (m_window.init(c_WINDOW_NAME) == -1) return;
-	//Open window
-	if (m_window.open(WindowHandler::WindowState::NONE, c_WIDTH, c_HEIGHT) == -1) return;
-	if (m_window.setIcon(p_APPLICATION_ICON) == -1)
+	if (!m_window.init(c_WINDOW_NAME)) return;
+
+	m_window.open(WindowHandler::WindowState::NONE, c_WIDTH, c_HEIGHT);
+
+	if (!m_window.setIcon(p_APPLICATION_ICON))
 	{
 		std::cout << "Could not set application icon" << std::endl;
 	}
-
 
 	//GLAD library loading
 	if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
@@ -52,7 +38,9 @@ Engine::Engine()
 		return;
 	}
 
-	Engine::Time::PcTime(glfwGetTime());
+	Time::Set(glfwGetTime());
+	Time::FixedDeltaTime(g_fixedDeltaTime);
+
 	if (g_fps_limit < 0)
 	{
 		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -88,80 +76,98 @@ void Engine::Run()
 	m_window.setTitle("Fluid Simulation");
 
 	Engine::g_running = true;
+	double timePassed = 0;
+	double fixedTimePassed = 0;
+	double clockTimePassed = 0;
+	double frames = 0;
+	double ticks = 0;
+	int max = 0;
 
 	//Rendering loop
+	glClearColor(c_DEFAULT_CLEAR_COLOR[0], c_DEFAULT_CLEAR_COLOR[1], c_DEFAULT_CLEAR_COLOR[2], c_DEFAULT_CLEAR_COLOR[3]);
+	//dt = renderTime + sleepTime_0 = t1 - t0
+	//sleepTime_0 = dt - renderTime
+	//sleepTime = maxDt - dt = maxDt - renderTime + sleepTime_0
 	while (!glfwWindowShouldClose(m_window.getWindow()))
 	{
+		Time::Set(glfwGetTime());
+		Performance::SetDeltaTime(Time::DeltaTime());
+
+		if ((clockTimePassed += Time::DeltaTime()) >= 1.0f)
+		{
+			std::string title = std::to_string(Time::DeltaTime() * 1000) + "ms " + std::to_string(Performance::CalculateFPS(frames, clockTimePassed)) + " FPS";
+			m_window.setTitle(title);
+
+			std::cout << "fixedUpdate: " << Performance::CalculateFPS(ticks, fixedTimePassed) << " Renderer: " << Performance::CalculateFPS(frames, clockTimePassed) << std::endl; //Fixed FPS
+			
+			clockTimePassed = 0;
+			
+			
+			frames = 0;
+		}
+		
 		IO_EVENTS(m_window.getWindow());
-
-		calculateDeltatime();
-		calculateSleeptime();
-		calculateFPS();
-
-		glClearColor(c_DEFAULT_CLEAR_COLOR[0], c_DEFAULT_CLEAR_COLOR[1], c_DEFAULT_CLEAR_COLOR[2], c_DEFAULT_CLEAR_COLOR[3]);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		if (Engine::g_running)
 		{
-			physicsUpdate();
+			update(Time::DeltaTime());
+
+			double dt = Time::DeltaTime();
+			if ((timePassed += dt) >= Time::FixedDeltaTime())
+			{
+				fixedUpdate(Time::FixedDeltaTime());
+				if ((fixedTimePassed += timePassed) >= 1.0f)
+				{
+					fixedTimePassed = 0;
+					ticks = 0;
+				}
+				timePassed = 0;
+				ticks++;
+			}
 		}
-		update();
+
+		render();
+		frames++;
 
 		glBindVertexArray(0);
 
-		/*Double buffer
-			When rendering, the front buffer contains the final output of an image and is rendered to the screen.
-			While it is being drawn to the screen a back buffer is being drawn behind the scenes in order to reduce flickering issues.
-		*/
-		//Swap color buffer in order to render new images
 		glfwSwapBuffers(m_window.getWindow());
-		//Check if any events have been triggered
 		glfwPollEvents();
 
-		if (sleepTime > 0)
-		{
-			std::this_thread::sleep_for(std::chrono::milliseconds((long) (sleepTime)));
-		}
+		std::this_thread::sleep_for(
+			std::chrono::milliseconds(
+			(long) (Performance::SleepTime(g_fps_limit, Time::DeltaTime()) * 1000.0f)
+		));
 	}
+
 	std::cout << "EXITED::RENDER::LOOP" << std::endl;
 	return;
 }
 
-void Engine::calculateDeltatime()
+//double Engine::calculateDeltatime(double& out_StartTime, double& out_EndTime)
+//{
+//	out_StartTime = glfwGetTime();
+//	double deltaTime = out_StartTime - out_EndTime;
+//	out_EndTime = glfwGetTime();
+//	return deltaTime;
+//}
+
+void Engine::render()
 {
-	currentTime = glfwGetTime();
-	Engine::Time::DeltaTime(currentTime - g_lastTime);
-	g_lastTime = glfwGetTime();
-}
-
-void Engine::calculateSleeptime()
-{
-
-	sleepTime = (1.0f / g_fps_limit - Engine::Time::DeltaTime() + sleepTime / 1000.0f) * 1000; //ms
-
-	//Avoiding negative numbers
-	if (sleepTime < 0 || sleepTime == 0)
-	{
-		sleepTime = 0;
-	}
-}
-
-void Engine::calculateFPS()
-{
-	fps = (int) (1000.f / Engine::Time::DeltaTime());
-}
-
-void Engine::update()
-{
-	m_fluid->updateMouse(&g_mouse.lastX, &g_mouse.lastY, &g_mouse.leftMouseDown, &g_mouse.rightMouseDown);
-	m_fluid->updateConfiguration();
-
 	m_fluid->Draw(glm::vec3(0, 0, 0));
 }
 
-void Engine::physicsUpdate()
+void Engine::update(double deltaTime)
 {
-	m_fluid->timeStep((float) Engine::Time::DeltaTime());
+	m_fluid->updateMouse(&g_mouse.lastX, &g_mouse.lastY, &g_mouse.leftMouseDown, &g_mouse.rightMouseDown);
+	m_fluid->updateConfiguration();
+	m_fluid->timeStep((float) deltaTime);
+}
+
+void Engine::fixedUpdate(double deltaTime)
+{
+	//m_fluid->timeStep((float) deltaTime);
 }
 
 void Engine::IO_EVENTS(GLFWwindow* window)
@@ -195,7 +201,7 @@ void Engine::IO_EVENTS(GLFWwindow* window)
 
 	float cameraSpeed = 2.5f;
 
-	const float cameraSensitivity = m_camera.sensitivity * (float) Engine::Time::DeltaTime();
+	const float cameraSensitivity = m_camera.sensitivity * (float) Time::DeltaTime();
 	double time = glfwGetTime(); //Seconds
 	float passed_time = 0;
 
@@ -212,7 +218,7 @@ void Engine::IO_EVENTS(GLFWwindow* window)
 	//Step forward a single timestep
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && Engine::g_running == false)
 	{
-		m_fluid->timeStep(c_precision);
+		m_fluid->timeStep(g_fixedDeltaTime);
 	}
 	if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
 	{
@@ -301,8 +307,8 @@ void Engine::saveResults()
 	if (g_running && g_save_result)
 	{
 		Engine::g_running = false;
-		//std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(c_precision * 1000)) + "-dt" + std::to_string((int)(Time::DeltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-hz" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound) + "-Z" + std::to_string((int)sum);
-		std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int) (c_precision * 1000)) + "-dt" + std::to_string((int) (Engine::Time::DeltaTime() * 1000));
+		//std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int)(g_fixedDeltaTime * 1000)) + "-dt" + std::to_string((int)(Time::DeltaTime * 1000)) + "-sT" + std::to_string((int)(simulationTime)) + "-hz" + std::to_string((int)g_fps_limit) + "-pcT" + std::to_string((int)currentTime) + "-b" + std::to_string(c_precision_bound) + "-Z" + std::to_string((int)sum);
+		std::string filename = "-Res" + std::to_string(c_RESOLUTION) + "-dx" + std::to_string((int) (g_fixedDeltaTime * 1000)) + "-dt" + std::to_string((int) (Time::DeltaTime() * 1000));
 		std::string path = p_GENERATED_RESULTS + filename + ".png";
 		saveImage(path.c_str(), m_window.getWindow());
 		g_save_result = false;

@@ -279,6 +279,7 @@ private:
 	void bufferIntegrate(DoubleFramebuffer* target, glm::vec4 value);
 	void displayFluidMotion(Framebuffer* target, glm::vec3 color);
 
+	void splat();
 	void advect(float dt);
 	void diffuse(float dt);
 	void addForces(float dt);

@@ -1,7 +1,7 @@
 #include "WindowHandler.h"
 #include <stb/stb_image.h>
 
-int WindowHandler::init(std::string _title)
+bool WindowHandler::init(std::string _title)
 {
 	title = _title;
 	window = nullptr;
@@ -9,7 +9,7 @@ int WindowHandler::init(std::string _title)
 	std::cout << "INITIALIZING::WINDOW" << std::endl;
 
 	int success = glfwInit();
-	if (!success) return -1;
+	if (!success) return false;
 
 	monitor = glfwGetPrimaryMonitor();
 	mode = glfwGetVideoMode(monitor);
@@ -25,14 +25,14 @@ int WindowHandler::init(std::string _title)
 	//glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 }
 
-int WindowHandler::open(WindowState state)
+bool WindowHandler::open(WindowState state)
 {
 	return open(state, mode->width, mode->height);
 }
 
-int WindowHandler::open(WindowState state, unsigned int _width, unsigned int _height)
+bool WindowHandler::open(WindowState state, unsigned int _width, unsigned int _height)
 {
-	if (window != NULL || (state == WindowState::NONE && (_width == 0 || _height == 0))) return -1;
+	if (window != NULL || (state == WindowState::NONE && (_width == 0 || _height == 0))) return false;
 
 	windowState = state;
 	width = _width;
@@ -58,23 +58,23 @@ int WindowHandler::open(WindowState state, unsigned int _width, unsigned int _he
 	{
 		std::cout << "ERROR::CREATE::WINDOW" << std::endl;
 		glfwTerminate();
-		return -1;
+		return false;
 	}
 
 	glfwMakeContextCurrent(window);
 	glfwRequestWindowAttention(window);
 	std::cout << "SUCCESS::INITIALIZATION::WINDOW" << std::endl;
-	return 0;
+	return true;
 }
 
-int WindowHandler::setState(WindowState state)
+bool WindowHandler::setState(WindowState state)
 {
 	return setState(state, mode->width, mode->height);
 }
 
-int WindowHandler::setState(WindowState state, unsigned int _width, unsigned int _height)
+bool WindowHandler::setState(WindowState state, unsigned int _width, unsigned int _height)
 {
-	if (monitor == nullptr || window == NULL || (state == WindowState::NONE && (_width == 0 || _height == 0))) return -1;
+	if (monitor == nullptr || window == NULL || (state == WindowState::NONE && (_width == 0 || _height == 0))) return false;
 
 	windowState = state;
 	width = _width;
@@ -92,7 +92,7 @@ int WindowHandler::setState(WindowState state, unsigned int _width, unsigned int
 		glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
 	}
 
-	return 0;
+	return true;
 }
 
 void WindowHandler::setTitle(std::string title)
@@ -100,9 +100,9 @@ void WindowHandler::setTitle(std::string title)
 	glfwSetWindowTitle(window, title.c_str());
 }
 
-int WindowHandler::setIcon(std::string path)
+bool WindowHandler::setIcon(std::string path)
 {
-	if (window == NULL) return -1;
+	if (window == NULL) return false;
 	int w, h, channels;
 	unsigned char* data = stbi_load(path.c_str(), &w, &h, &channels, 0);
 	if (data != NULL)
@@ -116,10 +116,10 @@ int WindowHandler::setIcon(std::string path)
 		delete(icon);
 		icon = nullptr;
 		stbi_image_free(data);
-		return 0;
+		return true;
 	}
 	else if (data == NULL)
 	{
-		return -1;
+		return false;
 	}
 }

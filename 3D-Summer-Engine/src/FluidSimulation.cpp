@@ -154,9 +154,10 @@ void FluidSimulation::blit(Framebuffer* target, Shader* shader)
 }
 
 //Advection -> Diffusion -> Force Application -> Projection
-void FluidSimulation::timeStep(float dt)
+void FluidSimulation::timeStep(float deltaTime)
 {
-	float time = dt * m_timestep_scalar;
+	float time = deltaTime * m_timestep_scalar;
+
 	if (m_advect)	advect(time);		//Move the fluid and its quantities
 	if (m_diffuse)	diffuse(time);		//Spread out the fluid (if viscosity > 0)
 	if (m_forces)	addForces(time);	//Add a ball in the center and gravity. Also add multiple splats
@@ -165,6 +166,30 @@ void FluidSimulation::timeStep(float dt)
 	//displayFluidMotion(m_dye_buffer->writeBuffer(), glm::vec3(3.5f, 0.0, 0));
 	//m_dye_buffer->swap();
 
+}
+
+void FluidSimulation::splat()
+{
+	if (abs(m_mouse.window_delta.x) > 0 || abs(m_mouse.window_delta.y) > 0)
+	{
+		if (m_mouse.right_mouse_down && m_mouse.left_mouse_down)
+		{
+			splat(m_mouse.texcoord_pos, m_splat_radius, true, false);
+		}
+		else if (m_mouse.right_mouse_down)
+		{
+			splat(m_mouse.texcoord_pos, m_splat_radius, false, true);
+		}
+		else if (m_mouse.left_mouse_down)
+		{
+			splat(m_mouse.texcoord_pos, m_splat_radius, true, true);
+		}
+		//std::cout << "X: " << m_mouse.window_pos.x << " Y: " << m_mouse.window_pos.y << "tX: " << m_mouse.texcoord_pos.x << " tY: " << m_mouse.texcoord_pos.y << std::endl;
+	}
+	else if (m_mouse.left_mouse_down)
+	{
+		splat(m_mouse.texcoord_pos, m_splat_radius, true, false);
+	}
 }
 
 //Add a value to an entire framebuffer
@@ -410,27 +435,7 @@ void FluidSimulation::splat(glm::vec2 pos, float r, bool dye, bool velocity)
 void FluidSimulation::updateMouse(double* mouseX, double* mouseY, bool* left_mouse_down, bool* right_mouse_down)
 {
 	m_mouse.update(*mouseX, *mouseY, *left_mouse_down, *right_mouse_down);
-
-	if (abs(m_mouse.window_delta.x) > 0 || abs(m_mouse.window_delta.y) > 0)
-	{
-		if (m_mouse.right_mouse_down && m_mouse.left_mouse_down)
-		{
-			splat(m_mouse.texcoord_pos, m_splat_radius, true, false);
-		}
-		else if (m_mouse.right_mouse_down)
-		{
-			splat(m_mouse.texcoord_pos, m_splat_radius, false, true);
-		}
-		else if (m_mouse.left_mouse_down)
-		{
-			splat(m_mouse.texcoord_pos, m_splat_radius, true, true);
-		}
-		//std::cout << "X: " << m_mouse.window_pos.x << " Y: " << m_mouse.window_pos.y << "tX: " << m_mouse.texcoord_pos.x << " tY: " << m_mouse.texcoord_pos.y << std::endl;
-	}
-	else if (m_mouse.left_mouse_down)
-	{
-		splat(m_mouse.texcoord_pos, m_splat_radius, true, false);
-	}
+	splat();
 }
 
 void FluidSimulation::setDisplayBuffer(Framebuffer* buffer)

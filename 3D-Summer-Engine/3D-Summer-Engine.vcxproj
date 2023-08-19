@@ -34,6 +34,7 @@
     <ClCompile Include="src\Object.cpp" />
     <ClCompile Include="src\Texture2D.cpp" />
     <ClCompile Include="src\WindowHandler.cpp" />
+    <ClCompile Include="src\Time.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\STB\stb_image.h" />
@@ -57,6 +58,7 @@
     <ClInclude Include="libs\stb_image_write.h" />
     <ClInclude Include="src\Texture2D.h" />
     <ClInclude Include="src\WindowHandler.h" />
+    <ClInclude Include="src\Time.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="infoForCreator.txt" />

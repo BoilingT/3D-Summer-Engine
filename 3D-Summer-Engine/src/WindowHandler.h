@@ -22,13 +22,13 @@ public:
 		// Do nothing
 	}
 
-	int init(std::string _title);
-	int setState(WindowState state);
-	int setState(WindowState state, unsigned int _width, unsigned int _height);
-	int setIcon(std::string path);
+	bool init(std::string _title);
+	bool setState(WindowState state);
+	bool setState(WindowState state, unsigned int _width, unsigned int _height);
+	bool setIcon(std::string path);
 	void setTitle(std::string title);
-	int open(WindowState state, unsigned int _width, unsigned int _height);
-	int open(WindowState state);
+	bool open(WindowState state, unsigned int _width, unsigned int _height);
+	bool open(WindowState state);
 
 	~WindowHandler()
 	{
