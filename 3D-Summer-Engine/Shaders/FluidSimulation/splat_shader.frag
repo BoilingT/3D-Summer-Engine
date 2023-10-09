@@ -11,7 +11,7 @@ uniform int amount;
 float calcSplat(vec2 pos, float r, vec2 coord, float ratio){
 	vec2 p = coord - pos;
 	p*=ratio;
-	return exp(-dot(p, p) / (r/30.0f));
+	return exp(-dot(p, p) / (r*0.03f));
 }
 
 float getFinalSplat(vec2 coord, float ratio){
@@ -36,7 +36,7 @@ void main(){
 		
 	vec3 base = texture2D(uTarget, vUv).xyz;
 
-	fragColor = vec4(base + getFinalSplat(vUv, ratio) * color, 1.0f);
+	fragColor = vec4(base + color * getFinalSplat(vUv, ratio), 1.0f);
 
 	/*vec2 p = vUv - point.xy;
 	p.x *= 1920.0f / 1080.0f;

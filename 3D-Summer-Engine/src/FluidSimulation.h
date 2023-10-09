@@ -187,6 +187,7 @@ private:
 		const std::string forces = "forces";
 		const std::string project = "project";
 		const std::string image = "image";
+		const std::string visualize_change = "visualize_change";
 	} FLUID;
 
 	//Framebuffers
@@ -244,6 +245,7 @@ private:
 	bool m_forces								 = 0;
 	bool m_project								 = 1;
 	bool m_image								 = 0;
+	bool m_visualize_change						 = 0;
 
 public:
 	FluidSimulation(const unsigned int WIDTH, const unsigned int HEIGHT, const unsigned int resolution);
@@ -277,7 +279,7 @@ private:
 	//Draw using specified shader together with a specified framebuffer (NULL if the purpose is to render to the screen with specified shader)
 	void blit(Framebuffer* target, Shader* shader);
 	void bufferIntegrate(DoubleFramebuffer* target, glm::vec4 value);
-	void displayFluidMotion(Framebuffer* target, glm::vec3 color);
+	void displayFluidMotion();
 
 	void splat();
 	void advect(float dt);

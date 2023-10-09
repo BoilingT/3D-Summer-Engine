@@ -76,12 +76,12 @@ void Engine::Run()
 	m_window.setTitle("Fluid Simulation");
 
 	Engine::g_running = true;
-	double timePassed = 0;
-	double fixedTimePassed = 0;
-	double clockTimePassed = 0;
-	double frames = 0;
-	double ticks = 0;
-	int max = 0;
+	static double timePassed = 0;
+	static double fixedTimePassed = 0;
+	static double clockTimePassed = 0;
+	static double frames = 0;
+	static double ticks = 0;
+	static int max = 0;
 
 	//Rendering loop
 	glClearColor(c_DEFAULT_CLEAR_COLOR[0], c_DEFAULT_CLEAR_COLOR[1], c_DEFAULT_CLEAR_COLOR[2], c_DEFAULT_CLEAR_COLOR[3]);
@@ -98,14 +98,14 @@ void Engine::Run()
 			std::string title = std::to_string(Time::DeltaTime() * 1000) + "ms " + std::to_string(Performance::CalculateFPS(frames, clockTimePassed)) + " FPS";
 			m_window.setTitle(title);
 
-			std::cout << "fixedUpdate: " << Performance::CalculateFPS(ticks, fixedTimePassed) << " Renderer: " << Performance::CalculateFPS(frames, clockTimePassed) << std::endl; //Fixed FPS
-			
+			//std::cout << "fixedUpdate: " << Performance::CalculateFPS(ticks, fixedTimePassed) << " Renderer: " << Performance::CalculateFPS(frames, clockTimePassed) << std::endl; //Fixed FPS
+
 			clockTimePassed = 0;
-			
-			
+
+
 			frames = 0;
 		}
-		
+
 		IO_EVENTS(m_window.getWindow());
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -114,7 +114,7 @@ void Engine::Run()
 			update(Time::DeltaTime());
 
 			double dt = Time::DeltaTime();
-			if ((timePassed += dt) >= Time::FixedDeltaTime())
+			if ((timePassed += dt) >= Time::DeltaTime())
 			{
 				fixedUpdate(Time::FixedDeltaTime());
 				if ((fixedTimePassed += timePassed) >= 1.0f)
@@ -156,11 +156,11 @@ void Engine::Run()
 void Engine::render()
 {
 	m_fluid->Draw(glm::vec3(0, 0, 0));
+	m_fluid->updateMouse(&g_mouse.lastX, &g_mouse.lastY, &g_mouse.leftMouseDown, &g_mouse.rightMouseDown);
 }
 
 void Engine::update(double deltaTime)
 {
-	m_fluid->updateMouse(&g_mouse.lastX, &g_mouse.lastY, &g_mouse.leftMouseDown, &g_mouse.rightMouseDown);
 	m_fluid->updateConfiguration();
 	m_fluid->timeStep((float) deltaTime);
 }

@@ -32,13 +32,39 @@ vec4 getSciColor(float value, float minVal, float maxVal) {
 	return vec4(r,g,b, 1);
 }
 
+float gaussian(float x, float a, float b, float c){
+	return a*exp(-pow(x-b,2)/(2*c*c));
+}
+
 void main(){
 	vec4 color = texture(u_image_overlay, texCoord);
+	if(scene == 1 && false){
+		float vel = length(color.rg);
+		if(vel == 0){
+			color = vec4(1, 1, 1, 1.0f) * gaussian(vel, 1, 0, 100);
+		}/*else if(color.r > 0 && color.g < 0){
+			color.r = gaussian(vel, 1, 0, 100);
+		}else if(color.r < 0){
+			color.b = gaussian(vel, 1, 0, 100);
+		}*/
+		else if(vel > 0){
+			color = vec4(vec3(gaussian(color.r, 1, 0, 100), 1, 1), 1.0f);
+		}
+
+		/*if(color.g > 0){
+			color.r = gaussian(vel, 1, 0, 100);
+		}else if(color.g < 0){
+			color.b = gaussian(vel, 1, 0, 100);
+		}*/
+
+	}
+
 	if((color.g + color.b)/2.f <= 0.0f){ //if g and b are not in use
 		if(color.r < 0){ //show negative red as positive blue
 			color.b = abs(color.r);
 		}
 	}
+
 	if(scene == 3){
 		vec2 pressureTexel = texture(u_image_overlay, vec2(0.0f, 0.0f)).xy;
 		float maxP = pressureTexel.x;

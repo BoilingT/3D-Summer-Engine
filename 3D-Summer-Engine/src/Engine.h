@@ -51,7 +51,7 @@ private:
 	const double g_save_result_time							 = 20.0f;			//How long the simulation has to be running before taking a screenshot (seconds)
 
 	int g_fps_limit											 = 144;				//Modes: (x < 0) = Monitor refreshrate, (x == 0) = No limit
-	double g_fixedDeltaTime									 = 1.0f / 60.0f;	// The time step for each new iteration
+	double g_fixedDeltaTime									 = 1.0f / 80.0f;	// The time step for each new iteration
 
 	//Fluid Simulation Properties
 	const unsigned int c_RESOLUTION							 = 256;				// The amount of cells that the velocityfield will contain the fluid. Note: The visual resolution is 1.333333 times larger than this resolution.

@@ -162,9 +162,9 @@ void FluidSimulation::timeStep(float deltaTime)
 	if (m_diffuse)	diffuse(time);		//Spread out the fluid (if viscosity > 0)
 	if (m_forces)	addForces(time);	//Add a ball in the center and gravity. Also add multiple splats
 	if (m_project)	project(time);		//Remove unwanted stuff
+	if (m_visualize_change) displayFluidMotion();
 
-	//displayFluidMotion(m_dye_buffer->writeBuffer(), glm::vec3(3.5f, 0.0, 0));
-	//m_dye_buffer->swap();
+
 
 }
 
@@ -203,13 +203,14 @@ void FluidSimulation::bufferIntegrate(DoubleFramebuffer* target, glm::vec4 value
 	target->swap();
 }
 
-void FluidSimulation::displayFluidMotion(Framebuffer* target, glm::vec3 color)
+void FluidSimulation::displayFluidMotion()
 {
 	m_apply_shader.use();
-	glUniform3f(m_apply_shader.uniforms["value"], color.r, color.g, color.b);
+	glUniform3f(m_apply_shader.uniforms["value"], 3.5f, 0.0, 0);
 	glUniform1i(m_apply_shader.uniforms["divergenceTexture"], m_divergence_buffer->setTexture(0));
 	glUniform1i(m_apply_shader.uniforms["dyeTexture"], m_dye_buffer->readBuffer()->setTexture(1));
-	blit(target, &m_apply_shader);
+	blit(m_dye_buffer->writeBuffer(), &m_apply_shader);
+	m_dye_buffer->swap();
 }
 
 //Move the quantities in the fluid
@@ -412,18 +413,23 @@ void FluidSimulation::splat(glm::vec2 pos, float r, bool dye, bool velocity)
 	glUniform1i(m_splat_shader.uniforms["uTarget"], m_dye_buffer->readBuffer()->setTexture(0));
 	glUniform2f(uTexLoc, m_dye_buffer->readBuffer()->texelSize.x, m_dye_buffer->readBuffer()->texelSize.y);
 
-	glm::vec3 color = glm::vec3(1.0f) * m_splat_brightness;
+	glm::vec3 color = glm::vec3(0.0f);
 
 	if (m_splat_color_acc_dependent)
 	{
-		color *= glm::normalize(glm::vec3(m_mouse.texcoord_delta.x * m_splat_force, m_mouse.texcoord_delta.y * m_splat_force, 0.2f));
+		float scalar = 1 / 0.01f;
+		color = (glm::vec3(abs(m_mouse.texcoord_delta.x) * scalar, abs(m_mouse.texcoord_delta.y) * scalar, 0.1f));
+		color *= 0.7f;
+		std::cout << "dX: " << m_mouse.texcoord_delta.x << ", dY: " << m_mouse.texcoord_delta.y << std::endl;
 	}
 	else
 	{
-		color *= glm::vec3(m_splat_color[0], m_splat_color[1], m_splat_color[2]);
+		color = glm::vec3(m_splat_color[0], m_splat_color[1], m_splat_color[2]);
 	}
 
-	glUniform3f(uColorLoc, abs(color.r), abs(color.g), abs(color.b + (color.r + color.g) / 5.0f) * 0.3f);
+	color *= m_splat_brightness;
+
+	glUniform3f(uColorLoc, abs(color.r), abs(color.g), abs(color.b));
 
 	if (dye)
 	{
@@ -524,6 +530,7 @@ int FluidSimulation::applyConfiguration(Config& configurationFile)
 		m_forces = configurationFile.getValue(FLUID.forces) == "1";
 		m_project = configurationFile.getValue(FLUID.project) == "1";
 		m_image = configurationFile.getValue(FLUID.image) == "1";
+		m_visualize_change = configurationFile.getValue(FLUID.visualize_change) == "1";
 
 		return 0;
 	}
