@@ -21,7 +21,6 @@
 class Engine
 {
 private:
-	//Fluid simulation properties
 	static bool g_running;
 
 	static WindowHandler m_window;
@@ -37,6 +36,8 @@ private:
 	const char* c_WINDOW_NAME								 = "Summer Engine";
 	const float c_DEFAULT_CLEAR_COLOR[4]					 = { 1.0f, 0.0f, 0.0f, 1.0f };
 	const float c_CLEAR_COLOR[4]							 = { 0.28f, 0.41f, 0.61f, 1.0f };
+	static bool g_window_is_focused;
+	static bool g_iconified;
 
 	//Filepaths
 	//Note: Only p_GENERATED_RESULTS is being used
@@ -50,7 +51,8 @@ private:
 	bool  g_save_result										 = false;			//If set to TRUE a screenshot will be saved after the desired time below
 	const double g_save_result_time							 = 20.0f;			//How long the simulation has to be running before taking a screenshot (seconds)
 
-	int g_fps_limit											 = 144;				//Modes: (x < 0) = Monitor refreshrate, (x == 0) = No limit
+	int g_focused_fps_limit									 = 144;				//Modes: (x < 0) = Monitor refreshrate, (x == 0) = No limit
+	int g_unfocused_fps_limit								 = 144/2;			//Modes: (x <= 0) = focused fps limit
 	double g_fixedDeltaTime									 = 1.0f / 80.0f;	// The time step for each new iteration
 
 	//Fluid Simulation Properties
@@ -101,7 +103,7 @@ public:
 		static int CalculateFPS(int frames, double _deltaTime)
 		{
 			if (_deltaTime == 0) return 0;
-			return (int) roundf(frames/_deltaTime);
+			return (int) roundf(frames / _deltaTime);
 		}
 
 		static double SleepTime(unsigned int maxFPS)
@@ -143,8 +145,11 @@ public:
 	void update(double deltaTime);
 	void fixedUpdate(double deltaTime);
 	static void Pause();
+	static void Continue();
 
 private:
+	int getFpsLimit();
+	
 	void saveImage(const char* path, GLFWwindow* window);
 	void saveResults();
 	void constrainMouse(GLFWwindow* window, double xPos, double yPos);

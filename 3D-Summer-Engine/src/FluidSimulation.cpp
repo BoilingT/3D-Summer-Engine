@@ -394,45 +394,47 @@ void FluidSimulation::splat(glm::vec2 pos, float r, bool dye, bool velocity)
 	int uColorLoc = m_splat_shader.uniforms["color"];
 	int uTexLoc = m_splat_shader.uniforms["texelSize"];
 
-	glUniform1i(m_splat_shader.uniforms["uTarget"], m_velocity_buffer->readBuffer()->setTexture(0));
-	glUniform2f(m_splat_shader.uniforms["point"], pos.x, pos.y);
-	glUniform3f(uColorLoc, m_mouse.texcoord_delta.x * m_splat_force, m_mouse.texcoord_delta.y * m_splat_force, 0.0f);
 
 	//float ratio = m_mouse.width / m_mouse.height * 0.5f;
 	//glUniform1f(m_splat_shader.uniforms["radius"], ratio > 1 ? r * ratio : r);
 
+	glUniform2f(m_splat_shader.uniforms["point"], pos.x, pos.y);
 	glUniform1f(m_splat_shader.uniforms["radius"], r);
-	glUniform2f(uTexLoc, m_velocity_buffer->readBuffer()->texelSize.x, m_velocity_buffer->readBuffer()->texelSize.y);
 
 	if (velocity)
 	{
+		glUniform1i(m_splat_shader.uniforms["uTarget"], m_velocity_buffer->readBuffer()->setTexture(0));
+		glUniform3f(uColorLoc, m_mouse.texcoord_delta.x * m_splat_force, m_mouse.texcoord_delta.y * m_splat_force, 0.0f);
+		glUniform2f(uTexLoc, m_velocity_buffer->readBuffer()->texelSize.x, m_velocity_buffer->readBuffer()->texelSize.y);
+
 		blit(m_velocity_buffer->writeBuffer(), &m_splat_shader);
 		m_velocity_buffer->swap();
 	}
 
-	glUniform1i(m_splat_shader.uniforms["uTarget"], m_dye_buffer->readBuffer()->setTexture(0));
-	glUniform2f(uTexLoc, m_dye_buffer->readBuffer()->texelSize.x, m_dye_buffer->readBuffer()->texelSize.y);
-
-	glm::vec3 color = glm::vec3(0.0f);
-
-	if (m_splat_color_acc_dependent)
-	{
-		float scalar = 1 / 0.01f;
-		color = (glm::vec3(abs(m_mouse.texcoord_delta.x) * scalar, abs(m_mouse.texcoord_delta.y) * scalar, 0.1f));
-		color *= 0.7f;
-		std::cout << "dX: " << m_mouse.texcoord_delta.x << ", dY: " << m_mouse.texcoord_delta.y << std::endl;
-	}
-	else
-	{
-		color = glm::vec3(m_splat_color[0], m_splat_color[1], m_splat_color[2]);
-	}
-
-	color *= m_splat_brightness;
-
-	glUniform3f(uColorLoc, abs(color.r), abs(color.g), abs(color.b));
 
 	if (dye)
 	{
+		glUniform1i(m_splat_shader.uniforms["uTarget"], m_dye_buffer->readBuffer()->setTexture(0));
+		glUniform2f(uTexLoc, m_dye_buffer->readBuffer()->texelSize.x, m_dye_buffer->readBuffer()->texelSize.y);
+
+		glm::vec3 color = glm::vec3(0.0f);
+
+		if (m_splat_color_acc_dependent)
+		{
+			float scalar = 1 / 0.01f;
+			color = (glm::vec3(abs(m_mouse.texcoord_delta.x) * scalar, abs(m_mouse.texcoord_delta.y) * scalar, 0.1f));
+			color *= 0.7f;
+			std::cout << "dX: " << m_mouse.texcoord_delta.x << ", dY: " << m_mouse.texcoord_delta.y << std::endl;
+		}
+		else
+		{
+			color = glm::vec3(m_splat_color[0], m_splat_color[1], m_splat_color[2]);
+		}
+
+		color *= m_splat_brightness;
+
+		glUniform3f(uColorLoc, color.r, color.g, color.b);
+
 		blit(m_dye_buffer->writeBuffer(), &m_splat_shader);
 		m_dye_buffer->swap();
 	}

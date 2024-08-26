@@ -12,6 +12,8 @@ bool Engine::g_mouse.rightMouseDown		 = 0;
 bool Engine::g_firstMouseEnter		 = 0;
 bool Engine::g_mouse_constrain		 = true;*/
 bool Engine::g_running				 = false;
+bool Engine::g_iconified			 = false;
+bool Engine::g_window_is_focused	 = true;
 
 WindowHandler Engine::m_window;
 FluidSimulation* Engine::m_fluid;
@@ -41,11 +43,17 @@ Engine::Engine()
 	Time::Set(glfwGetTime());
 	Time::FixedDeltaTime(g_fixedDeltaTime);
 
-	if (g_fps_limit < 0)
+	if (g_focused_fps_limit < 0)
 	{
 		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		g_fps_limit = mode->refreshRate;
+		g_focused_fps_limit = mode->refreshRate;
 	}
+
+	if (g_unfocused_fps_limit <= 0)
+	{
+		g_unfocused_fps_limit = g_focused_fps_limit;
+	}
+
 	//Set the viewport size
 	glViewport(0, 0, c_WIDTH, c_HEIGHT);
 	//Resize the viewport when the window size is changed
@@ -137,7 +145,7 @@ void Engine::Run()
 
 		std::this_thread::sleep_for(
 			std::chrono::milliseconds(
-			(long) (Performance::SleepTime(g_fps_limit, Time::DeltaTime()) * 1000.0f)
+			(long) (Performance::SleepTime(getFpsLimit(), Time::DeltaTime()) * 1000.0f)
 		));
 	}
 
@@ -281,6 +289,18 @@ void Engine::IO_EVENTS(GLFWwindow* window)
 	*/
 }
 
+int Engine::getFpsLimit()
+{
+	if (Engine::g_window_is_focused)
+	{
+		return g_focused_fps_limit;
+	}
+	else
+	{
+		return g_unfocused_fps_limit;
+	}
+}
+
 //This is some copy pasta from somewhere on stackoverflow
 void Engine::saveImage(const char* path, GLFWwindow* window)
 {
@@ -356,7 +376,13 @@ void Engine::MOUSE_CALLBACK(GLFWwindow* window, double xPos, double yPos)
 
 void Engine::Pause()
 {
-	Engine::g_running = !Engine::g_running;
+	Engine::g_running = false;
+	std::cout << "Running: " << Engine::g_running << std::endl;
+}
+
+void Engine::Continue()
+{
+	Engine::g_running = true;
 	std::cout << "Running: " << Engine::g_running << std::endl;
 }
 
@@ -370,17 +396,32 @@ void Engine::FRAMEBUFFER_RESIZE_CALLBACK(GLFWwindow* window, int width, int heig
 
 void Engine::WINDOW_ICONIFY_CALLBACK(GLFWwindow* window, int iconified)
 {
-	if (Engine::g_running && iconified) glfwRequestWindowAttention(window);
+	Engine::g_iconified = iconified;
+
+	if (Engine::g_iconified)
+	{
+		Engine::Pause();
+		glfwRequestWindowAttention(window);
+	}
+	else
+	{
+		Engine::Continue();
+	}
 }
 
 void Engine::WINDOW_FOCUS_CALLBACK(GLFWwindow* window, int focused)
 {
+	Engine::g_window_is_focused = focused;
+
 	if (focused)
 	{
+		std::cout << "Window Focused" << std::endl;
+
 		//m_window.setState(WindowHandler::WindowState::FULLSCREEN);
 	}
 	else if (!focused)
 	{
+		std::cout << "Window Unfocused" << std::endl;
 		m_window.setState(WindowHandler::WindowState::WINDOWED);
 	}
 }
@@ -389,7 +430,14 @@ void Engine::KEY_CALLBACK(GLFWwindow* window, int key, int scancode, int action,
 {
 	if ((key == GLFW_KEY_PAUSE || key == GLFW_KEY_0) && action == GLFW_PRESS)
 	{
-		Engine::Pause();
+		if (Engine::g_running)
+		{
+			Engine::Pause();
+		}
+		else
+		{
+			Engine::Continue();
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
 	{

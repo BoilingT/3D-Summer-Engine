@@ -7,6 +7,7 @@ uniform vec4 value;
 uniform float time;
 
 void main () {
+	float ratio = 1.0f / (texelSize.x / texelSize.y);
 	vec2 coords = gl_FragCoord.xy;
 	vec2 margin = vec2(texelSize.x*200, texelSize.y*100) * 1.f;
 	vec4 u = texture2D(uTexture, vUv);
@@ -16,7 +17,7 @@ void main () {
 	//	fragColor = u;
 	//}
 
-	float size = 3.0f / texelSize.x;
+	float size = 1000.f * ratio;
 	
 	vec2 pos = vec2(0.5f, 0.6f) / texelSize;
 
@@ -31,12 +32,10 @@ void main () {
 
 	bool rectCondition = (pos.x + dim.x > coords.x && pos.x - dim.x < coords.x) && (pos.y + dim.y > coords.y && pos.y - dim.y < coords.y);
 	rectCondition = false;
+	bool circleCondition = shapeCoord < size;
+	//circleCondition = true;
 
-	if((shapeCoord < size) || rectCondition){
+	if(circleCondition || rectCondition){
 		fragColor = vec4(0, 0, 0.0f, 0.0f);
-	}
-	
-	if((shapeCoord < size + 5 && shapeCoord > size)){
-		fragColor = vec4(-u.x, -u.y, 0.0f, 1.0f);
 	}
 }
