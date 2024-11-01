@@ -77,6 +77,7 @@ void FluidSimulation::Draw(glm::vec3 origin)
 {
 
 	m_primary_shader.use();
+	glUniform1f(m_primary_shader.uniforms["t"], glfwGetTime());
 	glUniform1i(m_primary_shader.uniforms["u_image"], m_dye_buffer->readBuffer()->setTexture(0));
 	glUniform2f(m_primary_shader.uniforms["viewportBufferSize"], m_mouse.width, m_mouse.height);
 	glUniform2f(m_primary_shader.uniforms["dyeTexelSize"], m_dye_buffer->readBuffer()->texelSize.x, m_dye_buffer->readBuffer()->texelSize.y);
@@ -196,6 +197,7 @@ void FluidSimulation::splat()
 void FluidSimulation::bufferIntegrate(DoubleFramebuffer* target, glm::vec4 values)
 {
 	m_integrate_shader.use();
+	glUniform1f(m_integrate_shader.uniforms["t"], glfwGetTime());
 	glUniform4f(m_integrate_shader.uniforms["value"], values.x, values.y, values.z, values.w);
 	glUniform1i(m_integrate_shader.uniforms["uTexture"], target->readBuffer()->setTexture(0));
 	glUniform2f(m_integrate_shader.uniforms["texelSize"], target->readBuffer()->texelSize.x, target->readBuffer()->texelSize.y);
@@ -281,7 +283,7 @@ void FluidSimulation::addForces(float dt)
 	float r = m_splat_radius / 10.0f;
 
 	splat(glm::vec2(0.5f, 0.9f), r, m_splats, true, false);
-	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -90.82f, 0.0f, 0.0f) * (float) dt);
+	bufferIntegrate(m_velocity_buffer, glm::vec4(0.0f, -0.982f, 0.0f, 0.0f));
 }
 
 //Projection, by removing any divergence
@@ -392,6 +394,7 @@ void FluidSimulation::splat(glm::vec2 pos, float r, bool dye, bool velocity)
 	m_splat_shader.use();
 	//Uniforms
 	int uColorLoc = m_splat_shader.uniforms["color"];
+	int uVelocityLoc = m_splat_shader.uniforms["velocities"];
 	int uTexLoc = m_splat_shader.uniforms["texelSize"];
 
 
@@ -403,10 +406,12 @@ void FluidSimulation::splat(glm::vec2 pos, float r, bool dye, bool velocity)
 
 	if (velocity)
 	{
+		glUniform3f(uColorLoc, 0.0f, 0.0f, 0.0f);
 		glUniform1i(m_splat_shader.uniforms["uTarget"], m_velocity_buffer->readBuffer()->setTexture(0));
-		glUniform3f(uColorLoc, m_mouse.texcoord_delta.x * m_splat_force, m_mouse.texcoord_delta.y * m_splat_force, 0.0f);
+		//std::cout << "x " << m_mouse.texcoord_delta.x * m_splat_force << ", " << m_mouse.texcoord_delta.y * m_splat_force << ", " << 0.0f << std::endl;
+		glUniform3f(uVelocityLoc, m_mouse.texcoord_delta.x * m_splat_force, m_mouse.texcoord_delta.y * m_splat_force, 0.0f);
 		glUniform2f(uTexLoc, m_velocity_buffer->readBuffer()->texelSize.x, m_velocity_buffer->readBuffer()->texelSize.y);
-
+		
 		blit(m_velocity_buffer->writeBuffer(), &m_splat_shader);
 		m_velocity_buffer->swap();
 	}
@@ -414,6 +419,7 @@ void FluidSimulation::splat(glm::vec2 pos, float r, bool dye, bool velocity)
 
 	if (dye)
 	{
+		glUniform3f(uVelocityLoc, 0.0f, 0.0f, 0.0f);
 		glUniform1i(m_splat_shader.uniforms["uTarget"], m_dye_buffer->readBuffer()->setTexture(0));
 		glUniform2f(uTexLoc, m_dye_buffer->readBuffer()->texelSize.x, m_dye_buffer->readBuffer()->texelSize.y);
 

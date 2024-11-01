@@ -227,7 +227,8 @@ private:
 	float m_dye_resolution_scalar				 = 2.0f;
 	bool  m_splat_color_acc_dependent			 = false;
 	float m_splat_brightness					 = 1.0f;
-	float m_splat_color[3]						 = { 0.0f, 0.1f, 1.0f };
+	//float m_splat_color[3]						 = { 0.0f, 0.1f, 1.0f };
+	float m_splat_color[3]						 = { 1.0, 0.2, 0.0 };
 	float m_splat_force							 = 6000.0f;
 	float m_splat_radius						 = 0.25f;
 	float m_dye_dissipation						 = 0.3f;		// The rate at which the dye clears from the screen

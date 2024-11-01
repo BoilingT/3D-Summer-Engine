@@ -16,6 +16,7 @@ private:
 	{
 		double lastPcTime = Instance().time;
 		double dT = newTime - lastPcTime;
+		if (dT < 0) dT *= -1;
 		Instance().deltaTime = dT;
 		return dT;
 	}
@@ -38,6 +39,7 @@ public:
 
 	static double Set(double newTime)
 	{
+		if (newTime < 0) return 0;
 		calculateDeltaTime(newTime);
 		return Instance().time = newTime;
 	}

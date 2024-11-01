@@ -31,6 +31,8 @@ private:
 	Camera m_camera;
 
 	//Window Properties
+	//const unsigned int c_WIDTH								 = 2560;
+	//const unsigned int c_HEIGHT								 = 1440;
 	const unsigned int c_WIDTH								 = 1920;
 	const unsigned int c_HEIGHT								 = 1080;
 	const char* c_WINDOW_NAME								 = "Summer Engine";
@@ -51,9 +53,9 @@ private:
 	bool  g_save_result										 = false;			//If set to TRUE a screenshot will be saved after the desired time below
 	const double g_save_result_time							 = 20.0f;			//How long the simulation has to be running before taking a screenshot (seconds)
 
-	int g_focused_fps_limit									 = 144;				//Modes: (x < 0) = Monitor refreshrate, (x == 0) = No limit
-	int g_unfocused_fps_limit								 = 144/2;			//Modes: (x <= 0) = focused fps limit
-	double g_fixedDeltaTime									 = 1.0f / 80.0f;	// The time step for each new iteration
+	int g_focused_fps_limit									 = 0;				//Modes: (x < 0) = Monitor refreshrate, (x == 0) = No limit
+	int g_unfocused_fps_limit								 = 0;				//Modes: (x <= 0) = focused fps limit
+	double g_fixedDeltaTime									 = 1.0f / 144.0f;	// The time step for each new iteration
 
 	//Fluid Simulation Properties
 	const unsigned int c_RESOLUTION							 = 256;				// The amount of cells that the velocityfield will contain the fluid. Note: The visual resolution is 1.333333 times larger than this resolution.
@@ -115,8 +117,8 @@ public:
 		{
 			if (maxFPS == 0) return 0;
 			double dtMax = 1.0f / maxFPS;
-			double renderTime = deltaTime - Instance().sleepTime;
-			double time = (dtMax - renderTime);
+			//double renderTime = deltaTime + Instance().sleepTime;
+			double time = (dtMax - deltaTime);
 
 			if (time < 0)
 			{
@@ -124,7 +126,7 @@ public:
 			}
 
 			Instance().sleepTime = time;
-			return time; //ms
+			return Instance().sleepTime;
 		}
 	};
 

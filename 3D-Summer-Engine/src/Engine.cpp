@@ -96,20 +96,31 @@ void Engine::Run()
 	//dt = renderTime + sleepTime_0 = t1 - t0
 	//sleepTime_0 = dt - renderTime
 	//sleepTime = maxDt - dt = maxDt - renderTime + sleepTime_0
+	double sleepTime = 0;
+	double t0 = 0;
+	double t1 = 0;
+	double a = 0;
+	double b = 0;
+	double dt1 = 0;
+	double dt2 = 0;
+	long s0 = 0;
+	long s1 = 0;
+	double timepassed = 0;
 	while (!glfwWindowShouldClose(m_window.getWindow()))
 	{
-		Time::Set(glfwGetTime());
-		Performance::SetDeltaTime(Time::DeltaTime());
+		//sleepTime = (Performance::SleepTime(getFpsLimit(), Time::DeltaTime()));
+		//Time::Set(glfwGetTime()); //t0
+		//Performance::SetDeltaTime(Time::DeltaTime());
+		t0 = glfwGetTime();
 
-		if ((clockTimePassed += Time::DeltaTime()) >= 1.0f)
+		if ((clockTimePassed += timepassed) >= 0.5f)
 		{
-			std::string title = std::to_string(Time::DeltaTime() * 1000) + "ms " + std::to_string(Performance::CalculateFPS(frames, clockTimePassed)) + " FPS";
+			std::string title = std::to_string(dt1 * 1000) + "ms " + std::to_string(Performance::CalculateFPS(frames, clockTimePassed)) + " FPS";
 			m_window.setTitle(title);
-
 			//std::cout << "fixedUpdate: " << Performance::CalculateFPS(ticks, fixedTimePassed) << " Renderer: " << Performance::CalculateFPS(frames, clockTimePassed) << std::endl; //Fixed FPS
+			std::cout << "Sleeptime: " << s0 * 1e-6f << " ms\n" << (b-a)*1000 << " ms\ndt1: " << dt1 * 1000.f << " ms / " << 1.f / dt1 << " FPS\ntimestep : " << (timepassed) * 1000.f << "ms / " << (1.f / (timepassed)) << " FPS" << std::endl;
 
 			clockTimePassed = 0;
-
 
 			frames = 0;
 		}
@@ -119,22 +130,9 @@ void Engine::Run()
 
 		if (Engine::g_running)
 		{
-			update(Time::DeltaTime());
-
-			double dt = Time::DeltaTime();
-			if ((timePassed += dt) >= Time::DeltaTime())
-			{
-				fixedUpdate(Time::FixedDeltaTime());
-				if ((fixedTimePassed += timePassed) >= 1.0f)
-				{
-					fixedTimePassed = 0;
-					ticks = 0;
-				}
-				timePassed = 0;
-				ticks++;
-			}
+			update(timepassed);
+			fixedUpdate(timepassed);
 		}
-
 		render();
 		frames++;
 
@@ -142,11 +140,25 @@ void Engine::Run()
 
 		glfwSwapBuffers(m_window.getWindow());
 		glfwPollEvents();
+		
+		//dt2 = dt1;
+		t1 = glfwGetTime();
+		dt1 = t1 - t0;
+		if (dt1 < 0) dt1 = 0;
 
+		//s0 = ((1.f/(Engine::getFpsLimit()) - (dt1 + (b-a >= s0 / 1e9f ? (b-a) - s0 / 1e9f : 0))) * 1e9f);
+		s0 = ((1.f/(Engine::getFpsLimit()) - dt1) * 1e9f);
+		if (s0 < 0) s0 = 0;
+		
+		timepassed = dt1 + s0 / 1e9f;
+
+		a = glfwGetTime();
 		std::this_thread::sleep_for(
-			std::chrono::milliseconds(
-			(long) (Performance::SleepTime(getFpsLimit(), Time::DeltaTime()) * 1000.0f)
+			std::chrono::nanoseconds(
+			(long long)(s0)
 		));
+		b = glfwGetTime();
+		s1 = s0;
 	}
 
 	std::cout << "EXITED::RENDER::LOOP" << std::endl;
@@ -170,12 +182,13 @@ void Engine::render()
 void Engine::update(double deltaTime)
 {
 	m_fluid->updateConfiguration();
-	m_fluid->timeStep((float) deltaTime);
+	//m_fluid->timeStep((float) deltaTime);
 }
 
 void Engine::fixedUpdate(double deltaTime)
 {
-	//m_fluid->timeStep((float) deltaTime);
+	//m_fluid->updateConfiguration();
+	m_fluid->timeStep((float) deltaTime);
 }
 
 void Engine::IO_EVENTS(GLFWwindow* window)
