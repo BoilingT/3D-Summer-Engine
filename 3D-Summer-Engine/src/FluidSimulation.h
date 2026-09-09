@@ -132,23 +132,25 @@ class FluidSimulation
 
 
 private:
+	//Simulation Shaders 
 	const char* p_CONFIG_FILE							 = "./fluid_config.cfg";
-	const char* p_COMPUTE_SHADER						 = "./Shaders/shader_backup.glsl";
-	const char* p_advection_shader						 = "./Shaders/advection_shader.frag";
-	const char* p_jacobi_shader							 = "./Shaders/jacobi_shader.frag";
-	const char* p_force_shader							 = "./Shaders/force_shader.frag";
-	const char* p_divergence_shader						 = "./Shaders/divergence_shader.frag";
-	const char* p_clear_shader							 = "./Shaders/clear_shader.frag";
-	const char* p_integrate_shader						 = "./Shaders/integrate_shader.frag";
-	const char* p_gradient_subtraction_shader			 = "./Shaders/gradient_subtraction_shader.frag";
-	const char* p_vorticity_shader						 = "./Shaders/vorticity_shader.frag";
-	const char* p_curl_shader							 = "./Shaders/curl_shader.frag";
-	const char* p_temperature_shader					 = "./Shaders/temperature_shader.frag";
-	const char* p_density_shader						 = "./Shaders/density_shader.frag";
-	const char* p_bounds_shader							 = "./Shaders/bounds_shader.frag";
-	const char* p_splat_shader							 = "./Shaders/splat_shader.frag";
-	const char* p_apply_shader							 = "./Shaders/apply_shader.frag";
+	const char* p_COMPUTE_SHADER						 = "./Shaders/FluidSimulation/shader_backup.glsl";
+	const char* p_advection_shader						 = "./Shaders/FluidSimulation/advection_shader.frag";
+	const char* p_jacobi_shader							 = "./Shaders/FluidSimulation/jacobi_shader.frag";
+	const char* p_force_shader							 = "./Shaders/FluidSimulation/force_shader.frag";
+	const char* p_divergence_shader						 = "./Shaders/FluidSimulation/divergence_shader.frag";
+	const char* p_clear_shader							 = "./Shaders/FluidSimulation/clear_shader.frag";
+	const char* p_integrate_shader						 = "./Shaders/FluidSimulation/integrate_shader.frag";
+	const char* p_gradient_subtraction_shader			 = "./Shaders/FluidSimulation/gradient_subtraction_shader.frag";
+	const char* p_vorticity_shader						 = "./Shaders/FluidSimulation/vorticity_shader.frag";
+	const char* p_curl_shader							 = "./Shaders/FluidSimulation/curl_shader.frag";
+	const char* p_temperature_shader					 = "./Shaders/FluidSimulation/temperature_shader.frag";
+	const char* p_density_shader						 = "./Shaders/FluidSimulation/density_shader.frag";
+	const char* p_bounds_shader							 = "./Shaders/FluidSimulation/bounds_shader.frag";
+	const char* p_splat_shader							 = "./Shaders/FluidSimulation/splat_shader.frag";
+	const char* p_apply_shader							 = "./Shaders/FluidSimulation/apply_shader.frag";
 
+	//Engine Shaders
 	const char* p_VISUALISE_GRID_VERTEX_SHADER			 = "./Shaders/visualise_grid_vertex_shader.vert";
 	const char* p_VISUALISE_GRID_FRAGMENT_SHADER		 = "./Shaders/visualise_grid_fragment_shader.frag";
 	const char* p_VERTEX_SHADER							 = "./Shaders/vertex_shader.vert";
@@ -185,69 +187,66 @@ private:
 		const std::string forces = "forces";
 		const std::string project = "project";
 		const std::string image = "image";
+		const std::string visualize_change = "visualize_change";
 	} FLUID;
 
 	//Framebuffers
-	DoubleFramebuffer* m_velocity_buffer;                     //Contains velocities to be advected
-	Framebuffer* m_divergence_buffer;                         //Contains divergent velocities
-	DoubleFramebuffer* m_pressure_buffer;                     //Contains a pressure field
-
-	//Application buffers
-	DoubleFramebuffer* m_dye_buffer;                          //Contains dye quantities to be advected
-	Framebuffer* m_curl_buffer;                               //Contains curling velocities
-	//Display buffer
-	Framebuffer* m_render_buffer;                             //Contains the buffer that will be used when rendering
+	DoubleFramebuffer* m_velocity_buffer; //Contains velocities to be advected
+	DoubleFramebuffer* m_pressure_buffer; //Contains a pressure field
+	DoubleFramebuffer* m_dye_buffer;      //Contains dye quantities to be advected
+	Framebuffer* m_divergence_buffer;     //Contains divergent velocities
+	Framebuffer* m_curl_buffer;           //Contains curling velocities
+	Framebuffer* m_render_buffer;         //Contains the buffer that will be used when rendering
 
 	//Shaders
-	Shader m_advection_shader;                                //Used for advecting quantities in the fluid dependent on the given velocity buffer
-	Shader m_jacobi_iteration_shader;                         //Used for Pressure and Diffusion
-	Shader m_force_shader;                                    //Alternative shader for splat shader (Not ready)
-	Shader m_divergence_shader;                               //Calculates change in velocities
-	Shader m_integrate_shader;                                //Used for adding a value to an entire buffer
-	Shader m_clear_shader;                                    //Used for clearing a buffer of its values
-	Shader m_gradient_subtraction_shader;                     //Subtract a gradient from given buffer
-	Shader m_vorticity_shader;                                //Adds swirly movement and details lost by numerical error.
-	Shader m_curl_shader;                                     //Calculates how the fluid curls
-	Shader m_bounds_shader;                                   //TODO: Control of Fluid boundaries
-	Shader m_splat_shader;                                    //Used for application of Dye and Velocity manipulation
-	Shader m_apply_shader;                                    //Used for application of value
+	Shader m_advection_shader;            //Used for advecting quantities in the fluid dependent on the given velocity buffer
+	Shader m_jacobi_iteration_shader;     //Used for Pressure and Diffusion
+	Shader m_force_shader;                //Alternative shader for splat shader (Not ready)
+	Shader m_divergence_shader;           //Calculates change in velocities
+	Shader m_integrate_shader;            //Used for adding a value to an entire buffer
+	Shader m_clear_shader;                //Used for clearing a buffer of its values
+	Shader m_gradient_subtraction_shader; //Subtract a gradient from given buffer
+	Shader m_vorticity_shader;            //Adds swirly movement and details lost by numerical error.
+	Shader m_curl_shader;                 //Calculates how the fluid curls
+	Shader m_bounds_shader;               //TODO: Control of Fluid boundaries
+	Shader m_splat_shader;                //Used for application of Dye and Velocity manipulation
+	Shader m_apply_shader;                //Used for application of value
 	//Screen rendering shaders
-	Shader  m_object_shader;                                  //Used to render objects to the screen
-	Shader* m_primary_shader;                                 //Used to render the fluid to the screen
+	Shader m_object_shader;               //Used to render objects to the screen
+	Shader m_primary_shader;              //Used to render the fluid to the screen
 
 	Texture2D* m_texture;
 	Rect* m_fieldQuad;
+	Mouse m_mouse;
+	Rect rectangle;
+	Line line;
 
 	const unsigned int m_WIDTH, m_HEIGHT, m_resolution;
 
-	float	 m_velocity_resolution_scalar			 = 1.0f;
-	float	 m_dye_resolution_scalar				 = 1.0f;
-	bool	 m_splat_color_acc_dependent			 = false;
-	float	 m_splat_brightness						 = 0.5f;
-	float	 m_splat_color[3]						 = { 0.0f, 0.1f, 1.0f };
-	float	 m_splat_force							 = 6000.0f;
-	float	 m_splat_radius							 = 0.35f;
-	float	 m_dye_dissipation						 = 0.2f;		// The rate at which the dye clears from the screen
-	float	 m_velocity_dissipation					 = 0.1f;		// The rate at which the velocities reduces to zero
-	float	 m_viscosity							 = 0.0f;		// Internal friction of the fluid
-	unsigned int m_diffuseIterations				 = 30;			// Number of iterations used to calculate proper diffusion of the applied dye or velocities
-	unsigned int m_pressureIterations				 = 60;			// Number of iterations used to calculate more precise pressure fields
-	float	 m_pressure_dissipation					 = 0.9f;		// How fast the pressure field dissipates
-	float	 m_vortitcity_scalar					 = 30.0f;		// Scale the magnitude of force that will be used when applying curling velocities
-	float	 m_timestep_scalar						 = 1.0f;		// Unit of time which the simulation will use when advancing forward.
+	float m_velocity_resolution_scalar			 = 11.0f;
+	float m_dye_resolution_scalar				 = 2.0f;
+	bool  m_splat_color_acc_dependent			 = false;
+	float m_splat_brightness					 = 1.0f;
+	//float m_splat_color[3]						 = { 0.0f, 0.1f, 1.0f };
+	float m_splat_color[3]						 = { 1.0, 0.2, 0.0 };
+	float m_splat_force							 = 6000.0f;
+	float m_splat_radius						 = 0.25f;
+	float m_dye_dissipation						 = 0.3f;		// The rate at which the dye clears from the screen
+	float m_velocity_dissipation				 = 0.2f;		// The rate at which the velocities reduces to zero
+	float m_viscosity							 = 0.0f;		// Internal friction of the fluid
+	unsigned int m_diffuseIterations			 = 20;			// Number of iterations used to calculate proper diffusion of the applied dye or velocities
+	unsigned int m_pressureIterations			 = 60;			// Number of iterations used to calculate more precise pressure fields
+	float m_pressure_dissipation				 = 0.8f;		// How fast the pressure field dissipates
+	float m_vortitcity_scalar					 = 30.0f;		// Scale the magnitude of force that will be used when applying curling velocities
+	float m_timestep_scalar						 = 1.0f;		// Unit of time which the simulation will use when advancing forward.
 
-	unsigned int m_splats							 = 11;
-	bool	 m_advect								 = 1;
-	bool	 m_diffuse								 = 1;
-	bool	 m_forces								 = 0;
-	bool	 m_project								 = 1;
-	bool	 m_image								 = 0;
-
-	//Visualisation
-	Rect					rectangle;
-	Line					line;
-
-	Mouse  m_mouse;
+	unsigned int m_splats						 = 11;
+	bool m_advect								 = 1;
+	bool m_diffuse								 = 1;
+	bool m_forces								 = 0;
+	bool m_project								 = 1;
+	bool m_image								 = 0;
+	bool m_visualize_change						 = 0;
 
 public:
 	FluidSimulation(const unsigned int WIDTH, const unsigned int HEIGHT, const unsigned int resolution);
@@ -261,24 +260,19 @@ public:
 		delete(m_divergence_buffer);
 		delete(m_pressure_buffer);
 
-		delete(m_primary_shader);
 		delete(m_fieldQuad);
 		std::cout << "DESTROYED::FLUIDFIELD" << std::endl;
 	}
 
 	void resizeViewport(unsigned int width, unsigned int height);
 
-	//Draw the fluid
-	void Draw(glm::vec3 origin); //Should be used with a template?
-	//Set mouse position and button properties
+	void Draw(glm::vec3 origin);
 	void updateMouse(double* mouseX, double* mouseY, bool* left_mouse_down, bool* right_mouse_down);
-	//Move forward in time, update values
 	void timeStep(float dt);
-	void setCurrentBuffer(Framebuffer* buffer);
-	void swapBuffer(int i);
+	void setDisplayBuffer(Framebuffer* buffer);
+	void displayTexture(int i);
+	void clearSimulationBuffers();
 
-	//Clear everything and start from the beginning
-	void reset(); //TODO
 	int applyConfiguration(Config& configurationFile);
 	void updateConfiguration();
 
@@ -286,7 +280,9 @@ private:
 	//Draw using specified shader together with a specified framebuffer (NULL if the purpose is to render to the screen with specified shader)
 	void blit(Framebuffer* target, Shader* shader);
 	void bufferIntegrate(DoubleFramebuffer* target, glm::vec4 value);
-	void bufferApplyValue(Framebuffer* target, glm::vec3 value);
+	void displayFluidMotion();
+
+	void splat();
 	void advect(float dt);
 	void diffuse(float dt);
 	void addForces(float dt);
@@ -299,11 +295,7 @@ private:
 	void clearBuffer(Framebuffer* target, float value);
 	void pressure(float dt);
 	void gradientSubtract(float dt);
-	/// <summary>
-	///Add velocity in the specified position
-	/// </summary>
-	/// <param name="pos">Origin</param>
-	/// <param name="r">Radius of the splat</param>
+
 	void splat(glm::vec2 pos, float r, bool dye, bool velocity);
 	void splat(glm::vec2 pos, float r, unsigned int amount, bool dye, bool velocity);
 };

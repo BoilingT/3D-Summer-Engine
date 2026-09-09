@@ -22,9 +22,9 @@ float divergence(vec2 coords){
 	//Boundary conditions
 	vec2 u = texture2D(w, coords).xy;
 	if (vL.x < 0.0f) { wL = -u.x; }
-    if (vR.x > 1.0f) { wR = -u.x; }
-    if (vT.y > 1.0f) { wT = -u.y; }
-    if (vB.y < 0.0f) { wB = -u.y; }
+	if (vR.x > 1.0f) { wR = -u.x; }
+	if (vT.y > 1.0f) { wT = -u.y; }
+	if (vB.y < 0.0f) { wB = -u.y; }
 
 	//Finite Difference Form of Divergence
 	//return u;
